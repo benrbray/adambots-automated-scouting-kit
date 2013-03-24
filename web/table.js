@@ -1,4 +1,4 @@
-  function Table(url) { //Mimick the Table object so that less of the other classes change. Use without 'new'
+	function Table(url) { //Mimick the Table object so that less of the other classes change. Use without 'new'
 		//URL is either "RANKINGS" or "MATCHES" referring to which table you want.
 		/**It is NOT the actual URL**/
 		var r = [];
@@ -44,7 +44,6 @@
 		var body = table.substring(table.indexOf("font-family:arial"), table.length - 1);
 		var cell = body.split("\n");
 		var cells = new Array(cell.length);
-		
 		var o = 0;
 		for (var i = 0; i < cell.length; i++) {
 			if (cell[i].length > 20 && cell[i].indexOf("</") > 0) {
@@ -52,14 +51,14 @@
 				o++;
 			}
 		}
-		
 		//double[][] k = new double[heading.length][o / heading.length];
 		var k = new Array(heading.length);
+		for (var i = 0; i < heading.length; i++)
+		{
+			k[i] = new Array(o / heading.length);
+		}
 		for (var i = 0; i < o; i++) {
-			if (k[i % heading.length] == undefined) {
-				k[i%heading.length] = new Array(o / heading.length);
-			}
-			k[i % heading.length][i / heading.length] = (cells[i]) + 0;
+			k[i % heading.length][Math.floor(i / heading.length)] = parseInt(cells[i]);
 		}
 		return k;
 	}
