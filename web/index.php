@@ -1,5 +1,11 @@
-(The relevant PHP / HTML code to make this run)
+
 <?php
+//(The relevant PHP / HTML code to make this run)
+/*
+This is the only server-side work done.
+Loading a page from WW2.USFIRST.ORG violates the same-origin policy.
+Instead, this pages acts a proxy, so same-origin isn't violated.
+*/
 if (isset($_REQUEST["grab"]))
 {
 exit(file_get_contents("http://www2.usfirst.org/" . $_REQUEST["grab"]));
