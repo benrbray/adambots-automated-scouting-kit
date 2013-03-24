@@ -1,3 +1,6 @@
+/************** equivalent to TABLE.JAVA **************/
+//Distr. under GNU GPL
+
 	function Table(url) { //Mimick the Table object so that less of the other classes change. Use without 'new'
 		//URL is either "RANKINGS" or "MATCHES" referring to which table you want.
 		/**It is NOT the actual URL**/
@@ -5,11 +8,42 @@
 		r.getTable = function(){ return TableGetTable(url); };
 		r.getHeading = function(){return TableGetHeading(url);};
 		r.getBody = function(){return TableGetBody(url);};
-		//constructcolumnhash
-		//constructrowhash
-		//get height / width of table, too.
+		r.constructColumnHash = function(a,b) {return TableConstructColumnHash(url,a,b);};
+		r.constructRowHash = function(a,b) {return TableConstructRowHash(url,a,b);};
+		r.getRows = function() {return TableGetRows(url); };
+		r.getColumns = function() {return TableGetColumns(url)};
 		return r;
 	} 
+	function TableGetRows(url){
+		return TableGetTable(url)[0].length;
+	}
+	
+	function TableGetColumns(url){
+		return TableGetTable(url).length;
+	}
+
+	function TableConstructColumnHash(url,keyrow,valrow)
+	{
+		var u = [];
+		u.get = function(f) {return u[f]; };
+		var body = TableGetBody(url);
+		for (var i = 0; i < body.length; i++)
+		{
+			u[body[i][keyrow]] = body[i][valrow];
+		}
+		return u;
+	}
+
+	function TableConstructRowHash(url,keycol,valcol)
+	{
+		var u = [];
+		u.get = function(f) {return u[f]; };
+		var body = TableGetBody(url);
+		for (var i = 0; i < body[0].length; i++)
+		{
+			u[body[keycol][i]] = body[valcol][i];
+		}
+	}
 
 	function TableGetTable(url) {
 		var page = "";
