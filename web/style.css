@@ -1,36 +1,35 @@
 a {
-font-weight:bold;
-color:#5588EE;
+  font-weight:bold;
+  color:#5588EE;
 }
 
 body {
-font-family:Arial;
-font-size:12px;
+  font-family:Arial;
+  font-size:12px;
 }
 
 #thetable * tr td {
-border-right: 1px solid #555555;
-border-bottom: 1px solid #555555; /*#AAAAAA on the light gray, #AAAAAA on the colored*/
+  border-right: 1px solid #555555;
+  border-bottom: 1px solid #555555; /*#AAAAAA on the light gray, #AAAAAA on the colored*/
 }
 
 table {
-text-align:center;
-border-left:1px solid #555555;
-border-top:1px solid #555555;
+  text-align:center;
+  border-left:1px solid #555555;
+  border-top:1px solid #555555;
 }
 thead {
-font-weight:bold;
-background:#EEEEEE;
+  font-weight:bold;
+  background:#EEEEEE;
 }
 
 tfoot {
-text-align:left;
+  text-align:left;
 }
 
 thead tr td {
-width:80px;
-padding-top:4px;
-padding-bottom:4px;
-padding-left:10px;
-padding-right:10px;
+  padding-top:4px;
+  padding-bottom:4px;
+  padding-left:10px;
+  padding-right:10px;
 }
