@@ -1,4 +1,3 @@
-
 <?php
 //(The relevant PHP / HTML code to make this run)
 /*
@@ -24,7 +23,7 @@ exit(file_get_contents("http://www2.usfirst.org/" . $_REQUEST["grab"]));
 <body>
 
 
-<div style="border:1px solid #EEEEEE; width:474px; padding:1px;">
+<div style="border:1px solid #EEEEEE; width:474px; padding:1px; margin-left:auto; margin-right:auto;">
 <table cellspacing="0" id="thetable">
 <thead>
 <tr>
