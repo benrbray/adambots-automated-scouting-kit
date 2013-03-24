@@ -15,6 +15,7 @@ exit(file_get_contents("http://www2.usfirst.org/" . $_REQUEST["grab"]));
 <html>
 <head>
 <title>Adambots Automated Scouting Kit</title>
+<script type="text/javascript" src="table.js"></script>
 <script type="text/javascript" src="main.js"></script>
 <link href="style.css" rel="stylesheet" type="text/css">
 
