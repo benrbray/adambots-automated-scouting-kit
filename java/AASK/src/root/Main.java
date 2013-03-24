@@ -31,11 +31,11 @@ public class Main {
         // Get Data
         Hashtable<Integer, Integer> teamHash = event.getTeamHash();
         Table teamStandings = event.getTeamStandings();
-        Jama.Matrix autonEC = event.getAutonContributions();
-        Jama.Matrix climbEC = event.getClimbContributions();
-        Jama.Matrix teleopEC = event.getTeleopContributions();
-        Jama.Matrix totalEC = event.getTotalContributions();
-        Jama.Matrix standings = event.getTeamStandingsMatrix();
+        Matrix autonEC = event.getAutonContributions();
+        Matrix climbEC = event.getClimbContributions();
+        Matrix teleopEC = event.getTeleopContributions();
+        Matrix totalEC = event.getTotalContributions();
+        Matrix standings = event.getTeamStandingsMatrix();
         // Print Data
         System.out.println("Team\tAP\tCP\tTP\tTOTAL");
         for (int i = 0; i < autonEC.getRowDimension(); i++) {

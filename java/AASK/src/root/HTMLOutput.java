@@ -4,6 +4,7 @@
  */
 package root;
 
+import Jama.Matrix;
 import utils.ColorUtils;
 
 /**
@@ -23,7 +24,7 @@ public class HTMLOutput {
         return m.substring(0, (int) Math.min(m.length() - 1, m.indexOf(".") + a + 1));
     }
 
-    public static double getMinimum(Jama.Matrix u) {
+    public static double getMinimum(Matrix u) {
         double a = u.get(0, 0);
         for (int i = 0; i < u.getRowDimension(); i++) {
             a = Math.min(a, u.get(i, 0));
@@ -31,7 +32,7 @@ public class HTMLOutput {
         return a;
     }
 
-    public static double getMaximum(Jama.Matrix u) {
+    public static double getMaximum(Matrix u) {
         double a = u.get(0, 0);
         for (int i = 0; i < u.getRowDimension(); i++) {
             a = Math.max(a, u.get(i, 0));
@@ -46,10 +47,10 @@ public class HTMLOutput {
      * @param cols The data to fill the columns with
      * @param colors Color schemes for the columns. 0--red/green inc. 1--r/g
      * dec. 2:red/blue inc. 3:red/blue dec
-     * @param gray
+     * @param gray number of columns to make gray rather than gradient-y
      * @return
      */
-    public static String generateHTMLTable(String title, String[] heading, Jama.Matrix[] cols, int[] colors, int gray) {
+    public static String generateHTMLTable(String title, String[] heading, Matrix[] cols, int[] colors, int gray) {
 
         String s;
         //
