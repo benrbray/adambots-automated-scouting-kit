@@ -32,42 +32,31 @@ public class Main {
 
 	//// INITIALIZATION -------------------------------------------------------
 	
-	public String getColor(int color1, int color2, int color3, double low, double val, double hi) {
-		val = Math.max(low,Math.min(hi,val));
-		double r = 0;
-		double g = 0;
-		double b = 0;
-		int r1 = (color1>>16) & 0xFF;
-		int r2 = (color2>>16) & 0xFF;
-		int r3 = (color3>>16) & 0xFF;
-		int g1 = (color1>>8) & 0xFF;
-		int g2 = (color2>>8) & 0xFF;
-		int g3 = (color3>>8) & 0xFF;
-		int b1 = color1 & 0xFF;
-		int b2 = color2 & 0xFF;
-		int b3 = color3 & 0xFF;
-		//50,200,80
-		//240,240,20
-		//200,20,40
-		double wei = 0;
-		if (val < (low + hi)/2)
-		{
-			wei = (val - low) / Math.abs(hi - low) * 2;
-			r = r2*wei + r1*(1-wei);
-			g = g2*wei + g1*(1-wei);
-			b = b2*wei + b1*(1-wei);			
-		}
-		else
-		{
-			wei = (val - (low + hi)/2) / Math.abs(hi - low) * 2;
-			r = r3*wei + r2*(1-wei);
-			g = g3*wei + g2*(1-wei);
-			b = b3*wei + b2*(1-wei);
-		}
-		return makeHex((int)r,(int)g,(int)b);
+	public double[] colorLerp(double[] c1,double[] c2,double v)
+	{
+		return new double[] {c1[0]*(1-v) + c2[0]*v , c1[1]*(1-v) + c2[1]*v , c1[2]*(1-v) + c2[2]*v };
 	}
 	
-	String makeHex(int a,int b,int c){
+	public String getWarmCold(double lo,double val,double hi)
+	{
+                double md = (lo + hi)/2;
+                double hf = (hi - lo)/2;
+                double[] A = {227,137,147};
+                double[] B = {247,247,137};
+                double[] C = {152,227,167};
+                if (val < md) {
+                        double x = (val - lo) / hf;
+                        return colorToHex(colorLerp(A,B,x));
+                }
+                double x = (val - md) / hf;
+                return colorToHex(colorLerp(B,C,x));
+	}
+	
+	String colorToHex(double[] m)
+	{
+		int a = (int)m[0];
+		int b = (int)m[1];
+		int c = (int)m[2];
 		String f = "0123456789ABCDEF";
 		return "#" + f.charAt(a/16) + f.charAt(a%16) + f.charAt(b/16) + f.charAt(b%16) + f.charAt(c/16) + f.charAt(c%16);
 	}
@@ -131,11 +120,11 @@ public class Main {
 		{
 			s = s + "<tr>";
 			s = s + "<td style=\"border-right:2px solid #BBBBBB; border-bottom:1px solid #CCCCCC; background:"  + "#EEEEEE" + "\">" + (int)teamStandings.getBody()[1][i] + "</td>";
-			s = s + "<td style=\"background:" + getColor(color1, color2, color3, 1, autonEC.getRowDimension()-(i+1), autonEC.getRowDimension())+ "\">" + (i+1) + "</td>";
-			s = s + "<td style=\"background:" + getColor(color1, color2, color3, autonr[0], autonEC.get(i,0), autonr[1]) + "\">" + truncate(autonEC.get(i,0),2) + "</td>";
-			s = s + "<td style=\"background:" + getColor(color1, color2, color3, climbr[0], climbEC.get(i,0), climbr[1]) + "\">" + truncate(climbEC.get(i,0),2) + "</td>";
-			s = s + "<td style=\"background:" + getColor(color1, color2, color3, teleopr[0], teleopEC.get(i,0), teleopr[1]) + "\">" + truncate(teleopEC.get(i,0),2) + "</td>";
-			s = s + "<td style=\"background:" + getColor(color1, color2, color3, totalr[0], totalEC.get(i,0), totalr[1]) + "\">" + truncate(totalEC.get(i,0),2) + "</td>";
+			s = s + "<td style=\"background:" + getWarmCold(color1, color2, color3, 1, autonEC.getRowDimension()-(i+1), autonEC.getRowDimension())+ "\">" + (i+1) + "</td>";
+			s = s + "<td style=\"background:" + getWarmCold(color1, color2, color3, autonr[0], autonEC.get(i,0), autonr[1]) + "\">" + truncate(autonEC.get(i,0),2) + "</td>";
+			s = s + "<td style=\"background:" + getWarmCold(color1, color2, color3, climbr[0], climbEC.get(i,0), climbr[1]) + "\">" + truncate(climbEC.get(i,0),2) + "</td>";
+			s = s + "<td style=\"background:" + getWarmCold(color1, color2, color3, teleopr[0], teleopEC.get(i,0), teleopr[1]) + "\">" + truncate(teleopEC.get(i,0),2) + "</td>";
+			s = s + "<td style=\"background:" + getWarmCold(color1, color2, color3, totalr[0], totalEC.get(i,0), totalr[1]) + "\">" + truncate(totalEC.get(i,0),2) + "</td>";
 			s = s + "</tr>";
 		}
 		s = s + "</tbody></table></div>";
