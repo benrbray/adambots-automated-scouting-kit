@@ -135,6 +135,10 @@ public class MatchParser {
 	}
 	
 	//// GETTER / SETTER METHODS ----------------------------------------------
+        
+        public Matrix getTeamStandingsMatrix() {
+            return this._teamStandingsMatrix;
+        }
 	
 	public Hashtable getTeamHash(){
 		return _teamHash;

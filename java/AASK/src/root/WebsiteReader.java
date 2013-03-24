@@ -32,7 +32,6 @@ public class WebsiteReader {
            while (line != null) {
                k = k + line + "\n";
                line = reader.readLine();
-               System.out.println(line);
            }
            return k;
        } catch (Exception e) {

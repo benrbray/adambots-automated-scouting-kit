@@ -48,7 +48,7 @@ public final class ColorUtils {
 	// Three-Color Gradient (Red -> Yellow -> Green)
 	
 	public static int[] getRedGreen(double lo, double val, double hi){
-		return threeColorGradient(0xFF7F7F, 0xE5E572, 0x7BB75B, lo, val, hi);
+		return threeColorGradient(0xE38993, 0xF7F789, 0x98E3A7, lo, val, hi);
 	}
 	
 	public static int[] getRedGreen(double lo, double val, double hi, boolean reverse){
