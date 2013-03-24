@@ -1,0 +1,17 @@
+package root.graphics;
+
+public final class ColorUtils {
+	//// CONSTANTS ------------------------------------------------------------
+	
+	// Color Masks
+	private static int ALPHA_MASK	= 0xFF000000;
+	private static int RED_MASK		= 0x00FF0000;
+	private static int GREEN_MASK	= 0x0000FF00;
+	private static int BLUE_MASK	= 0x000000FF;
+	
+	//// INTERPOLATION --------------------------------------------------------
+	
+	public int lerp(int colorA, int colorB, int low, int high, int value){
+		byte dR = colorA & RED_MASK)
+	}
+}

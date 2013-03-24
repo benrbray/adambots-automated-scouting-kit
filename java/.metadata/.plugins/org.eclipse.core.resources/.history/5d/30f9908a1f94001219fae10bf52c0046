@@ -1,0 +1,5 @@
+package root.graphics;
+
+public class ColorUtils {
+	//// INTERPOLATION --------------------------------------------------------
+}

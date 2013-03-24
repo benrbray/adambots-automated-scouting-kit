@@ -10,6 +10,8 @@ import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
 
+import root.graphics.ColorUtils;
+
 import Jama.Matrix;
 
 public class Main {
@@ -30,21 +32,20 @@ public class Main {
 
 	//// INITIALIZATION -------------------------------------------------------
 	
-	public String getColor(double low,double val,double hi)
-	{
+	public String getColor(int color1, int color2, int color3, double low, double val, double hi) {
 		val = Math.max(low,Math.min(hi,val));
 		double r = 0;
 		double g = 0;
 		double b = 0;
-		int r1 = 200;
-		int r2 = 240;
-		int r3 = 50;
-		int g1 = 20;
-		int g2 = 240;
-		int g3 = 200;
-		int b1 = 40;
-		int b2 = 20;
-		int b3 = 80;
+		int r1 = (color1>>16) & 0xFF;
+		int r2 = (color2>>16) & 0xFF;
+		int r3 = (color3>>16) & 0xFF;
+		int g1 = (color1>>8) & 0xFF;
+		int g2 = (color2>>8) & 0xFF;
+		int g3 = (color3>>8) & 0xFF;
+		int b1 = color1 & 0xFF;
+		int b2 = color2 & 0xFF;
+		int b3 = color3 & 0xFF;
 		//50,200,80
 		//240,240,20
 		//200,20,40
@@ -66,14 +67,12 @@ public class Main {
 		return makeHex((int)r,(int)g,(int)b);
 	}
 	
-	String makeHex(int a,int b,int c)
-	{
+	String makeHex(int a,int b,int c){
 		String f = "0123456789ABCDEF";
 		return "#" + f.charAt(a/16) + f.charAt(a%16) + f.charAt(b/16) + f.charAt(b%16) + f.charAt(c/16) + f.charAt(c%16);
 	}
 	
-	String truncate(double u,int a)
-	{
+	String truncate(double u,int a){
 		String m = u + "";
 		if (m.indexOf(".") == -1)
 		{
@@ -125,16 +124,18 @@ public class Main {
 		String s = "<style>.results tr td {border-right:1px solid #222222; border-bottom:1px solid #222222;}  .results .heading td {border-color:#CCCCCC; border-bottom: 2px solid #BBBBBB;}   </style><div style='width:504px;border:1px solid #EEEEEE; padding:1px;'><table class=\"results\" cellspacing='0' style='font-family:Calibri;text-align:center;border:1px solid #CCCCCC;'><tbody>";
 		s = s + "<tr class=\"heading\" style='background:#EEEEEE;'><td style='width:50px; border-bottom:1px solid #CCCCCC;'>Team</td><td style='width:50px'>Standing</td><td style='width:100px;'>Autonomous</td><td style='width:100px;'>Climb</td><td style='width:100px;'>Teleop</td><td style='width:100px;'>Total</td></tr>";
 		
-		
+		int color1 = 0x32C850;
+		int color2 = 0xC8F014;
+		int color3 = 0xC81428;
 		for (int i = 0; i < autonEC.getRowDimension(); i++)
 		{
 			s = s + "<tr>";
 			s = s + "<td style=\"border-right:2px solid #BBBBBB; border-bottom:1px solid #CCCCCC; background:"  + "#EEEEEE" + "\">" + (int)teamStandings.getBody()[1][i] + "</td>";
-			s = s + "<td style=\"background:" + getColor(1,autonEC.getRowDimension()-(i+1), autonEC.getRowDimension()  )+ "\">" + (i+1) + "</td>";
-			s = s + "<td style=\"background:" + getColor(autonr[0],autonEC.get(i,0),autonr[1]) + "\">" + truncate(autonEC.get(i,0),2) + "</td>";
-			s = s + "<td style=\"background:" + getColor(climbr[0],climbEC.get(i,0),climbr[1]) + "\">" + truncate(climbEC.get(i,0),2) + "</td>";
-			s = s + "<td style=\"background:" + getColor(teleopr[0],teleopEC.get(i,0),teleopr[1]) + "\">" + truncate(teleopEC.get(i,0),2) + "</td>";
-			s = s + "<td style=\"background:" + getColor(totalr[0],totalEC.get(i,0),totalr[1]) + "\">" + truncate(totalEC.get(i,0),2) + "</td>";
+			s = s + "<td style=\"background:" + getColor(color1, color2, color3, 1, autonEC.getRowDimension()-(i+1), autonEC.getRowDimension())+ "\">" + (i+1) + "</td>";
+			s = s + "<td style=\"background:" + getColor(color1, color2, color3, autonr[0], autonEC.get(i,0), autonr[1]) + "\">" + truncate(autonEC.get(i,0),2) + "</td>";
+			s = s + "<td style=\"background:" + getColor(color1, color2, color3, climbr[0], climbEC.get(i,0), climbr[1]) + "\">" + truncate(climbEC.get(i,0),2) + "</td>";
+			s = s + "<td style=\"background:" + getColor(color1, color2, color3, teleopr[0], teleopEC.get(i,0), teleopr[1]) + "\">" + truncate(teleopEC.get(i,0),2) + "</td>";
+			s = s + "<td style=\"background:" + getColor(color1, color2, color3, totalr[0], totalEC.get(i,0), totalr[1]) + "\">" + truncate(totalEC.get(i,0),2) + "</td>";
 			s = s + "</tr>";
 		}
 		s = s + "</tbody></table></div>";

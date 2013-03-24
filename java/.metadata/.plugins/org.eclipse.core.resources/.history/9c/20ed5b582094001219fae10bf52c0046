@@ -1,0 +1,22 @@
+package root.graphics;
+
+public final class ColorUtils {
+	//// CONSTANTS ------------------------------------------------------------
+	
+	// Color Masks
+	private static int RED_SHIFT	= 16;
+	private static int GREEN_SHIFT	= 8;
+	private static int BLUE_SHIFT	= 0;
+	private static int ALPHA_MASK	= 0xFF000000;
+	private static int RED_MASK		= 0x00FF0000;
+	private static int GREEN_MASK	= 0x0000FF00;
+	private static int BLUE_MASK	= 0x000000FF;
+	
+	//// INTERPOLATION --------------------------------------------------------
+	
+	public int lerpRGB(int colorA, int colorB, int low, int high, int value){
+		int dR = (colorA & RED_MASK) - (colorB & RED_MASK);
+		int dG = (colorA & RED_MASK) - (colorB & RED_MASK);
+		int dB = (colorA & BLUE_MASK) - (colorB & BLUE_MASK);
+	}
+}
