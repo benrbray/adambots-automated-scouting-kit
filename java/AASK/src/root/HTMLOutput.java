@@ -65,6 +65,7 @@ public class HTMLOutput {
                 + "border-bottom: 1px solid #555555;\n"
                 + "}\n"
                 + "table {\n"
+                + "border-spacing:0px;"
                 + "text-align:center;\n"
                 + "border-left:1px solid #555555;\n"
                 + "border-top:1px solid #555555;\n"
@@ -86,7 +87,7 @@ public class HTMLOutput {
         s = s + "</head><body>";
         //create the page stuff, now create the table:
         s = s + "<div style='border:1px solid #AAAAAA; width:600px; padding:1px;margin-left:auto;margin-right:auto;'>\n"
-                + "<table id=\"thetable\" class=\"results\" cellspacing=\"0\"><thead>\n";
+                + "<table id=\"thetable\" class=\"results\"><thead>\n";
         s = s + "<tr><td style=\"width:9999px;\" colspan=\"" + heading.length + "\">" + title + "</td></tr>";
 
         s = s + "<tr>";
@@ -121,8 +122,10 @@ public class HTMLOutput {
                     s = s + "<td style=\"background:" + color + "\">" + truncate(cols[col].get(row, 0), 2) + "</td>";
                 }
             }
-            s = s + "</tr>";
+            s = s + "</tr>\n";
         }
+        s = s + "\n</tbody>" + "\n<tfoot>\n<tr><td colspan=\"" + heading.length + "\">*Data from <a href=\"http://www.usfirst.org\">www.US<em>FIRST.org</em></a><br/>\n"
+                + "**These numbers are calculated and only estimates. They represent the expected average score that <em>this</em> team will score <em>alone</em> in a match.</td></tr>\n</tfoot>\n</table>\n</div>";
         return s;
     }
 }
