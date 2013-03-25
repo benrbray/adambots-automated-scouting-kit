@@ -37,7 +37,7 @@ exit(file_get_contents("http://www2.usfirst.org/" . $_REQUEST["grab"]));
 
 
 <div style="border:1px solid #AAAAAA; width:600px; padding:1px;margin-left:auto;margin-right:auto;">
-<table cellspacing="0" id="thetable">
+<table id="thetable">
 <thead>
 <tr>
 <td colspan="6">
