@@ -1,15 +1,15 @@
+
 //a not very nicely done table sorting library
 //Requires that TR's have no attributes
 //Requires thead, tbody, tfoot have no attributes
 //Will add an empty thead / tfoot / tbody if there was not one, I think
-//Usage:
-//setupTable(html element table)
+//Requires a call to tableSetup( table element )
 
-var tablelastsort = -1;
+var tablelastsort = 1;
 
 function clickcol(a)
 {
-  a = tabledata[a];
+	a = tabledata[a];
 	var table = a.table;
 	console.log(table.rows);
 	var sortby = a.sortby;
@@ -79,10 +79,30 @@ function sortTableRows(rows,col,mul)
 	return "<thead>" + hed.join("") + "</thead><tbody>" +  srt.join("") + "</tbody><tfoot>" + fot.join("") + "</tfoot>";
 }
 
+function tableGetRows(tab) {
+	var rows = [];
+	var n = tab.childNodes;
+	for (var i = 0; i < n.length; i++)
+	{
+		var m = n[i];
+		if (m.nodeName.substring(0,1) == "T")
+		{
+			m = m.childNodes;
+			for (var o = 0; o < m.length; o++) {
+				if (m[o].nodeName == "TR")
+				{
+					rows[rows.length] = m[o];
+				}
+			}
+		}
+	}
+	return rows;
+}
+
 function setupTable(tab)
 {
 	var sorting = tab.getAttribute("data-sorting");
-	var rows = tab.rows;
+	var rows = tableGetRows(tab);
 	var bdy = [];
 	var hed = [];
 	for (var i = 0; i < rows.length; i++)
@@ -98,6 +118,15 @@ function setupTable(tab)
 		}
 	}
 	hed = hed[hed.length-1].childNodes;
+	var hed2 = [];
+	for (var i = 0; i < hed.length; i++)
+	{
+		if (hed[i].nodeName == "TD")
+		{
+			hed2[hed2.length] = hed[i];
+		}
+	}
+	hed = hed2;
 	for (var i = 0; i < hed.length; i++)
 	{
 		var col = hed[i]; //a TD
@@ -107,7 +136,6 @@ function setupTable(tab)
 		k.sortby = i;
 		k.unique = tabledata.length;
 		tabledata[tabledata.length] = k;//[col,bdy,hed,tab];
-		col.innerHTML = "<a style=\"color:black;\" href='#' onclick=\"clickcol(" + (tabledata.length-1) + ");\">" + col.innerHTML + "</a>";
+		col.innerHTML = "<a style=\"color:black;cursor:pointer;text-decoration:underline;\" onclick=\"clickcol(" + (tabledata.length-1) + ");return false;\">" + col.innerHTML + "</a>";
 	}
-	//return hed;
 }
