@@ -4,6 +4,7 @@
  */
 package root;
 
+import Jama.Matrix;
 import utils.ColorUtils;
 
 /**
@@ -23,7 +24,7 @@ public class HTMLOutput {
         return m.substring(0, (int) Math.min(m.length() - 1, m.indexOf(".") + a + 1));
     }
 
-    public static double getMinimum(Jama.Matrix u) {
+    public static double getMinimum(Matrix u) {
         double a = u.get(0, 0);
         for (int i = 0; i < u.getRowDimension(); i++) {
             a = Math.min(a, u.get(i, 0));
@@ -31,7 +32,7 @@ public class HTMLOutput {
         return a;
     }
 
-    public static double getMaximum(Jama.Matrix u) {
+    public static double getMaximum(Matrix u) {
         double a = u.get(0, 0);
         for (int i = 0; i < u.getRowDimension(); i++) {
             a = Math.max(a, u.get(i, 0));
@@ -46,10 +47,10 @@ public class HTMLOutput {
      * @param cols The data to fill the columns with
      * @param colors Color schemes for the columns. 0--red/green inc. 1--r/g
      * dec. 2:red/blue inc. 3:red/blue dec
-     * @param gray
+     * @param gray number of columns to make gray rather than gradient-y
      * @return
      */
-    public static String generateHTMLTable(String title, String[] heading, Jama.Matrix[] cols, int[] colors, int gray) {
+    public static String generateHTMLTable(String title, String[] heading, Matrix[] cols, int[] colors, int gray) {
 
         String s;
         //
@@ -64,6 +65,7 @@ public class HTMLOutput {
                 + "border-bottom: 1px solid #555555;\n"
                 + "}\n"
                 + "table {\n"
+                + "border-spacing:0px;"
                 + "text-align:center;\n"
                 + "border-left:1px solid #555555;\n"
                 + "border-top:1px solid #555555;\n"
@@ -85,7 +87,7 @@ public class HTMLOutput {
         s = s + "</head><body>";
         //create the page stuff, now create the table:
         s = s + "<div style='border:1px solid #AAAAAA; width:600px; padding:1px;margin-left:auto;margin-right:auto;'>\n"
-                + "<table id=\"thetable\" class=\"results\" cellspacing=\"0\"><thead>\n";
+                + "<table id=\"thetable\" class=\"results\"><thead>\n";
         s = s + "<tr><td style=\"width:9999px;\" colspan=\"" + heading.length + "\">" + title + "</td></tr>";
 
         s = s + "<tr>";
@@ -120,8 +122,10 @@ public class HTMLOutput {
                     s = s + "<td style=\"background:" + color + "\">" + truncate(cols[col].get(row, 0), 2) + "</td>";
                 }
             }
-            s = s + "</tr>";
+            s = s + "</tr>\n";
         }
+        s = s + "\n</tbody>" + "\n<tfoot>\n<tr><td colspan=\"" + heading.length + "\">*Data from <a href=\"http://www.usfirst.org\">www.US<em>FIRST.org</em></a><br/>\n"
+                + "**These numbers are calculated and only estimates. They represent the expected average score that <em>this</em> team will score <em>alone</em> in a match.</td></tr>\n</tfoot>\n</table>\n</div>";
         return s;
     }
 }

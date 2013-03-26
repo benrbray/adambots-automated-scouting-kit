@@ -71,6 +71,7 @@ function Main4()
     s += "<tr><td style=\"background:#EEEEEE;\">" + u[1][row] + "</td><td style=\"background:" + getWarmCold( mn ,mx - rk, mx ) +  "\">" + u[0][row] + "</td><td colspan='4'></td></tr>";
   }
   document.getElementById("thedata").innerHTML = s;
+  setTimeout("tableSetup(document.getElementById(\"thetable\"))",1);
 }
 
 function Main3()

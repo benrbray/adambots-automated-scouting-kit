@@ -1,4 +1,16 @@
 <?php
+/*
+Licensed use:
+The Adambots Automated Scouting Kit (AASK) is free software: you can redistribute it and/or modify it under the terms
+of the GNU General Public License as published by the Free Software Foundation, version 3 of the License. 
+AASK is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied
+warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU General Public License for more details. 
+You should have received a copy of the GNU General Public License along with AASK.
+If not, see <http://www.gnu.org/licenses/>.
+
+*/
+
+
 //(The relevant PHP / HTML code to make this run)
 /*
 This is the only server-side work done.
@@ -24,8 +36,8 @@ exit(file_get_contents("http://www2.usfirst.org/" . $_REQUEST["grab"]));
 <body>
 
 
-<div style="border:1px solid #EEEEEE; width:474px; padding:1px; margin-left:auto; margin-right:auto;">
-<table cellspacing="0" id="thetable">
+<div style="border:1px solid #AAAAAA; width:600px; padding:1px;margin-left:auto;margin-right:auto;">
+<table id="thetable">
 <thead>
 <tr>
 <td colspan="6">
@@ -33,8 +45,8 @@ exit(file_get_contents("http://www2.usfirst.org/" . $_REQUEST["grab"]));
 </td>
 </tr>
 <tr>
-<td style="width:30px;">Team*</td>
-<td style="width:30px;">Ranking*</td>
+<td>Team*</td>
+<td>Ranking*</td>
 <td>Autonomous Pts.**</td>
 <td>Teleoperated Pts.**</td>
 <td>Climb Pts.**</td>
@@ -45,7 +57,7 @@ exit(file_get_contents("http://www2.usfirst.org/" . $_REQUEST["grab"]));
 <tr><td colspan="6"><em>Waiting for data from www2.USFIRST.org...</em></td></tr>
 </tbody>
 <tfoot>
-<tr><td colspan="6" style="width:460px;">
+<tr><td colspan="6">
 *Data from <a href="http://www.usfirst.org">www.US<em>FIRST.org</em></a><br/>
 **These numbers are calculated and only estimates. They represent the expected average score that <em>this</em> team will score <em>alone</em> in a match.</td></tr>
 </tfoot>

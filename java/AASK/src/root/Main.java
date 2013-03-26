@@ -31,17 +31,12 @@ public class Main {
         // Get Data
         Hashtable<Integer, Integer> teamHash = event.getTeamHash();
         Table teamStandings = event.getTeamStandings();
-        Jama.Matrix autonEC = event.getAutonContributions();
-        Jama.Matrix climbEC = event.getClimbContributions();
-        Jama.Matrix teleopEC = event.getTeleopContributions();
-        Jama.Matrix totalEC = event.getTotalContributions();
-        Jama.Matrix standings = event.getTeamStandingsMatrix();
+        Matrix autonEC = event.getAutonContributions();
+        Matrix climbEC = event.getClimbContributions();
+        Matrix teleopEC = event.getTeleopContributions();
+        Matrix totalEC = event.getTotalContributions();
+        Matrix standings = event.getTeamStandingsMatrix();
         // Print Data
-        double[] totalr = {totalEC.get(0, 0), totalEC.get(0, 0)};
-        double[] climbr = {climbEC.get(0, 0), climbEC.get(0, 0)};
-        double[] autonr = {autonEC.get(0, 0), autonEC.get(0, 0)};
-        double[] teleopr = {teleopEC.get(0, 0), teleopEC.get(0, 0)};
-
         System.out.println("Team\tAP\tCP\tTP\tTOTAL");
         for (int i = 0; i < autonEC.getRowDimension(); i++) {
             System.out.printf("%d\t%1.2f\t%1.2f\t%1.2f\t%1.2f\t\n",
@@ -50,19 +45,6 @@ public class Main {
                     climbEC.get(i, 0),
                     teleopEC.get(i, 0),
                     totalEC.get(i, 0));
-
-            totalr[0] = Math.min(totalr[0], totalEC.get(i, 0));
-            totalr[1] = Math.max(totalr[1], totalEC.get(i, 0));
-
-            climbr[0] = Math.min(climbr[0], climbEC.get(i, 0));
-            climbr[1] = Math.max(climbr[1], climbEC.get(i, 0));
-
-            autonr[0] = Math.min(autonr[0], autonEC.get(i, 0));
-            autonr[1] = Math.max(autonr[1], autonEC.get(i, 0));
-
-            teleopr[0] = Math.min(teleopr[0], teleopEC.get(i, 0));
-            teleopr[1] = Math.max(teleopr[1], teleopEC.get(i, 0));
-
         }
 
         String s = HTMLOutput.generateHTMLTable("Data from Grand Blanc Competition",
