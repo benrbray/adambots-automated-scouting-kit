@@ -51,9 +51,9 @@ if (isset($_REQUEST["grab"])) {
 		<br/>
 		<br/>
 		
-		<div id="change-selection" style="text-align:center;">
+		<div id="change-selection" style="height:35px; text-align:center;">
 			Select Competition:
-			<select id="compselector" style="height:35px;outline:none;"></select>
+			<select id="compselector" style="height:35px;outline:none;vertical-align:top;"></select>
 			<button id="goToComp" style="width:50px;height:35px;">Go!</button>
 			
 			<script>
