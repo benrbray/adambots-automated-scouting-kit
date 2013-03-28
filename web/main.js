@@ -93,14 +93,9 @@ var totalEC;
  * to be displayed for a second.
  */
 function Main() {
-	console.log("[Main] started");
-	
-	console.log("\t[Main] Creating MatchParser...");
 	
 	frcEvent = MatchParser(rankingsPage, resultsPage);
 	frcEvent.parse(compute);
-	
-	console.log("\t[Main] Success");
 	
 	// Display Waiting Message
 	document.getElementById("thedata").innerHTML = "<tr><td colspan=\"6\"><em>Waiting for data from www2.USFIRST.org...</em></td></tr>";
