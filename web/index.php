@@ -18,7 +18,15 @@ Loading a page from WW2.USFIRST.ORG violates the same-origin policy.
 Instead, this pages acts a proxy, so same-origin isn't violated.
 */
 if (isset($_REQUEST["grab"])) {
-	exit(file_get_contents("http://www2.usfirst.org/" . $_REQUEST["grab"]));
+    $u = @file_get_contents("http://www2.usfirst.org/" . $_REQUEST["grab"]);
+	if ($u)
+	{
+	exit($u);
+	}
+	else
+	{
+	exit("404");
+	}
 }
 ?>
 
