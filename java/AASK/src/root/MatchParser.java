@@ -67,6 +67,8 @@ public class MatchParser {
 	
 	//// PARSING --------------------------------------------------------------
 	
+	// tyler's added code here!!!  Tyler's first code
+	
 	public void parse(){
 		// Verify Arguments
 		if(_competitionURL == null) throw new NullPointerException("MatchParser URL cannot be null.");
@@ -135,10 +137,10 @@ public class MatchParser {
 	}
 	
 	//// GETTER / SETTER METHODS ----------------------------------------------
-        
-        public Matrix getTeamStandingsMatrix() {
-            return this._teamStandingsMatrix;
-        }
+	
+	public Matrix getTeamStandingsMatrix() {
+		return this._teamStandingsMatrix;
+	}
 	
 	public Hashtable getTeamHash(){
 		return _teamHash;

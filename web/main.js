@@ -29,26 +29,33 @@ function getRedGreen(lo,val,hi) {
 	return colorToHex(colorLerp(B,C,x));
 }
 
-function getMaximum(ar) {
-	var u = ar.slice(0);
-	u.reverse();
-	return u[0];
+function getMaximum(array) {
+	var max = array[0];
+	for(var i = 1; i < array.length; i++){
+		if(array[i] > max){
+			max = array[i];
+		}
+	}
+	return max;
 }
 
-function getMinimum(ar) {
-	var u = ar.slice(0);
-	return u[0];
+function getMinimum(array) {
+	var min = array[0];
+	for(var i = 1; i < array.length; i++){
+		if(array[i] < min){
+			min = array[i];
+		}
+	}
+	return min;
 }
 
 //// WEBSITE READER EQUIVALENT ------------------------------------------------
-
-var request;
-
 /**
  * Cross platform method to get XMLHttpRequest objects. Taken from an article
  * published by Brett McLaughlin.
  */
 function createRequest() {
+	var request;
 	try{
 		request = new XMLHttpRequest();
 	} catch(trymicrosoft) {
@@ -67,90 +74,76 @@ function createRequest() {
 	if(!request) {
 		alert("Unfortunately, your browser cannot utilize AASK. Please enable, or switch to a browser with, XMLHttpRequests! (Chrome, Opera, Safari, IE, others)");
 	}
+	
+	return request;
 }
 
 
 //// JAVASCRIPT-Y STUFF BELOW -------------------------------------------------
 
-var RANKINGS = "";
-var MATCHES = "";
+var frcEvent;
+var autonEC;
+var climbEC;
+var teleopEC;
+var totalEC;
 
-var rankingsMatrix;
-var matchesMatrix;
-
+/**
+ * Synch call so that the page doesn't freeze when it starts;
+ * reduces page load time at the cost of causing a "waiting for data" message
+ * to be displayed for a second.
+ */
 function Main() {
-	// Ran by a script at the bottom of the page (so that means the document is here)
-	createRequest();
-	request.open("GET","?grab=2013comp/events/MIGBL/rankings.html", true); 
+	console.log("[Main] started");
 	
-	/*
-	 * Synch call so that the page doesn't freeze when it starts;
-	 * reduces page load time at the cost of causing a "waiting for data" message
-	 * to be displayed for a second
-	 */
-	request.onreadystatechange = Main2; /*Proceed to here to actually start working*/
-	request.send();
+	console.log("\t[Main] Creating MatchParser...");
+	
+	frcEvent = MatchParser(rankingsPage, resultsPage);
+	frcEvent.parse(compute);
+	
+	console.log("\t[Main] Success");
+	
+	// Display Waiting Message
 	document.getElementById("thedata").innerHTML = "<tr><td colspan=\"6\"><em>Waiting for data from www2.USFIRST.org...</em></td></tr>";
 }
 
-function Main2() {
-	if (request.readyState == 4){
-		// Store Rankings, which have successfully loaded
-		RANKINGS = request.responseText;
-		createRequest();
-		
-		// Request Match Results
-		request.open("GET", "?grab=2013comp/events/MIGBL/matchresults.html", true); 
-		request.onreadystatechange = Main3; // Proceed to here to actually start working
-		request.send();
-	}
-}
-
-/**
- *  The request data has been received, so parsing and computation can begin.
- */
-function Main3() {
-	if (request.readyState == 4) {
-		// Store Match Results, which have successfully loaded
-		MATCHES = request.responseText;
-		
-		// What is this for?
-		document.getElementById("thedata").innerHTML = "<tr><td colspan=\"6\">" + "ERROR IN FETCHING RESULTS" + "</td></tr>";
-		
-		// Compute
-		compute();
-		
-		// Display
-		Main4();
-	}
-}
-
 function compute(){
-	// Dump Data into Arrays
-	rankingsMatrix = Table("RANKINGS").getBody(); // Dim1 = Columns
-	matchesMatrix = Table("MATCHES").getBody();	// Dim1 = Columns
+	// Compute Estimated Contributions
+	autonEC = solveLU(frcEvent.mpf, frcEvent.autonPoints);
+	climbEC = solveLU(frcEvent.mpf, frcEvent.climbPoints);
+	teleopEC = solveLU(frcEvent.mpf, frcEvent.teleopPoints);
+	totalEC = solveLU(frcEvent.mpf, frcEvent.totalPoints);
 	
-	// Create Match Pair Frequency Array
+	// Minimum & Maximum Values, for Coloring
+	autonEC.min = getMinimum(autonEC);
+	autonEC.max = getMaximum(autonEC);
+	climbEC.min = getMinimum(climbEC);
+	climbEC.max = getMaximum(climbEC);
+	teleopEC.min = getMinimum(teleopEC);
+	teleopEC.max = getMaximum(teleopEC);
+	totalEC.min = getMinimum(totalEC);
+	totalEC.max = getMaximum(totalEC);
 	
-	// Solve
-	console.log(matrixToFormattedString(matchesMatrix));
+	// Table
+	populateTable();
 }
 
 /**
- * The results are in!  Data is contained within RANKINGS and MATCHES.
+ * The results are in!  Create the table!
  */
-function Main4() {
+function populateTable() {
 	// Display Table
 	var s = "";
-	for (var row = 0; row < rankingsMatrix[0].length; row++) {
-		var mx = 40;//getMaximum(rankingsMatrix[0]);
-		var mn = 1;//getMinimum(rankingsMatrix[0]);
-		var rk = rankingsMatrix[0][row];
+	for (var row = 0; row < frcEvent.rankingsBody[0].length; row++) {
+		var mx = frcEvent.teamCount;
+		var mn = 1;
+		var rk = frcEvent.rankingsBody[0][row];
 		s += "<tr>" +
-				"<td style=\"background:#EEEEEE;\">" + rankingsMatrix[1][row] + "</td>" +
-				"<td style=\"background:" + getRedGreen( mn ,mx - rk, mx ) +  "\">" + rankingsMatrix[0][row] + "</td>" +
-				
-				"<td colspan='4'></td></tr>"; // Fill Rest of Table
+			"<td style=\"background:#EEEEEE;\">" + frcEvent.rankingsBody[1][row] + "</td>" +
+			"<td style=\"background:" + getRedGreen(mn, mx-rk, mx) +  "\">" + frcEvent.rankingsBody[0][row] + "</td>" +
+			"<td style=\"background:" + getRedGreen(autonEC.min, autonEC[row], autonEC.max) + "\">" + autonEC[row].toFixed(2) + "</td>" +
+			"<td style=\"background:" + getRedGreen(climbEC.min, climbEC[row], climbEC.max) + "\">" + climbEC[row].toFixed(2) + "</td>" +
+			"<td style=\"background:" + getRedGreen(teleopEC.min, teleopEC[row], teleopEC.max) + "\">" + teleopEC[row].toFixed(2) + "</td>" +
+			"<td style=\"background:" + getRedGreen(totalEC.min, totalEC[row], totalEC.max) + "\">" + totalEC[row].toFixed(2) + "</td>";
 	}
 	
 	document.getElementById("thedata").innerHTML = s;

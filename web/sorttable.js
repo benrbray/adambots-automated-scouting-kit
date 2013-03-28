@@ -1,3 +1,4 @@
+
 //a not very nicely done table sorting library
 //Requires that TR's have no attributes
 //Requires thead, tbody, tfoot have no attributes

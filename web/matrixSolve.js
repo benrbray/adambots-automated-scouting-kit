@@ -83,23 +83,17 @@ function luFactorizeInPlace(matrix){
 	for(var i = 0; i < n; i++){
 		for(var j = 0; j < i; j++){
 			var alpha = matrix[i][j];
-			console.log("A:  " + alpha);
 			for(var p = 0; p < j; p++){
-				alpha -= matrix[i][p] * matrix[p][j];		
-				console.log("\tA:  " + alpha);
+				alpha -= matrix[i][p] * matrix[p][j];
 			}
-			console.log("\tFINAL= " + alpha);
 			matrix[i][j] = alpha / matrix[j][j];
 		}
 		
 		for(var j = i; j < n; j++){
 			var alpha = matrix[i][j];
-			console.log("B:  " + alpha);
 			for(var p = 0; p < i; p++){
-				alpha -= matrix[i][p] * matrix[p][j];	
-				console.log("\tB:  " + alpha);
+				alpha -= matrix[i][p] * matrix[p][j];
 			}
-			console.log("\tFINAL= " + alpha);
 			matrix[i][j] = alpha;
 		}
 	}
@@ -112,7 +106,7 @@ function luFactorizeInPlace(matrix){
  * @param matrix The matrix to factorize.
  * @param LU The resulting LU factorization in condensed form.
  */
-function luFactorizeTogether(matrix){
+function luFactorizeTogether(matrix, LU){
 	var n = matrix.length;
 	
 	// Initialize LU Matrix
@@ -136,11 +130,14 @@ function luFactorizeTogether(matrix){
 		for(var j = i; j < n; j++){
 			var alpha = matrix[i][j];
 			for(var p = 0; p < i; p++){
-				alpha -= lu[i][p] * lu[p][j];	
+				alpha -= lu[i][p] * lu[p][j];
 			}
 			lu[i][j] = alpha;
 		}
 	}
+	
+	LU = lu;
+	return lu;
 }
 
 /**
@@ -216,35 +213,22 @@ function solveLU(A, b){
 	var U = new Array();
 	
 	luFactorizeSeparate(A, L, U);
+	
 	var y = forwardSolve(L, b);
 	var x = backSolve(U, y);
 	
-	var stringL = matrixToFormattedString(L);
-	var stringU = matrixToFormattedString(U);
-	var stringSolution = matrixToFormattedString(x);
-	
-	document.getElementById("luFactors").innerHTML = "L=<br><code>" + stringL + "</code><br>U=<br><code>" + stringU + "</code>";
-	
-	document.getElementById("solution").innerHTML = "x=<br><code>" + stringSolution + "</code>"
+	return x;
 }
 
 function backSolve(A, b){
 	var n = A.length;
 	var x = new Array(n);
 	for(var i = n-1; i >= 0; i--){
-		console.log("i:  " + i);
 		var sum = 0;
 		for(var j = i+1; j < n; j++){
-			console.log("\tj:  " + j);
-			console.log("\tA[" + i + "][" + j + "]:  " + A[i][j]);
-			console.log("\t\tx[" + j + "]:  " + x[j]);
 			sum += A[i][j] * x[j];
 		}
 		x[i] = (b[i] - sum) / A[i][i];
-		console.log("\tb[i]:  " + b[i]);
-		console.log("\tsum:  " + sum);
-		console.log("\tA[i][i]:  " + A[i][i]);
-		console.log("\tx[" + i + "]:  " + x[i]);
 	}
 	
 	return x;
@@ -260,7 +244,6 @@ function forwardSolve(A, b){
 		}
 		x[i] = (b[i] - sum) / A[i][i];
 	}
-	
 	return x;
 }
 
@@ -280,6 +263,17 @@ function eye(size){
 		m[i] = new Array(size);
 		for(var j = 0; j < size; j++){
 			m[i][j] = (i==j?1:0);
+		}
+	}
+	return m;
+}
+
+function zeros(size){
+	var m = new Array(size);
+	for(var i = 0; i < size; i++){
+		m[i] = new Array(size);
+		for(var j = 0; j < size; j++){
+			m[i][j] = 0;
 		}
 	}
 	return m;
