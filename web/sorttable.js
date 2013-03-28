@@ -1,4 +1,3 @@
-
 //a not very nicely done table sorting library
 //Requires that TR's have no attributes
 //Requires thead, tbody, tfoot have no attributes
@@ -11,7 +10,6 @@ function clickcol(a)
 {
 	a = tabledata[a];
 	var table = a.table;
-	console.log(table.rows);
 	var sortby = a.sortby;
 	
 	var m = 1;
