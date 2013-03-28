@@ -35,20 +35,21 @@ if (isset($_REQUEST["grab"])) {
 <html>
 	<head>
 		<title>Adambots Automated Scouting Kit</title>
-		<script type="text/javascript" src="hashtable.js"></script>
-		<script type="text/javascript" src="sortTable.js"></script>
-		<script type="text/javascript" src="table.js"></script>
-		<script type="text/javascript" src="matrixSolve.js"></script>
-		<script type="text/javascript" src="matchParser.js"></script>
-		<script type="text/javascript" src="main.js"></script>
-		<link href="style.css" rel="stylesheet" type="text/css">
+		<script type="text/javascript" src="<?php bloginfo('template_directory');?>/js/scouting/Hashtable.js"></script>
+		<script type="text/javascript" src="<?php bloginfo('template_directory');?>/js/scouting/sorttable.js"></script>
+		<script type="text/javascript" src="<?php bloginfo('template_directory');?>/js/scouting/table.js"></script>
+		<script type="text/javascript" src="<?php bloginfo('template_directory');?>/js/scouting/matrixSolve.js"></script>
+		<script type="text/javascript" src="<?php bloginfo('template_directory');?>/js/scouting/matchParser.js"></script>
+		<script type="text/javascript" src="<?php bloginfo('template_directory');?>/js/scouting/main.js"></script>
+		<link href="<?php bloginfo('template_directory');?>/css/scouting.css" rel="stylesheet" type="text/css">
 	</head>
-	<body>
+	<body style="padding-left:32px; padding-right:32px; width:800px; margin-left:auto; margin-right:auto;">
 		<h1>Adambots Automated Scouting Kit</h1>
-		The Adambots Automated Scouting Kit (AASK) automatically generates estimations of the ability of robots at competition. It utilizes the estimation of solutions to linear equations to predict expected contributions.<br/>
+		The Adambots Automated Scouting Kit (AASK) automatically generates estimations of the ability of robots at competition. It utilizes the estimation of solutions to linear equations to predict expected contributions.<br/><br/>
 		This system is produced in Javascript by Adambots team members for any <em>FIRST</em> robotics teams to use!
 		<br/>
 		<br/>
+		Click the table headings to sort the table.<br/>
 		<br/>
 		
 		<div id="change-selection" style="height:35px; text-align:center;">
@@ -187,8 +188,6 @@ if (isset($_REQUEST["grab"])) {
 			</div>
 
 		<br/>
-		<br/>
-
 		<div style="border:1px solid #AAAAAA; width:600px; padding:1px;margin-left:auto;margin-right:auto;">
 			<table id="thetable" data-sorting="iidddd">
 				<thead>
@@ -201,8 +200,8 @@ if (isset($_REQUEST["grab"])) {
 						<td>Team*</td>
 						<td>Ranking*</td>
 						<td>Autonomous Pts.**</td>
-						<td>Teleoperated Pts.**</td>
 						<td>Climb Pts.**</td>
+						<td>Teleoperated Pts.**</td>
 						<td>Total Pts.**</td>
 					</tr>
 				</thead>
@@ -218,19 +217,39 @@ if (isset($_REQUEST["grab"])) {
 		</div>
 
 		<br/>
-		<div style="height:200px;"></div>
+		<div style="height:70px;"></div>
 		<br/>
 		
-		<h2>How does this work?</h2>
-		This system generates a set of linear equations representing the contributions of scores of different teams. It then finds an approximate solution to the equation and displays the results.<br/>
-		The Javascript implementation is dependent on the match and rankings reported by <a href="http://www.usfirst.org">www.US<em>FIRST.org</em></a>.<br/>
+<h2>How Does This Work?</h2>
+		<p>For each point category, our system solves a system of linear equations for the "average contribution" of each team per match.  Each equation corresponds to
+		a single team and expresses the total accumulated points earned by that team as a linear combination of that team's average contribution and the average 
+		contributions of every other team that has competed on an alliance with that team.  Naturally, we represent the system of equations with a single matrix equation
+		of the form <code>Ax=b</code>
+		
+		<ul>
+			<li>Vector <code>b</code> contains the aggregate point value for each team.</li>
+			<li>Each element <code>A(i,j)</code> of matrix <code>A</code> represents the number of times team <code>i</code> has played with team <code>j</code>.
+				Each element on the diagonal, therefore, is the total number of matches played by the team represented by that row and column.  As a result, our
+				matrix has the following properties:
+				<ul>
+					<li>It is symmetric.</li>
+					<li>It is (very loosely speaking) diagonally dominant.</li>
+					<li>It is always nonsingular.</li>
+				</ul>
+			</li>
+			<li>We solve for the vector <code>x</code>, which contains the average contribution of each team.</li>
+		</ul>
+		
+		<p>Because of the special properties of our matrix, we can easily find an exact solution using LU Factorization (without pivoting!) followed by forward- and back-substitution.</p>
+		
+		<p>This Javascript implementation is dependent on the match and rankings reported by <a href="http://www.usfirst.org">www.US<em>FIRST.org</em></a>.<br/>
 		Example pages for the 2013 Grand Blanc competition:
 		<ul>
 			<li><a href="http://www2.usfirst.org/2013comp/Events/MIGBL/rankings.html">http://www2.usfirst.org/2013comp/Events/MIGBL/rankings.html</a></li>
 			<li><a href="http://www2.usfirst.org/2013comp/events/MIGBL/matchresults.html">http://www2.usfirst.org/2013comp/events/MIGBL/matchresults.html</a></li>
 		</ul>
 
-		<h2>Want source code?</h2>
+		<h2>Want Source Code?</h2>
 		This project is available on <a href="https://github.com/benrbray/adambots-automated-scouting-kit/">GitHub</a>. It is available in <a href="https://github.com/benrbray/adambots-automated-scouting-kit/">web</a> and <a href="https://github.com/benrbray/adambots-automated-scouting-kit/tree/master/java">Java</a> forms.<br/>
 		<br/>
 		Licensed use:<br/>
