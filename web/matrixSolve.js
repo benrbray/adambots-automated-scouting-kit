@@ -58,8 +58,6 @@ function getVector(textAreaID){
 	var nextIndex = 0;
 	var rows = 0;
 	
-	console.log("vec:  " + vec.toString());
-	
 	for(var i = 0; i < vec.length; i++){
 		vec[i] = parseFloat(vec[i]);
 	}
