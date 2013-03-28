@@ -9,7 +9,6 @@
 //// MATCH PARSER CONSTRUCTOR -------------------------------------------------
 
 function MatchParser(rankingsURL, resultsURL){
-	console.log("[MatchParser] started");
 	var mp = {type:"MatchParser"};
 	
 	// Fields
