@@ -24,7 +24,7 @@ const TABLE_STANDINGS = "STANDINGS";
  * each table.
  */
 function Table(tableURL) {
-	console.log("[Table] started (tableURL=" + tableURL + ")");
+	//console.log("[Table] started (tableURL=" + tableURL + ")");
 	var tbl = {type:"Table"};
 	
 	// Table Fields
@@ -89,7 +89,7 @@ function TableLoadedCheck(tbl){
  * Begins loading FRC match data into the given Table object.
  */
 function TableLoadTable(tbl, onrequestcomplete) {
-	console.log("[TableLoadTable] started");
+	//console.log("[TableLoadTable] started");
 	// Type Check
 	TableTypeCheck(tbl);
 	
@@ -106,8 +106,7 @@ function TableLoadTable(tbl, onrequestcomplete) {
 			onrequestcomplete.call();
 		}
 	};
-	
-	tbl.request.open("GET", "?grab=" + tbl.url, true); 
+	tbl.request.open("GET", "http://localhost/?grab=" + tbl.url, true); 
 	tbl.request.send();
 }
 
@@ -115,7 +114,7 @@ function TableLoadTable(tbl, onrequestcomplete) {
  * Called when the given Table's XMLHTTPRequest readyState has changed.
  */
 function TableRequestReadyStateChange(tbl){
-	console.log("[TableRequestReadyStateChange] started");
+	//console.log("[TableRequestReadyStateChange] started");
 	// Type Check
 	TableTypeCheck(tbl);
 	
@@ -129,10 +128,17 @@ function TableRequestReadyStateChange(tbl){
 		
 		// Get Table Element
 		var page = tbl.request.responseText;
+		if (page.indexOf("<table style=\"ba") == -1)
+		{
+			document.getElementById("thedata").innerHTML = "<tr><td colspan=\"6\"><b>AASK cannot perform an analysis on this event.<br/>The response is malformed. We are working on a solution to the problem; thank you for your patience.</b></td></tr>";
+		}
+		if (page.indexOf("404") == 0)
+		{
+			document.getElementById("thedata").innerHTML = "<tr><td colspan=\"6\"><b>AASK cannot perform an analysis on this event.<br/>US<em>FIRST</em>.org responded with a 404, not found error. Most likely the event has not yet begun and no data is available.</b></td></tr>";
+		}
 		var reltab = page.substring(page.indexOf("<table style=\"ba") + 1, page.length - 1);
 		reltab = reltab.substring(reltab.indexOf("<table style=\"ba"), reltab.length - 1);
 		reltab = reltab.substring(0, reltab.indexOf("</table") - 1);
-		
 		tbl.tableText = reltab;
 	}
 }
@@ -141,7 +147,7 @@ function TableRequestReadyStateChange(tbl){
  * Returns the raw HTML of the given Table object.
  */
 function TableGetTable(tbl) {
-	console.log("[TableGetTable] started");
+	//console.log("[TableGetTable] started");
 	
 	// Type Check
 	TableTypeCheck(tbl);
@@ -154,7 +160,7 @@ function TableGetTable(tbl) {
  * Returns the Table's headings as a String array.
  */
 function TableGetHeadings(tbl) {
-	console.log("[TableGetHeadings] started");
+	//console.log("[TableGetHeadings] started");
 	// Type Check
 	TableTypeCheck(tbl);
 	TableLoadedCheck(tbl);
@@ -174,8 +180,8 @@ function TableGetHeadings(tbl) {
 		tbl.headings = mm;
 	}
 	
-	console.log("[TableGetHeadings] success");
-	console.log(tbl.headings);
+	//console.log("[TableGetHeadings] success");
+	//console.log(tbl.headings);
 	
 	return tbl.headings;
 }
@@ -184,7 +190,7 @@ function TableGetHeadings(tbl) {
  * Returns the Table's body (entries) as a 2D numeric array.
  */
 function TableGetBody(tbl) {
-	console.log("[TableGetBody] started");
+	//console.log("[TableGetBody] started");
 	// Type Check
 	TableTypeCheck(tbl);
 	TableLoadedCheck(tbl);
@@ -224,8 +230,8 @@ function TableGetBody(tbl) {
 		tbl.body = k;
 	}
 	
-	console.log("[TableGetBody] success");
-	console.log(tbl.body);
+	//console.log("[TableGetBody] success");
+	//console.log(tbl.body);
 	
 	return tbl.body;
 }
