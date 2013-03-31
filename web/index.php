@@ -19,15 +19,13 @@ Instead, this pages acts a proxy, so same-origin isn't violated.
 */
 if (isset($_REQUEST["grab"])) {
     $u = @file_get_contents("http://www2.usfirst.org/" . $_REQUEST["grab"]);
-	if ($u)
-	{
-	exit($u);
-	}
-	else
-	{
-	exit("404");
+	if ($u) {
+		exit($u);
+	} else {
+		exit("404");
 	}
 }
+
 ?>
 
 <!doctype html>
@@ -35,13 +33,13 @@ if (isset($_REQUEST["grab"])) {
 <html>
 	<head>
 		<title>Adambots Automated Scouting Kit</title>
-		<script type="text/javascript" src="<?php bloginfo('template_directory');?>/js/scouting/Hashtable.js"></script>
-		<script type="text/javascript" src="<?php bloginfo('template_directory');?>/js/scouting/sorttable.js"></script>
-		<script type="text/javascript" src="<?php bloginfo('template_directory');?>/js/scouting/table.js"></script>
-		<script type="text/javascript" src="<?php bloginfo('template_directory');?>/js/scouting/matrixSolve.js"></script>
-		<script type="text/javascript" src="<?php bloginfo('template_directory');?>/js/scouting/matchParser.js"></script>
-		<script type="text/javascript" src="<?php bloginfo('template_directory');?>/js/scouting/main.js"></script>
-		<link href="<?php bloginfo('template_directory');?>/css/scouting.css" rel="stylesheet" type="text/css">
+		<script type="text/javascript" src="/Hashtable.js"></script>
+		<script type="text/javascript" src="/sorttable.js"></script>
+		<script type="text/javascript" src="/table.js"></script>
+		<script type="text/javascript" src="/matrixSolve.js"></script>
+		<script type="text/javascript" src="/matchParser.js"></script>
+		<script type="text/javascript" src="/main.js"></script>
+		<link href="/scouting.css" rel="stylesheet" type="text/css">
 	</head>
 	<body style="padding-left:32px; padding-right:32px; width:800px; margin-left:auto; margin-right:auto;">
 		<h1>Adambots Automated Scouting Kit</h1>
@@ -52,10 +50,12 @@ if (isset($_REQUEST["grab"])) {
 		Click the table headings to sort the table.<br/>
 		<br/>
 		
-		<div id="change-selection" style="height:35px; text-align:center;">
-			Select Competition:
-			<select id="compselector" style="height:35px;outline:none;vertical-align:top;"></select>
-			<button id="goToComp" style="width:50px;height:35px;">Go!</button>
+		<div id="change-selection" style="text-align:center;">
+			Select Competition:<br/><br/>
+			<div style="height:35px;">
+				<select id="compselector" style="width:538px;height:35px;outline:none;vertical-align:top;"></select>
+				<button id="goToComp" style="width:60px;height:35px;">Go!</button><br/>
+			</div>
 			
 			<script>
 				var competitionList = [
@@ -189,11 +189,11 @@ if (isset($_REQUEST["grab"])) {
 
 		<br/>
 		<div style="border:1px solid #AAAAAA; width:600px; padding:1px;margin-left:auto;margin-right:auto;">
-			<table id="thetable" data-sorting="iidddd">
+			<table class="shinytable" id="oprtable" data-sorting="iidddd">
 				<thead>
 					<tr>
 						<td colspan="6">
-						<script>document.write(eventName);</script>
+						<script>document.write(eventName + " Estimated Contributions");</script>
 						</td>
 					</tr>
 					<tr>
@@ -205,7 +205,7 @@ if (isset($_REQUEST["grab"])) {
 						<td>Total Pts.**</td>
 					</tr>
 				</thead>
-				<tbody id="thedata">
+				<tbody id="oprdata">
 					<tr><td colspan="6"><em>Waiting for script to load...</em></td></tr>
 				</tbody>
 				<tfoot>
@@ -216,6 +216,42 @@ if (isset($_REQUEST["grab"])) {
 			</table>
 		</div>
 
+		<br/>
+		
+		<div style="border:1px solid #AAAAAA; width:600px; padding:1px;margin-left:auto;margin-right:auto;">
+			<table class="shinytable" id="matchtable">
+				<thead>
+					<tr>
+						<td colspan="11">
+							<script>document.write(eventName + " Match Predictions")</script>
+						</td>
+					</tr>
+					<tr>
+						<td>Match</td>
+						<td>Red 1</td>
+						<td>Red 2</td>
+						<td>Red 3</td>
+						<td>Blue 1</td>
+						<td>Blue 2</td>
+						<td>Blue 3</td>
+						<td>Red Score**</td>
+						<td>Blue Score**</td>
+						<td>Est. Blue Score**</td>
+						<td>Est. Blue Score**</td>
+					</tr>
+				</thead>
+				<tbody id="matchdata">
+					<tr><td colspan="1"><em>Waiting for script to load...</em></td></tr>
+				</tbody>
+				<tfoot>
+					<tr><td colspan="11">
+					*Data from <a href="http://www.usfirst.org">www.US<em>FIRST.org</em></a><br/>
+					**These numbers are calculated and only estimates. They represent the expected average score that <em>this</em> team will score <em>alone</em> in a match.
+					</td></tr>
+				</tfoot>
+			</table>
+		</div>
+		
 		<br/>
 		<div style="height:70px;"></div>
 		<br/>

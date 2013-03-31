@@ -35,13 +35,12 @@ function MatchParserTypeCheck(mp){
 //// MATCH PARSER METHODS -----------------------------------------------------
 
 function MatchParserBeginParse(mp){
-	console.log("\t[MatchParserBeginParse] started");
 	// Type Check
 	MatchParserTypeCheck(mp);
 	
 	// Verify URL Existence
 	if(!mp.rankingsURL || !mp.resultsURL){
-		throw "MatchParserParse :: Undefined URL";
+		//throw "MatchParserParse :: Undefined URL";
 	}
 	
 	// Create Tables
@@ -58,7 +57,6 @@ function MatchParserBeginParse(mp){
  * @mp The MatchParser object to use.
  */
 function MatchParserLoadResults(mp){
-	console.log("[MatchParserLoadResults] started");
 	// Type Check
 	MatchParserTypeCheck(mp);
 	
@@ -69,7 +67,6 @@ function MatchParserLoadResults(mp){
 			mp.resultsTable.loadTable(MatchParserCompleteParse);
 		}
 	}
-	console.log("[MatchParserLoadResults] success");
 }
 
 /**
@@ -78,7 +75,6 @@ function MatchParserLoadResults(mp){
  * @mp The MatchParser object to use.
  */
 function MatchParserLoadRankings(mp){
-	console.log("[MatchParserLoadRankings] started");
 	// Type Check
 	MatchParserTypeCheck(mp);
 	
@@ -89,7 +85,6 @@ function MatchParserLoadRankings(mp){
 			mp.rankingsTable.loadTable(function() { MatchParserCompleteParse(mp); });
 		}
 	}
-	console.log("[MatchParserLoadRankings] success");
 }
 
 /**
@@ -97,13 +92,12 @@ function MatchParserLoadRankings(mp){
  * @mp The MatchParser object to use.
  */
 function MatchParserCompleteParse(mp){
-	console.log("[MatchParserCompleteParse] started");
 	// Type Check
 	MatchParserTypeCheck(mp);
 	
 	// Get Table Data
-	resultsBody = mp.resultsTable.getBody();
-	rankingsBody = mp.rankingsTable.getBody();
+	resultsBody = mp.resultsTable.getBody(true);
+	rankingsBody = mp.rankingsTable.getBody(false);
 	
 	teamHash = mp.rankingsTable.constructColumnHash(1, 0);
 	teamCount = teamHash.size();

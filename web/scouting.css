@@ -8,7 +8,7 @@ body {
 	font-size:12px;
 }
 
-#thetable * tr td {
+.shinytable * tr td {
 	width: 100px;
 	border-right: 1px solid #555555;
 	border-bottom: 1px solid #555555; /*#AAAAAA on the light gray, #AAAAAA on the colored*/

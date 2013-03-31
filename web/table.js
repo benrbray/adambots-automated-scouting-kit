@@ -1,6 +1,5 @@
 //// TABLE.JAVA EQUIVALENT ----------------------------------------------------
 
-
 /**
  * TABLE.JS
  * Designed as the equivalent of Table.java.  Create a new Table object with
@@ -8,11 +7,6 @@
  * The URL is either RANKINGS or MATCHES, depending on the desired data.  It 
  * is NOT the actual URL; this name is kept for consistency's sake.
  */
- 
-//// TABLE CONSTANTS ----------------------------------------------------------
-
-const TABLE_RESULTS = "RESULTS";
-const TABLE_STANDINGS = "STANDINGS";
  
 //// TABLE CONSTRUCTOR --------------------------------------------------------
 
@@ -42,8 +36,8 @@ function Table(tableURL) {
 	tbl.getHeadings = function() {
 		return TableGetHeadings(tbl);
 	};
-	tbl.getBody = function() {
-		return TableGetBody(tbl);
+	tbl.getBody = function(noNaNs) {
+		return TableGetBody(tbl, noNaNs);
 	};
 	tbl.constructColumnHash = function(keyColumnIndex, valueColumnIndex) {
 		return TableConstructColumnHash(tbl, keyColumnIndex, valueColumnIndex);
@@ -105,7 +99,7 @@ function TableLoadTable(tbl, onrequestcomplete) {
 		if(tbl.requestComplete){
 			onrequestcomplete.call();
 		}
-	};
+	}; 
 	tbl.request.open("GET", "http://localhost/?grab=" + tbl.url, true); 
 	tbl.request.send();
 }
@@ -130,11 +124,11 @@ function TableRequestReadyStateChange(tbl){
 		var page = tbl.request.responseText;
 		if (page.indexOf("<table style=\"ba") == -1)
 		{
-			document.getElementById("thedata").innerHTML = "<tr><td colspan=\"6\"><b>AASK cannot perform an analysis on this event.<br/>The response is malformed. We are working on a solution to the problem; thank you for your patience.</b></td></tr>";
+			document.getElementById("oprdata").innerHTML = "<tr><td colspan=\"6\"><b>AASK cannot perform an analysis on this event.<br/>The response is malformed. We are working on a solution to the problem; thank you for your patience.</b></td></tr>";
 		}
 		if (page.indexOf("404") == 0)
 		{
-			document.getElementById("thedata").innerHTML = "<tr><td colspan=\"6\"><b>AASK cannot perform an analysis on this event.<br/>US<em>FIRST</em>.org responded with a 404, not found error. Most likely the event has not yet begun and no data is available.</b></td></tr>";
+			document.getElementById("oprdata").innerHTML = "<tr><td colspan=\"6\"><b>AASK cannot perform an analysis on this event.<br/>US<em>FIRST</em>.org responded with a 404, not found error. Most likely the event has not yet begun and no data is available.</b></td></tr>";
 		}
 		var reltab = page.substring(page.indexOf("<table style=\"ba") + 1, page.length - 1);
 		reltab = reltab.substring(reltab.indexOf("<table style=\"ba"), reltab.length - 1);
@@ -189,7 +183,7 @@ function TableGetHeadings(tbl) {
 /**
  * Returns the Table's body (entries) as a 2D numeric array.
  */
-function TableGetBody(tbl) {
+function TableGetBody(tbl, noNaNs) {
 	//console.log("[TableGetBody] started");
 	// Type Check
 	TableTypeCheck(tbl);
@@ -208,23 +202,26 @@ function TableGetBody(tbl) {
 		var body = table.substring(table.indexOf("font-family:arial"), table.length - 1);
 		var cell = body.split("\n");
 		var cells = new Array(cell.length);
-		var o = 0;
+		var numCells = 0;
 		
 		for (var i = 0; i < cell.length; i++) {
-			if (cell[i].length > 20 && cell[i].indexOf("</") > 0) {
-				cells[o] = cell[i].substring(cell[i].indexOf(">") + 1, cell[i].indexOf("</"));
-				o++;
+			/*if (cell[i].length > 20 ... old, arbitrary way of doing it*/
+			if (cell[i].indexOf("TD") >= 0 && cell[i].indexOf("</") > 0) {
+				cells[numCells] = cell[i].substring(cell[i].indexOf(">") + 1, cell[i].indexOf("</"));
+				numCells++;
 			}
 		}
 		
 		var k = new Array(headings.length);
 		
 		for (var i = 0; i < headings.length; i++) {
-			k[i] = new Array(o / headings.length);
+			k[i] = new Array(numCells / headings.length);
 		}
 		
-		for (var i = 0; i < o; i++) {
-			k[i % headings.length][Math.floor(i / headings.length)] = parseInt(cells[i]);
+		for (var i = 0; i < numCells; i++) {
+			var val = parseInt(cells[i]);
+			if(isNaN(val) && noNaNs) { val = 0; };
+			k[i % headings.length][Math.floor(i / headings.length)] = val;
 		}
 		
 		tbl.body = k;

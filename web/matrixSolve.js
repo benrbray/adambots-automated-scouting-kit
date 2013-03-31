@@ -1,68 +1,109 @@
-const NL_ENTITY = "&#13;&#10;";
+var NL_ENTITY = "&#13;&#10;";
 
-//// ENTRY METHODS ------------------------------------------------------------
+//// MATRIX ARITHMETIC --------------------------------------------------------
 
-function luClick(){
-	var matrix = getMatrix("coefficients");
+function subtractMat(x, y){
+	var xRows = x.length;
+	var xCols = x[0].length;
+	var yRows = y.length;
+	var yCols = y[0].length;
 	
-	document.getElementById("matrixValue").innerHTML = 
-		"Your matrix was interpreted as:<br><code>" + 
-		matrixToFormattedString(matrix) + 
-		"</code>";
-}
-
-function solveClick(){
-	var coefficients = getMatrix("coefficients");
-	var constants = getVector("constants");
+	if(xRows != yRows || xCols != yCols){
+		throw "Cannot subtract matrices of nonconformant dimensions! [" + xRows + ", " + xCols + "]-[" + yRows + ", " + yCols + "]";
+	}
 	
-	document.getElementById("matrixValue").innerHTML = 
-		"Your matrix was interpreted as:<br><code>" + 
-		matrixToFormattedString(coefficients) + 
-		"</code>";
-	
-	solveLU(coefficients, constants);
-}
-
-function getMatrix(textAreaID){
-	// Get Text Value and Trim
-	var matText = new String(document.getElementById(textAreaID).value).killWhiteSpace();
-	
-	// Prepare Variables
-	var matrix = new Array();
-	var start = 0;
-	var nextIndex = 0;
-	var rows = 0;
-	
-	// Parse Row by Row
-	while(nextIndex > -1){
-		nextIndex = matText.indexOf(";", start);
-		var row = new String(matText.substring(start, (nextIndex==-1?matText.length:nextIndex)));
-		matrix[rows] = row.split(",");
-		for(var i = 0; i < matrix[rows].length; i++){
-			matrix[rows][i] = parseFloat(matrix[rows][i]);
+	var result = new Array(xRows);
+	for(var i = 0; i < xRows; i++){
+		result[i] = new Array(xCols);
+		for(var j = 0; j < xCols; j++){
+			result[i][j] = x[i][j] - y[i][j];
 		}
-		rows++;
-		start = nextIndex+1;
 	}
 	
-	return matrix;
+	return result;
 }
 
-function getVector(textAreaID){
-	// Get Text Value and Trim
-	var vecText = new String(document.getElementById(textAreaID).value).killWhiteSpace();
+function subtractVec(x, y){
+	var xRows = x.length;
+	var yRows = y.length;
 	
-	// Prepare Variables
-	var vec = vecText.split(new RegExp("[^\\d\\.\\-\\+]+"));
-	var start = 0;
-	var nextIndex = 0;
-	var rows = 0;
-	
-	for(var i = 0; i < vec.length; i++){
-		vec[i] = parseFloat(vec[i]);
+	if(xRows != yRows){
+		throw "Cannot subtract matrices of nonconformant dimensions! [" + xRows + ", " + xCols + "]-[" + yRows + ", " + yCols + "]";
 	}
 	
-	return vec;
+	var result = new Array(xRows);
+	for(var i = 0; i < xRows; i++){
+		result[i] = x[i] - y[i];
+	}
+	
+	return result;
+}
+
+function multiplyMatMat(x, y){
+	var xRows = x.length;
+	var xCols = x[0].length;
+	
+	var yRows = y.length;
+	var yCols = y[0].length;
+	
+	if(xCols != yRows){
+		throw "Cannot multiply matrices of nonconformant dimensions! [" + xRows + ", " + xCols + "]x[" + yRows + ", " + yCols + "]";
+	}
+	
+	var result = new Array(xRows);
+	
+	for(var i = 0; i < xRows; i++){
+		result[i] = new Array(yCols);
+		for(var j = 0; j < yCols; j++){
+			var sum = 0;
+			
+			for(var k = 0; k < xCols; k++){
+				sum += x[i][k] * y[k][j];
+			}
+			result[i][j] = sum;
+		}
+	}
+	
+	
+	return result;
+}
+
+function multiplyMatVec(X, y){
+	if(!X || !y) throw "Cannot multiply undefined matrix/vector!";
+	var xRows = X.length;
+	var xCols = X[0].length;
+	
+	var yRows = y.length;
+	var yCols = 1;
+	
+	if(xCols != yRows){
+		throw "Cannot multiply matrices of nonconformant dimensions! [" + xRows + ", " + xCols + "]x[" + yRows + ", " + yCols + "]";
+	}
+	
+	var result = new Array(xRows);
+	
+	for(var i = 0; i < xRows; i++){
+		result[i] = new Array(yCols);
+		var sum = 0;
+			
+		for(var k = 0; k < xCols; k++){
+			sum += X[i][k] * y[k];
+		}
+		
+		result[i] = sum;
+	}
+	
+	
+	return result;
+}
+
+function matrixDiagProduct(A){
+	if(!A) { return NaN; };
+	var product = A[0][0];
+	for(var i = 1; i < A.length; i++){
+		product *= A[i][i];
+	}
+	return product;
 }
 
 //// LU FACTORIZATION ---------------------------------------------------------
@@ -106,13 +147,13 @@ function luFactorizeInPlace(matrix){
  */
 function luFactorizeTogether(matrix, LU){
 	var n = matrix.length;
-	
+
 	// Initialize LU Matrix
 	var lu = new Array(n);
 	for(var i = 0; i < n; i++){
 		lu[i] = new Array(n);
 	}
-	
+
 	// Doolittle Algorithm
 	for(var i = 0; i < n; i++){
 		// Compute U
@@ -123,7 +164,7 @@ function luFactorizeTogether(matrix, LU){
 			}
 			lu[i][j] = alpha / lu[j][j];
 		}
-		
+
 		// Compute L
 		for(var j = i; j < n; j++){
 			var alpha = matrix[i][j];
@@ -133,7 +174,7 @@ function luFactorizeTogether(matrix, LU){
 			lu[i][j] = alpha;
 		}
 	}
-	
+
 	LU = lu;
 	return lu;
 }
@@ -150,7 +191,7 @@ function luFactorizeTogether(matrix, LU){
  */
 function luFactorizeSeparate(matrix, L, U){
 	var n = matrix.length;
-	
+
 	// Initialize Matrices
 	L.constructor(n); // Retain Array Reference by Reinstantiating
 	U.constructor(n); // Retain Array Reference by Reinstantiating
@@ -162,7 +203,7 @@ function luFactorizeSeparate(matrix, L, U){
 			L[i][j] = (i==j?1:0);
 		}
 	}
-	
+
 	// Doolittle Algorithm
 	for(var i = 0; i < n; i++){
 		// Compute L:  Unit Lower-Triangular Product of Elementary Matrices
@@ -173,7 +214,7 @@ function luFactorizeSeparate(matrix, L, U){
 			}
 			L[i][j] = alpha / U[j][j];
 		}
-		
+
 		// Compute U:  Upper-Triangular REF
 		for(var j = i; j < n; j++){
 			var alpha = matrix[i][j];
@@ -205,17 +246,24 @@ function solveLU(A, b){
 	// Initialize
 	var n = A.length;
 	var x = new Array(n);
-	
+
 	// LU Decomposition
 	var L = new Array();
 	var U = new Array();
-	
 	luFactorizeSeparate(A, L, U);
 	
-	var y = forwardSolve(L, b);
-	var x = backSolve(U, y);
+	// Return Iterative Approximation if Singular
+	var detL = matrixDiagProduct(L);
+	var detU = matrixDiagProduct(U);
 	
-	return x;
+	if(isNaN(detL) || isNaN(detU) || detL === 0 || detU === 0){
+		alert("Warning:  It appears that not enough matches have been played.  The displayed solution is a \"best guess\", use additional discretion when interpreting results.");
+		return gaussSeidel(A, b);
+	} else {
+		var y = forwardSolve(L, b);
+		var x = backSolve(U, y);
+		return x;
+	}
 }
 
 function backSolve(A, b){
@@ -228,7 +276,7 @@ function backSolve(A, b){
 		}
 		x[i] = (b[i] - sum) / A[i][i];
 	}
-	
+
 	return x;
 }
 
@@ -243,6 +291,49 @@ function forwardSolve(A, b){
 		x[i] = (b[i] - sum) / A[i][i];
 	}
 	return x;
+}
+
+/**
+ * Gauss-Seidel Iterative Method (SLOW & SUBOPTIMAL)
+ * Guaranteed to converge if either
+ *  - A is symmetric positive-definite, or
+ *  - A is strictly or irreducibly diagonally dominant.
+ * In our case, the latter is true.
+ */
+function gaussSeidel(A, b){
+	// Initialize
+	var n = b.length;
+	var phi = randVector(n);
+	
+	// Gauss-Seidel
+	var error = 100;
+	var iterations = 0;
+	while(error > 0.001 && iterations < 1000){
+		iterations++;
+		
+		// Iterate
+		for(var i = 0; i < n; i++){
+			var omega = 0;
+			for(var j = 0; j < n; j++){
+				if(j != i){
+					omega += A[i][j] * phi[j];
+				}
+			}
+			phi[i] = (1/A[i][i]) * (b[i] - omega);
+		}
+	
+		// Check Error
+		var estimate = multiplyMatVec(A, phi);
+		var residual = subtractMat(estimate, b);
+		error = Math.abs(residual[0]);
+		for(var i = 1; i < residual.length; i++){
+			if(Math.abs(residual[i]) > error){
+				error = Math.abs(residual[i]);
+			}
+		}
+	}
+	
+	return phi;
 }
 
 //// MATRIX HELPER METHODS ----------------------------------------------------
@@ -277,6 +368,25 @@ function zeros(size){
 	return m;
 }
 
+function randMatrix(rows, columns){
+	var m = new Array(rows);
+	for(var i = 0; i < rows; i++){
+		m[i] = new Array(columns);
+		for(var j = 0; j < columns; j++){
+			m[i][j] = Math.random();
+		}
+	}
+	return m;
+}
+
+function randVector(size){
+	var m = new Array(size);
+	for(var i = 0; i < size; i++){
+		m[i] = Math.random();
+	}
+	return m;
+}
+
 //// STRING FORMATTING --------------------------------------------------------
 
 function matrixToFormattedString(matrix){
@@ -288,7 +398,7 @@ function matrixToFormattedString(matrix){
 			s += submat.toString();
 			if(i<matrix.length-1) { s += "\n"; };
 		} else {
-			s += submat + ",";
+			s += submat + (i<matrix.length-1?",":"");
 		}
 	}
 	
