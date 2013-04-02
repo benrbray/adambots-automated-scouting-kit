@@ -8,7 +8,7 @@ var pageRankings;
  */
 function waitForData() {
   if (pageMatches.ready && pageRankings.ready) {
-		document.getElementById("thedata").innerHTML = "<tr><td colspan=\"6\"><em>Data ready; computing.</em></td></tr>";
+		document.getElementById("oprdata").innerHTML = "<tr><td colspan=\"6\"><em>Data ready; computing.</em></td></tr>";
 	} else {
 		setTimeout(waitForData,100);
 	}
@@ -20,10 +20,9 @@ function waitForData() {
  * Start waiting for the scrape and parse to finish at "waitForData()".
  */
 function Main() {
-	console.log("[Main] started");
 	
 	// Display Waiting Message
-	document.getElementById("thedata").innerHTML = "<tr><td colspan=\"6\"><em>Waiting for data from www2.USFIRST.org...</em></td></tr>";
+	document.getElementById("oprdata").innerHTML = "<tr><td colspan=\"6\"><em>Waiting for data from www2.USFIRST.org...</em></td></tr>";
 	
 	pageRankings = new Page(rankingsPage); //Generate the table for Rankings
 	pageMatches = new Page(resultsPage); //Generate the table for the match results
