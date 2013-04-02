@@ -1,11 +1,18 @@
-//// TABLE CONSTRUCTOR ----
+//// TABLE CONSTRUCTOR --------------------------------------------------------
+/**
+ * A "Table" occurs on a page when consecutive rows of data contains numbers. The row immediately before the data-rows is used as a heading.
+ * 
+ * heading/headings/header/headers :: String[] The names of the columns (in caps) of the data.
+ * data :: Int[row][col]  The data filling the cells. NaNs in most cases where there are no parseable numbers.
+ * raw :: String[row][col] the text filling the cells. data[row][col] == parseFloat(raw[row][col]), essentially.
+**/
 function Table(heading,raw,data) {
 	this.heading = this.headings = this.header = this.headers = heading;
 	this.raw = raw;
 	this.data = data;
 }
 
-//// WEBSITE SCRAPER ------------------------------------------------
+//// WEBSITE SCRAPER ----------------------------------------------------------
 /**
  * Cross platform method to get XMLHttpRequest objects. Taken from an article
  * published by Brett McLaughlin.
@@ -32,9 +39,16 @@ function createRequest() {
 	return request;
 }
 
-//// PAGE CONSTRCUTOR ----
+//// PAGE CONSTRCUTOR ---------------------------------------------------------
+/**
+Constructors a "page" object with .tables representing the list of "data tables" on the page.
 
-function Page(url) { //url is everything after domain, e.g. "2013comp/events/MITRY/matchresults.html"
+url: The url after the domain to parse, e.g. "2013comp/Events/MIGBL/rankings.html"
+
+obj.tables :: Table[] of data tables appearing on page.
+obj.ready :: bool True when the data has been parsed and placed into the tables array.
+**/
+function Page(url) {
 	function outoftag(str) {
 		//e.g
 		//<a>b<c><d>efg</k></m><n>o</p>
