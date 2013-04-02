@@ -1,8 +1,4 @@
 
-
-
-//// JAVASCRIPT-Y STUFF BELOW -------------------------------------------------
-
 var pageMatches;
 var pageRankings;
 
