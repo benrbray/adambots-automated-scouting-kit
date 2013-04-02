@@ -13,10 +13,11 @@ baseurl: e.g., 2013comp/Events/MIGBL
 .rankingstable a Table for the data on rankings.html
 
 **/
-function FRCEvent(baseurl,eventname) {
+function FRCEvent(baseurl,eventname,callback) {
+	this.callback = callback;
 	this.url = baseurl;
 	this.eventname = eventname;
-	this.status = "Waiting for data.";
+	this.status = "Downloading data.";
 	this.pageRankings = new Page(baseurl + "rankings.html"); //Generate the table for Rankings
 	this.pageMatches = new Page(baseurl + "matchresults.html"); //Generate the table for the match results
 	var me = this;
@@ -28,7 +29,7 @@ function FRCEvent(baseurl,eventname) {
 			me.status = "Data collected. Preparing for processing.";
 			me.prepare();
 		} else {
-			setTimeout(waitForData,100);
+			setTimeout(me.waitForData,100);
 		}
 	}
 	/**
@@ -48,8 +49,11 @@ function FRCEvent(baseurl,eventname) {
 	Output NOTHING. Just provide data outlets.
 	**/
 	this.process = function() {
-		this.status = "Processing data."
-		
+		this.status = "Processing data.";
+		this.ready = true;
+		if (this.callback) {
+			this.callback(this);
+		}
 	}
 	setTimeout(this.waitForData,100);
 }

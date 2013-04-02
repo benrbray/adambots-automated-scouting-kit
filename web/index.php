@@ -33,6 +33,7 @@ if (isset($_REQUEST["grab"])) {
 <html>
 	<head>
 		<title>Adambots Automated Scouting Kit</title>
+		<script type="text/javascript" src="graphing.js"></script>
 		<script type="text/javascript" src="frcevent.js"></script>
 		<script type="text/javascript" src="sorttable.js"></script>
 		<script type="text/javascript" src="colortable.js"></script>
@@ -254,6 +255,8 @@ if (isset($_REQUEST["grab"])) {
 			</table>
 		</div>
 		-->
+		
+		<canvas id="graphMatches" width="800" height="400"></canvas>
 		
 		<br/>
 		<div style="height:70px;"></div>

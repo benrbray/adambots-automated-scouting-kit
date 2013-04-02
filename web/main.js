@@ -17,9 +17,15 @@ var pageRankings;
 function Main() {
 	
 	// Display Waiting Message
+	
+	graphMatches = document.getElementById("graphMatches").getContext("2d");
+	
 	document.getElementById("oprdata").innerHTML = "<tr><td colspan=\"6\"><em>Waiting for data from www2.USFIRST.org...</em></td></tr>";
 	frcevent = new FRCEvent(eventURL,eventName);
-	//pageRankings = new Page(rankingsPage); //Generate the table for Rankings
-	//pageMatches = new Page(resultsPage); //Generate the table for the match results
-	//waitForData(); //Go to "waitForData" while the pages are loading.
+	setInterval( function() { 
+		document.getElementById("oprdata").innerHTML = "<td colspan=\"6\">" + frcevent.status + "</td>";
+	}, 1  );
 }
+
+
+var graphMatches;

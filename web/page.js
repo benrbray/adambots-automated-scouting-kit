@@ -89,54 +89,62 @@ function Page(url) {
 		}
 		return text;
 	}
-	var r = createRequest();
-	r.open("GET","?grab=" + url,false);
-	r.send();
-	var text = r.responseText.toUpperCase();
-	var rows = text.split("<TR"); //I do NOT want the first one (prior to the start of a <TR>:
-	rows.splice(0,1); //Remove the first one.
-	for (var i = 0; i < rows.length; i++) {
-		rows[i] = rows[i].substring(0, rows[i].indexOf("</TR") ); //Stop when the row ends. Requires a </TR> pairing to each <TR>.
-		//Not sure whether or not valid HTML requires it. May be a poor requirement, but fairly predictable and reliable.
-		rows[i] = rows[i].substring(rows[i].indexOf(">") + 1,rows[i].length); //I don't want anything between "<TR" and ">".
-		rows[i] = " " + rows[i].trim() + " ";
-	}
-	var raw = []; // raw[row][col] == string content of cell
-	var data = []; //data[row][col] == int content (or NaN). bool data[row].hasdata means that there are numbers in this row (not just text / headings &c)
-	for (var i = 0; i < rows.length; i++) {
-		//Split up the TD's...
-		raw[i] = [];
-		data[i] = [];
-		var cols = rows[i].split("<TD");
-		cols.splice(0,1);
-		for (var u = 0; u < cols.length; u++) {
-			cols[u] = " <TD" + cols[u]; //Reattach for the purpose of the 'outoftag'
-			cols[u] = outoftag(cols[u].substring(0,cols[u].indexOf("</TD"))); //get content not inside tags.
-			raw[i][u] = cols[u].trim(); //Fill the body! 'raw' refers to EVERY ROW COL pair.
-			data[i][u] = parseFloat(raw[i][u]);
-			var isnumber = raw[i][u].replace(/[0123456789\.]/g,"").trim() == ""; //contains only the decimal, spaces, and numbers.
-			if (isnumber && !isNaN(data[i][u])) {
-				data[i].hasdata = true;
-			}
+	var me = this;
+	this.returnto = function() {
+		if (me.r.readyState != 4) {
+			return;
 		}
-	}
-	this.tables = [];
-	for (var i = 0; i < data.length; i++) {
-		if (data[i].hasdata) {
-		//New table!!!!!!!!!!!!
-			var ra = [];
-			var dat = [];
-			for (var u = i; u < data.length; u++) {
-				if (!data[u].hasdata) {
-					this.tables[this.tables.length] = new Table(raw[i-1] , ra,dat );
-					i = u;
-					break;
-				} else {
-					ra[ra.length] = raw[u];
-					dat[dat.length] = data[u];
+		var text = me.r.responseText.toUpperCase();
+		var rows = text.split("<TR"); //I do NOT want the first one (prior to the start of a <TR>:
+		rows.splice(0,1); //Remove the first one.
+		for (var i = 0; i < rows.length; i++) {
+			rows[i] = rows[i].substring(0, rows[i].indexOf("</TR") ); //Stop when the row ends. Requires a </TR> pairing to each <TR>.
+			//Not sure whether or not valid HTML requires it. May be a poor requirement, but fairly predictable and reliable.
+			rows[i] = rows[i].substring(rows[i].indexOf(">") + 1,rows[i].length); //I don't want anything between "<TR" and ">".
+			rows[i] = " " + rows[i].trim() + " ";
+		}
+		var raw = []; // raw[row][col] == string content of cell
+		var data = []; //data[row][col] == int content (or NaN). bool data[row].hasdata means that there are numbers in this row (not just text / headings &c)
+		for (var i = 0; i < rows.length; i++) {
+			//Split up the TD's...
+			raw[i] = [];
+			data[i] = [];
+			var cols = rows[i].split("<TD");
+			cols.splice(0,1);
+			for (var u = 0; u < cols.length; u++) {
+				cols[u] = " <TD" + cols[u]; //Reattach for the purpose of the 'outoftag'
+				cols[u] = outoftag(cols[u].substring(0,cols[u].indexOf("</TD"))); //get content not inside tags.
+				raw[i][u] = cols[u].trim(); //Fill the body! 'raw' refers to EVERY ROW COL pair.
+				data[i][u] = parseFloat(raw[i][u]);
+				var isnumber = raw[i][u].replace(/[0123456789\.]/g,"").trim() == ""; //contains only the decimal, spaces, and numbers.
+				if (isnumber && !isNaN(data[i][u])) {
+					data[i].hasdata = true;
 				}
 			}
 		}
+		me.tables = [];
+		for (var i = 0; i < data.length; i++) {
+			if (data[i].hasdata) {
+			//New table!!!!!!!!!!!!
+				var ra = [];
+				var dat = [];
+				for (var u = i; u < data.length; u++) {
+					if (!data[u].hasdata) {
+						me.tables[me.tables.length] = new Table(raw[i-1] , ra,dat );
+						i = u;
+						break;
+					} else {
+						ra[ra.length] = raw[u];
+						dat[dat.length] = data[u];
+					}
+				}
+			}
+		}
+		me.ready = true;
 	}
-	this.ready = true;
+	this.r = createRequest();
+	this.r.open("GET","?grab=" + url,true);
+	this.r.onreadystatechange = this.returnto;
+	this.r.send();
+
 }
