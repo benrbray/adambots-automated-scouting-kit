@@ -1,10 +1,17 @@
-//// WEBSITE READER EQUIVALENT ------------------------------------------------
+//// TABLE CONSTRUCTOR ----
+function Table(heading,raw,data) {
+	this.heading = this.headings = this.header = this.headers = heading;
+	this.raw = raw;
+	this.data = data;
+}
+
+//// WEBSITE SCRAPER ------------------------------------------------
 /**
  * Cross platform method to get XMLHttpRequest objects. Taken from an article
  * published by Brett McLaughlin.
  */
 function createRequest() {
-  var request;
+	var request;
 	try{
 		request = new XMLHttpRequest();
 	} catch(trymicrosoft) {
@@ -25,29 +32,9 @@ function createRequest() {
 	return request;
 }
 
-/*
-Generate the table from a url, with a .heading, .body.
-Usage Example:
+//// PAGE CONSTRCUTOR ----
 
-tableMatches = new Table(resultsPage);
-tableMatches.body[row][col]
-tableMatches.heading[col]
-
-*/
-
-function Table(heading,raw,data) {
-	this.heading = this.headings = this.header = this.headers = heading;
-	this.raw = raw;
-	this.data = data;
-}
-
-function strreverse(str) {
-	var k = str.split("");
-	k.reverse();
-	return k.join();
-}
-
-function Page(url) {
+function Page(url) { //url is everything after domain, e.g. "2013comp/events/MITRY/matchresults.html"
 	function outoftag(str) {
 		//e.g
 		//<a>b<c><d>efg</k></m><n>o</p>
