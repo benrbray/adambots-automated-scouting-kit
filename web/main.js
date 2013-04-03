@@ -23,7 +23,7 @@ function Main() {
 	frcevent = new FRCEvent(eventURL,eventName);
 	setInterval( function() { 
 		document.getElementById("oprdata").innerHTML = "<td colspan=\"6\">" + frcevent.status + "</td>";
-	}, 1  );
+	}, 100  );
 }
 
 

@@ -9,6 +9,7 @@ body {
 }
 
 .shinytable * tr td {
+  table-layout:fixed;
   border-right: 1px solid #555555;
   border-bottom: 1px solid #555555; /*#AAAAAA on the light gray, #AAAAAA on the colored*/
 }
@@ -31,6 +32,29 @@ tfoot {
 thead tr td {
   padding-top:4px;
   padding-bottom:4px;
-  padding-left:10px;
-  padding-right:10px;
+  padding-left:7px;
+  padding-right:7px;
+}
+
+input.mini {
+width:50px;
+outline:none;
+text-align:center;
+height:35px;
+border:1px solid #AAAAAA;
+border-radius:3px;
+}
+
+input.mini:focus {
+border:1px solid #AAAAFF;
+}
+
+input.mini[readonly] {
+background:#EEEEEE;
+}
+
+div.box {
+outline:1px solid #AAAAAA;
+padding-top:10px;
+padding-bottom:10px;
 }
