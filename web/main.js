@@ -1,4 +1,3 @@
-
 var pageMatches;
 var pageRankings;
 
@@ -20,7 +19,7 @@ function Main() {
 	
 	graphMatches = document.getElementById("graphMatches").getContext("2d");
 	
-	document.getElementById("oprdata").innerHTML = "<tr><td colspan=\"6\"><em>Waiting for data from www2.USFIRST.org...</em></td></tr>";
+	document.getElementById("oprdata").innerHTML = "<tr><td colspan=\"6\">Building FRCEvent object</td></tr>";
 	frcevent = new FRCEvent(eventURL,eventName);
 	setInterval( function() { 
 		document.getElementById("oprdata").innerHTML = "<td colspan=\"6\">" + frcevent.status + "</td>";
