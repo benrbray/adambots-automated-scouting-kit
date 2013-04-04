@@ -62,61 +62,157 @@ if (isset($_REQUEST["grab"])) {
 		
 		<div style="width:819px; margin:0px; padding:0px;"> <!--Column container-->
 			<div style="width:400px; margin:0px; padding:0px; float:left;"> <!--Column 1-->	
-				<div style="border:1px solid #AAAAAA; width:400px; padding:1px;">
-					<table class="shinytable" id="oprtable" data-sorting="iidddd" style="width:400px;">
-						<thead>
-							<tr>
-								<td colspan="6">
-								<script>document.write(eventName + " Estimated Contributions (OPR Table)");</script>
-								</td>
-							</tr>
-							<tr>
-								<td>Team*</td>
-								<td>Ranking*</td>
-								<td>Autonomous Pts.**</td>
-								<td>Climb Pts.**</td>
-								<td>Teleoperated Pts.**</td>
-								<td>Total Pts.**</td>
-							</tr>
-						</thead>
-						<tbody id="oprdata">
-							<tr><td colspan="6"><em>Waiting for script to load...</em></td></tr>
-						</tbody>
-						<tfoot>
-							<tr><td colspan="6">
-							*Data from <a href="http://www.usfirst.org">www.US<em>FIRST.org</em></a><br/>
-							**These numbers are calculated and only estimates. They represent the expected average score that <em>this</em> team will score <em>alone</em> in a match.</td></tr>
-						</tfoot>
-					</table>
-				</div>
+				<table class="shinytable" id="oprtable" data-sorting="iidddd" style="width:400px;">
+					<thead>
+						<tr>
+							<td colspan="6">
+							<script>document.write(eventName + " (Estimated Contributions)");</script>
+							</td>
+						</tr>
+						<tr>
+							<td>Team*</td>
+							<td>Ranking*</td>
+							<td>Auton.**</td>
+							<td>Climb**</td>
+							<td>Teleop.**</td>
+							<td>Total**</td>
+						</tr>
+					</thead>
+					<tbody id="oprdata">
+						<tr><td colspan="6"><em>Waiting for script to load...</em></td></tr>
+					</tbody>
+					<tfoot>
+						<tr><td colspan="6">
+						*Data from <a href="http://www.usfirst.org">www.US<em>FIRST.org</em></a><br/>
+						**These numbers are calculated and only estimates. They represent the expected average score that <em>this</em> team will score <em>alone</em> in a match.</td></tr>
+					</tfoot>
+				</table>
 			</div>
 			<!-- Between Columns -->
-			<div style="width:400px; margin:0px; padding:0px; float:right;"> <!--Column 2-->	
-				<canvas id="graphMatches" style="background:#EEEEEE;" width="400" height="240" style="width:400px; height:240px;">Graphs require the HTML 5 canvas object.</canvas>
+			<div style="width:400px; margin:0px; padding:0px; float:right;"> <!--Column 2-->
+
+<table class="shinytable"><thead><tr><td>Match Scores</td></tr><tbody><tr><td>
+				<canvas id="graphMatches" width="398" height="240" style="background:white;width:398x; height:240px; border:0px #AAAAAA solid;">Graphs require the HTML 5 canvas object.</canvas>
+				</table>
+				<br/>
+				<br/>
+				
+				<div class="hr"></div>
+				<br/>
+				
+				
+				<table class="shinytable" style="width:400px;">
+					<thead>
+						<tr>
+							<td colspan="2">
+								Match Prediction
+							</td>
+						</tr>
+						<tr>
+							<td>Red</td><td>Blue</td>
+						</tr>
+					</thead>
+					<tbody><tr>
+					<td>
+						<div style="height:7px;"></div>
+						<input class="mini" /><span style="width:12px;display:inline-block;"> + </span><input class="mini" /><span style="width:12px;display:inline-block;"> + </span><input class="mini" /><br/>
+						<div style="height:7px;"></div>
+						<input id="redallianceprediction" class="mini" style="width:178px; background:#FFE0E0;" readonly />
+						<div style="height:7px;"></div>
+					</td>
+					<td>
+						<div style="height:7px;"></div>
+						<input class="mini" /><span style="width:12px;display:inline-block;"> + </span><input class="mini" /><span style="width:12px;display:inline-block;"> + </span><input class="mini" /><br/>
+						<div style="height:7px;"></div>
+						<input id="blueallianceprediction" class="mini" style="width:178px; background:#E0E0FF;" readonly /> 
+						<div style="height:7px;"></div>
+					</td>
+					</tr>
+					<tr>
+						<td colspan="2">Tie</td>
+					</tr>
+					</tbody>
+				</table>
+				
+				<!-- <div style="text-align:center; border:1px #AAAAAA solid; padding-top:7px; padding-bottom:7px;">
+					<b>Match Prediction</b><br/>
+					<div style="height:7px;"></div>
+					<input class="mini" /><span style="width:12px;display:inline-block;"> + </span><input class="mini" /><span style="width:12px;display:inline-block;"> + </span><input class="mini" /> <b>&nbsp;vs&nbsp;</b> <input class="mini" /><span style="width:12px;display:inline-block;"> + </span><input class="mini" /><span style="width:12px;display:inline-block;"> + </span><input class="mini" /><br/>
+					<div style="height:7px;"></div>
+					<input id="redallianceprediction" class="mini" style="width:178px;" readonly /> <b>&nbsp;vs&nbsp;</b> <input id="blueallianceprediction" class="mini" style="width:178px;" readonly /> 
+				</div> -->
+				
+				
+				
+				
+				
+				
+				
+				
 				
 				<br/>
+				<div class="hr"></div>
 				<br/>
-				<div class="box">
-					<div style="text-align:center;">
-						<b>Match Prediction</b><br/>
-						<br/>
-						<input class="mini" /><span style="width:12px;display:inline-block;"> + </span><input class="mini" /><span style="width:12px;display:inline-block;"> + </span><input class="mini" /> <b>&nbsp;vs&nbsp;</b> <input class="mini" /><span style="width:12px;display:inline-block;"> + </span><input class="mini" /><span style="width:12px;display:inline-block;"> + </span><input class="mini" /><br/>
-						<br/>
-						<input id="redallianceprediction" class="mini" style="width:178px;" readonly /> <b>&nbsp;vs&nbsp;</b> <input id="blueallianceprediction" class="mini" style="width:178px;" readonly /> 
-					</div>
-				</div>
+				
+				
+				
+				<table class="shinytable" data-sorting="iidddd" style="width:400px;">
+					<thead>
+						<tr>
+							<td colspan="6">
+							<script>document.write(eventName + " Estimated Contributions (OPR Table)");</script>
+							</td>
+						</tr>
+						<tr>
+							<td>Team*</td>
+							<td>Ranking*</td>
+							<td>Autonomous Pts.**</td>
+							<td>Climb Pts.**</td>
+							<td>Teleoperated Pts.**</td>
+							<td>Total Pts.**</td>
+						</tr>
+					</thead>
+					<tbody>
+						<tr><td colspan="6"><em>Waiting for script to load...</em></td></tr>
+					</tbody>
+					<tfoot>
+						<tr><td colspan="6">
+						*Data from <a href="http://www.usfirst.org">www.US<em>FIRST.org</em></a><br/>
+						**These numbers are calculated and only estimates. They represent the expected average score that <em>this</em> team will score <em>alone</em> in a match.</td></tr>
+					</tfoot>
+				</table>
+				
+				
+				
+				
+				
+				
+				
+				
+				
+				
+				
+				
+				
+				
+				
+				
+				
+				
+				
+				
+				
+				
+				
+				
 			</div>			
 		</div>
 		<div style="clear:both;"><!--return to 1 column layout-->
 			<h2>How Does This Work?</h2>
-			<p>For each point category, our system solves a system of linear equations for the "average contribution" of each team per match.  Each equation corresponds to
-			a single team and expresses the total accumulated points earned by that team as a linear combination of that team's average contribution and the average 
-			contributions of every other team that has competed on an alliance with that team.  Naturally, we represent the system of equations with a single matrix equation
-			of the form <code>Ax=b</code>
-		
+			<p>For each point category, our system solves a system of linear equations for the "average contribution" of each team per match.  Each equation corresponds to a single team and expresses the total accumulated points earned by that team as a linear combination of that team's average contribution and the average contributions of every other team that has competed on an alliance with that team.  Naturally, we represent the system of equations with a single matrix equation of the form <code>Ax=b</code>
 			<ul>
 				<li>Vector <code>b</code> contains the aggregate point value for each team.</li>
-				<li>Each element <code>A(i,j)</code> of matrix <code>A</code> represents the number of times team <code>i</code> has played with team <code>j</code>.
+				<li>Each element <code>A<sub>i&#8291;j</sub></code> of matrix <code>A</code> represents the number of times team <code>i</code> has played with team <code>j</code>.
 					Each element on the diagonal, therefore, is the total number of matches played by the team represented by that row and column.  As a result, our
 					matrix has the following properties:
 					<ul>

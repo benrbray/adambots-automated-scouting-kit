@@ -1,4 +1,4 @@
-function plotAxis(ctx,minx,maxx,miny,maxy,axx,axy) {
+function plotAxis(ctx,minx,maxx,miny,maxy,axx,axy,title) {
 	ctx.pad = 50;
 	var pad = ctx.pad;
 	function round(x) {
@@ -9,7 +9,9 @@ function plotAxis(ctx,minx,maxx,miny,maxy,axx,axy) {
 		}
 		return u*base;
 	}
+	ctx.lineJoin = "miter";
 	ctx.strokeStyle = "#CCCCCC";
+	ctx.strokeStyle = "black";
 	ctx.lineWidth = 2;
 	ctx.beginPath();
 	ctx.moveTo(pad,pad);
@@ -25,14 +27,18 @@ function plotAxis(ctx,minx,maxx,miny,maxy,axx,axy) {
 	ctx.font = "12px Arial";
 	ctx.textAlign = "center";
 	ctx.textBaseline = "middle";
+
+	
 	var step = round(40 / (ctx.canvas.width - pad*2) * (maxx - minx));
 	for (var i = minx; i < maxx + step; i += step)
 	{
+		ctx.strokeStyle = "black";
 		ctx.beginPath();
 		ctx.moveTo( pad + (ctx.canvas.width - pad*2) * (i-minx) / (maxx-minx), ctx.canvas.height - pad);
 		ctx.lineTo( pad + (ctx.canvas.width - pad*2) * (i-minx) / (maxx-minx), ctx.canvas.height - pad + 5);
 		ctx.stroke();
 		ctx.fillStyle = "#999999";
+		ctx.fillStyle = "black";
 		ctx.fillText(i,pad + (ctx.canvas.width - pad*2) * (i-minx) / (maxx-minx), ctx.canvas.height - pad + 17);
 	}
 	
@@ -40,27 +46,38 @@ function plotAxis(ctx,minx,maxx,miny,maxy,axx,axy) {
 	var step = round(40 / (ctx.canvas.height - pad*2) * (maxy - miny));
 	for (var i = miny; i < maxy + step; i += step)
 	{
+		ctx.strokeStyle = "black";
 		ctx.lineWidth = 2;
 		ctx.beginPath();
 		ctx.moveTo( pad , (ctx.canvas.height - pad) - (i - miny) * (ctx.canvas.height - pad*2) / (maxy - miny)  );
 		ctx.lineTo( pad - 5 , (ctx.canvas.height - pad) - (i - miny) * (ctx.canvas.height - pad*2) / (maxy - miny)  );
 		ctx.stroke();
 		
+		ctx.fillStyle = "#999999";
+		ctx.fillStyle = "black";
 		ctx.fillText(i,pad - 17 , (ctx.canvas.height - pad) - (i - miny) * (ctx.canvas.height - pad*2) / (maxy - miny) );
 		
-		ctx.lineWidth = 1;
-		ctx.beginPath();
-		ctx.moveTo( pad , (ctx.canvas.height - pad) - (i - miny) * (ctx.canvas.height - pad*2) / (maxy - miny)  );
-		ctx.lineTo( ctx.canvas.width - pad , (ctx.canvas.height - pad) - (i - miny) * (ctx.canvas.height - pad*2) / (maxy - miny)  );
-		ctx.stroke();
+		if (i > miny) {
+			ctx.strokeStyle = "#CCCCCC";
+			ctx.lineWidth = 1;
+			ctx.beginPath();
+			ctx.moveTo( pad , (ctx.canvas.height - pad) - (i - miny) * (ctx.canvas.height - pad*2) / (maxy - miny)  );
+			ctx.lineTo( ctx.canvas.width - pad , (ctx.canvas.height - pad) - (i - miny) * (ctx.canvas.height - pad*2) / (maxy - miny)  );
+			ctx.stroke();
+		}
 	}
 	
+	ctx.fillStyle = "black";
+	ctx.font = "bold 12px Arial";
 	ctx.fillText(axx, (ctx.canvas.width)/2, ctx.canvas.height - pad + 17 + 17); //x axis
 	ctx.save();
 	ctx.translate( pad - 17 - 17, (ctx.canvas.height)/2 );
 	ctx.rotate(-Math.PI/2);
 	ctx.fillText(axy,0,0);
 	ctx.restore();
+	
+	ctx.font = "bold 14px Arial";
+	ctx.fillText(title,ctx.canvas.width/2,pad/2);
 }
 
 function plotCurve(ctx,pts,color,nodots) {
@@ -77,6 +94,7 @@ function plotCurve(ctx,pts,color,nodots) {
 	}
 	
 	ctx.lineWidth = 10;
+	ctx.lineJoin = "bevel";
 	ctx.strokeStyle = "white";
 	ctx.beginPath();
 	ctx.moveTo(convx(pts[0][0]),convy(pts[0][1]));
@@ -84,7 +102,7 @@ function plotCurve(ctx,pts,color,nodots) {
 		ctx.lineTo(convx(pts[i][0]),convy(pts[i][1]));
 	}
 	ctx.stroke();
-	
+	ctx.lineJoin = "miter";
 	ctx.lineWidth = 4;
 	ctx.strokeStyle = color;
 	ctx.beginPath();

@@ -18,9 +18,18 @@ function Main() {
 	// Display Waiting Message
 	
 	graphMatches = document.getElementById("graphMatches").getContext("2d");
+	plotAxis(graphMatches,0,80,0,150,"Match","Score","");
 	
 	document.getElementById("oprdata").innerHTML = "<tr><td colspan=\"6\">Building FRCEvent object</td></tr>";
-	frcevent = new FRCEvent(eventURL,eventName);
+	frcevent = new FRCEvent(eventURL,eventName, function () {
+		var t = frcevent.qualtable.data;
+		var pts = [];
+		for (var i = 0; i < t.length; i++) {
+			pts[pts.length] = [i+1, t[i][9] ];
+		}
+		plotCurve(graphMatches,pts,"#9999EE",true);
+	}
+	);
 	setInterval( function() { 
 		document.getElementById("oprdata").innerHTML = "<td colspan=\"6\">" + frcevent.status + "</td>";
 	}, 100  );
