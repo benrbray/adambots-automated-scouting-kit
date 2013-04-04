@@ -33,6 +33,9 @@ if (isset($_REQUEST["grab"])) {
 <html>
 	<head>
 		<title>Adambots Automated Scouting Kit</title>
+
+		<!--[if IE]><script type="text/javascript" src="excanvas/excanvas.js"></script><![endif]-->
+
 		<script type="text/javascript" src="graphing.js"></script>
 		<script type="text/javascript" src="frcevent.js"></script>
 		<script type="text/javascript" src="sorttable.js"></script>
@@ -115,14 +118,14 @@ if (isset($_REQUEST["grab"])) {
 					<tbody><tr>
 					<td>
 						<div style="height:7px;"></div>
-						<input class="mini" /><span style="width:12px;display:inline-block;"> + </span><input class="mini" /><span style="width:12px;display:inline-block;"> + </span><input class="mini" /><br/>
+						<input class="mini" id="predictionred1" /><span style="width:12px;display:inline-block;"> + </span><input class="mini" id="predictionred2" /><span style="width:12px;display:inline-block;"> + </span><input class="mini" id="predictionred3" /><br/>
 						<div style="height:7px;"></div>
 						<input id="redallianceprediction" class="mini" style="width:178px; background:#FFE0E0;" readonly />
 						<div style="height:7px;"></div>
 					</td>
 					<td>
 						<div style="height:7px;"></div>
-						<input class="mini" /><span style="width:12px;display:inline-block;"> + </span><input class="mini" /><span style="width:12px;display:inline-block;"> + </span><input class="mini" /><br/>
+						<input class="mini" id="predictionblue1" /><span style="width:12px;display:inline-block;"> + </span><input class="mini" id="predictionblue2" /><span style="width:12px;display:inline-block;"> + </span><input class="mini" id="predictionblue3" /><br/>
 						<div style="height:7px;"></div>
 						<input id="blueallianceprediction" class="mini" style="width:178px; background:#E0E0FF;" readonly /> 
 						<div style="height:7px;"></div>
@@ -234,7 +237,7 @@ if (isset($_REQUEST["grab"])) {
 			</ul>
 
 			<h2>Want Source Code?</h2>
-			This project is available on <a href="https://github.com/benrbray/adambots-automated-scouting-kit/">GitHub</a>. It is available in <a href="https://github.com/benrbray/adambots-automated-scouting-kit/">web</a> and <a href="https://github.com/benrbray/adambots-automated-scouting-kit/tree/master/java">Java</a> forms.<br/>
+			This project is available on <a href="https://github.com/benrbray/adambots-automated-scouting-kit/">GitHub</a>. It is available in <a href="https://github.com/benrbray/adambots-automated-scouting-kit/">web</a> form, utilizing PHP, Javascript, HTML, and CSS.<br/>
 			<br/>
 			Licensed use:<br/>
 			The <em>Adambots Automated Scouting Kit (AASK)</em> is free software: you can redistribute it and/or modify
@@ -248,6 +251,10 @@ if (isset($_REQUEST["grab"])) {
 			<br/>
 			You should have received a copy of the GNU General Public License
 			along with AASK.  If not, see &lt;http://www.gnu.org/licenses/&gt;.
+			<br/>
+			<br/>
+			This project utilizes Excanvas.js (&copy; Google 2006) for backwards compatibility for Microsoft Internet Explorer which is licenced under the Apache License.<br/>
+			See <a href="excanvas">here</a>.
 		</div>
 		<script type="text/javascript">setTimeout(Main,1);</script>
 	</body>

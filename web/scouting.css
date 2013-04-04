@@ -55,16 +55,20 @@ input.mini:focus {
 border:1px solid #AAAAFF;
 }
 
+#redallianceprediction:focus, #predictionred1:focus, #predictionred2:focus, #predictionred3:focus {
+border:1px solid #FFAAAA;
+}
+
 input.mini[readonly] {
 background:#EEEEEE;
 }
 
 div.hr {
 height:1px;
-width:90%;
+width:80%;
 margin-left:auto;
 margin-right:auto;
 background:#DDDDDD;
-border-left:10px solid #F5F5F5;
-border-right:10px solid #F5F5F5;
+border-left:20px solid #F5F5F5;
+border-right:20px solid #F5F5F5;
 }

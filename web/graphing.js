@@ -1,4 +1,21 @@
+/**
+ctx: The canvas's context (canvas.getContext("2d"))
+minx: The minimum x to be shown on the xaxis (often either 0 or the minimum x of the dataset)
+maxx: The maximum x to be shown (often the maximum x of the dataset)
+miny: The min. y (often either 0 or the minimum y of the data set)
+maxy: The max. y (often 1.25 * the max. y, or something similar)
+axx: Name of the x axis
+axy: Name of the y axis
+title: Name of graph (optional)
+**/
 function plotAxis(ctx,minx,maxx,miny,maxy,axx,axy,title) {
+	if (!ctx) {
+		return;
+	}
+	if (!title) {
+		title = "";
+	}
+	
 	ctx.pad = 50;
 	var pad = ctx.pad;
 	function round(x) {
@@ -80,7 +97,18 @@ function plotAxis(ctx,minx,maxx,miny,maxy,axx,axy,title) {
 	ctx.fillText(title,ctx.canvas.width/2,pad/2);
 }
 
+/**
+(note: plotAxis must be called before plotCurve in order to set up the graph)
+ctx: the canvas's context (see plotAxis)
+pts: An array of arrays; each object in pts is in the form [x,y]
+color: a CSS color for the curve, e.g. "purple" or "#EECCBB" or "rgba(127,255,200,0.8)"
+nodots: If true, then the dots will not be shown at each data point. Recommended for when data is very dense horizontally or when data is very smooth.
+Otherwise, optional.
+**/
 function plotCurve(ctx,pts,color,nodots) {
+	if (!ctx) {
+		return;
+	}
 	var miny = ctx.miny;
 	var maxy = ctx.maxy;
 	var minx = ctx.minx;
