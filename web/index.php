@@ -118,14 +118,14 @@ if (isset($_REQUEST["grab"])) {
 					<tbody><tr>
 					<td>
 						<div style="height:7px;"></div>
-						<input class="mini" /><span style="width:12px;display:inline-block;"> + </span><input class="mini" /><span style="width:12px;display:inline-block;"> + </span><input class="mini" /><br/>
+						<input class="mini" id="predictionred1" /><span style="width:12px;display:inline-block;"> + </span><input class="mini" id="predictionred2" /><span style="width:12px;display:inline-block;"> + </span><input class="mini" id="predictionred3" /><br/>
 						<div style="height:7px;"></div>
 						<input id="redallianceprediction" class="mini" style="width:178px; background:#FFE0E0;" readonly />
 						<div style="height:7px;"></div>
 					</td>
 					<td>
 						<div style="height:7px;"></div>
-						<input class="mini" /><span style="width:12px;display:inline-block;"> + </span><input class="mini" /><span style="width:12px;display:inline-block;"> + </span><input class="mini" /><br/>
+						<input class="mini" id="predictionblue1" /><span style="width:12px;display:inline-block;"> + </span><input class="mini" id="predictionblue2" /><span style="width:12px;display:inline-block;"> + </span><input class="mini" id="predictionblue3" /><br/>
 						<div style="height:7px;"></div>
 						<input id="blueallianceprediction" class="mini" style="width:178px; background:#E0E0FF;" readonly /> 
 						<div style="height:7px;"></div>
@@ -237,7 +237,7 @@ if (isset($_REQUEST["grab"])) {
 			</ul>
 
 			<h2>Want Source Code?</h2>
-			This project is available on <a href="https://github.com/benrbray/adambots-automated-scouting-kit/">GitHub</a>. It is available in <a href="https://github.com/benrbray/adambots-automated-scouting-kit/">web</a> and <a href="https://github.com/benrbray/adambots-automated-scouting-kit/tree/master/java">Java</a> forms.<br/>
+			This project is available on <a href="https://github.com/benrbray/adambots-automated-scouting-kit/">GitHub</a>. It is available in <a href="https://github.com/benrbray/adambots-automated-scouting-kit/">web</a> form, utilizing PHP, Javascript, HTML, and CSS.<br/>
 			<br/>
 			Licensed use:<br/>
 			The <em>Adambots Automated Scouting Kit (AASK)</em> is free software: you can redistribute it and/or modify
