@@ -113,6 +113,9 @@ function plotCurve(ctx,pts,color,nodots) {
 	var maxy = ctx.maxy;
 	var minx = ctx.minx;
 	var maxx = ctx.maxx;
+
+	pts.sort(function(a,b) { return a[0] - b[0]; } );
+
 	function convx(x) {
 		return (x - minx) / (maxx - minx) * (ctx.canvas.width - ctx.pad*2) + ctx.pad;
 	}

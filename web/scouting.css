@@ -9,14 +9,8 @@ body {
 }
 
 .shinytable * tr td {
-  table-layout:fixed;
   border-right: 1px solid #707070;
   border-bottom: 1px solid #707070; /*#AAAAAA on the light gray, #AAAAAA on the colored*/
-}
-
-.shinytable {
-	/**/
-	color:inherit;
 }
 
 table.shinytable {
@@ -24,6 +18,11 @@ table.shinytable {
   text-align:center;
   border-left:1px solid #707070;
   border-top:1px solid #707070;
+  table-layout:fixed;
+}
+
+table.shinytable tbody tr td {
+width:49px;
 }
 
 thead {
@@ -71,4 +70,8 @@ margin-right:auto;
 background:#DDDDDD;
 border-left:20px solid #F5F5F5;
 border-right:20px solid #F5F5F5;
+}
+
+#predictedresult {
+  padding:4px;
 }

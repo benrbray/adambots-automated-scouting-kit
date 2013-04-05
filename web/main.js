@@ -19,7 +19,7 @@ function Main() {
 	graphMatches = document.getElementById("graphMatches").getContext("2d");
 	plotAxis(graphMatches, 0, 80, 0, 150, "Match","Score","");
 	
-	document.getElementById("bigdata").innerHTML = "<tr><td colspan=\"6\">Building FRCEvent object</td></tr>";
+	document.getElementById("bigdata").innerHTML = "<tr><td colspan=\"8\">Building FRCEvent object</td></tr>";
 	frcEvent = new FRCEvent(eventURL, eventName, 
 		function () {
 			var t = frcEvent.qualTable.data;
@@ -111,7 +111,7 @@ function Main() {
 	}
 
 	/*setInterval( function() { 
-		document.getElementById("contributiondata").innerHTML = "<td colspan=\"6\">" + frcEvent.status + "</td>";
+		document.getElementById("contributiondata").innerHTML = "<td colspan=\"8\">" + frcEvent.status + "</td>";
 	}, 100);*/
 }
 

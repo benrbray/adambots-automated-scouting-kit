@@ -30,8 +30,9 @@ if (isset($_REQUEST["grab"])) {
 
 <!doctype html>
 
-<html>
+<html> 
 	<head>
+		<meta charset="UTF-8">
 		<title>Adambots Automated Scouting Kit</title>
 		<!--[if IE]><script type="text/javascript" src="excanvas/excanvas.js"></script><![endif]-->
 		<script type="text/javascript" src="output.js"></script>
@@ -68,7 +69,7 @@ if (isset($_REQUEST["grab"])) {
 				<thead>
 					<tr>
 						<td colspan="8">
-						<script>document.write(eventName + " (Big Table)");</script>
+						<script>document.write(eventName + " (Analysis)");</script>
 						</td>
 					</tr>
 					<tr>
@@ -98,13 +99,13 @@ if (isset($_REQUEST["grab"])) {
 			</table>
 		</div>
 		
-		</br>
+		<br/>
 		<div class="hr"></div>
-		</br>
+		<br/>
 		
 		<div style="width:819px; margin:0px; padding:0px;"> <!--Column container-->
 		
-			<!----------------------------Column 1---------------------------->
+			<!-- Column 1 -->
 			
 			<div style="width:400px; margin:0px; padding:0px; float:left;">
 				<!-- Match Scores Graph -->
@@ -119,7 +120,7 @@ if (isset($_REQUEST["grab"])) {
 			
 			<!-- Between Columns -->
 			
-			<!----------------------------Column 2---------------------------->
+			<!-- Column 2 -->
 			
 			<div style="width:400px; margin:0px; padding:0px; float:right;">
 				
@@ -152,7 +153,7 @@ if (isset($_REQUEST["grab"])) {
 						</td>
 						</tr>
 						<tr>
-							<td id="predictedresult" colspan="2" height="35px">Tie</td>
+							<td id="predictedresult" colspan="2">Tie</td>
 						</tr>
 					</tbody>
 				</table>
