@@ -37,7 +37,9 @@ if (isset($_REQUEST["grab"])) {
 		<!--[if IE]><script type="text/javascript" src="excanvas/excanvas.js"></script><![endif]-->
 
 		<script type="text/javascript" src="graphing.js"></script>
-		<script type="text/javascript" src="frcevent.js"></script>
+		<script type="text/javascript" src="hashtable.js"></script>
+		<script type="text/javascript" src="matrix.js"></script>
+		<script type="text/javascript" src="frcEvent.js"></script>
 		<script type="text/javascript" src="sorttable.js"></script>
 		<script type="text/javascript" src="colortable.js"></script>
 		<script type="text/javascript" src="page.js"></script>
@@ -156,8 +158,6 @@ if (isset($_REQUEST["grab"])) {
 				<br/>
 				<div class="hr"></div>
 				<br/>
-				
-				
 				
 				<table class="shinytable" data-sorting="iidddd" style="width:400px;">
 					<thead>
