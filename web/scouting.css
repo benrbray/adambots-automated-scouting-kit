@@ -10,8 +10,8 @@ body {
 
 .shinytable * tr td {
   table-layout:fixed;
-  border-right: 1px solid #AAAAAA;
-  border-bottom: 1px solid #AAAAAA; /*#AAAAAA on the light gray, #AAAAAA on the colored*/
+  border-right: 1px solid #707070;
+  border-bottom: 1px solid #707070; /*#AAAAAA on the light gray, #AAAAAA on the colored*/
 }
 
 .shinytable {
@@ -22,8 +22,8 @@ body {
 table.shinytable {
   border-spacing:0px;
   text-align:center;
-  border-left:1px solid #AAAAAA;
-  border-top:1px solid #AAAAAA;
+  border-left:1px solid #707070;
+  border-top:1px solid #707070;
 }
 
 thead {
