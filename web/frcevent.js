@@ -56,7 +56,11 @@ function FRCEvent(baseurl,eventName,callback) {
 		
 		// Misc Stats
 		this.teamHash = this.rankingsMatrix.columnHash(1, 0);
+
 		this.teamCount = this.rankingsMatrix.getRows();
+
+		this.rankHash = this.rankingsMatrix.columnHash(0, 1);
+
 		this.matchCount = this.qualMatrix.getRows();
 		
 		this.process();
@@ -78,7 +82,22 @@ function FRCEvent(baseurl,eventName,callback) {
 		this.climbEC = this.mpf.solveLU(this.climbPoints);
 		this.teleopEC = this.mpf.solveLU(this.teleopPoints);
 		this.totalEC = this.mpf.solveLU(this.totalPoints);
-		
+
+		this.isTeam = function(t) {
+			return this.teamHash.get(t) != undefined;
+		}
+		this.getAutonEC = function(t) {
+			return this.autonEC.get(this.teamHash.get(t)-1,0);
+		}
+		this.getClimbEC = function(t) {
+			return this.climbEC.get(this.teamHash.get(t)-1,0);
+		}
+		this.getTeleopEC = function(t) {
+			return this.teleopEC.get(this.teamHash.get(t)-1,0);
+		}
+		this.getTotalEC = function(t) {
+			return this.totalEC.get(this.teamHash.get(t)-1,0);
+		}
 		// Exit
 		this.ready = true;
 		if (this.callback) {

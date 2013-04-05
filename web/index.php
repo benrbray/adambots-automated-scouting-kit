@@ -33,20 +33,18 @@ if (isset($_REQUEST["grab"])) {
 <html>
 	<head>
 		<title>Adambots Automated Scouting Kit</title>
-
 		<!--[if IE]><script type="text/javascript" src="excanvas/excanvas.js"></script><![endif]-->
-
+		<script type="text/javascript" src="output.js"></script>
 		<script type="text/javascript" src="graphing.js"></script>
 		<script type="text/javascript" src="hashtable.js"></script>
 		<script type="text/javascript" src="matrix.js"></script>
 		<script type="text/javascript" src="frcEvent.js"></script>
 		<script type="text/javascript" src="sorttable.js"></script>
-		<script type="text/javascript" src="colortable.js"></script>
 		<script type="text/javascript" src="page.js"></script>
 		<script type="text/javascript" src="main.js"></script>
 		<link href="scouting.css" rel="stylesheet" type="text/css">
 	</head>
-	<body style="width:820px; margin-left:auto; margin-right:auto;">
+	<body style="width:820px; padding-left:50px; padding-right:50px; margin-left:auto; margin-right:auto;">
 		<h1>Adambots Automated Scouting Kit</h1>
 		The Adambots Automated Scouting Kit (AASK) automatically generates estimations of the ability of robots at competition. It utilizes the estimation of solutions to linear equations to predict expected contributions.<br/><br/>
 		This system is produced in Javascript by Adambots team members for any <em>FIRST</em> robotics teams to use!
@@ -122,95 +120,26 @@ if (isset($_REQUEST["grab"])) {
 						<div style="height:7px;"></div>
 						<input class="mini" id="predictionred1" /><span style="width:12px;display:inline-block;"> + </span><input class="mini" id="predictionred2" /><span style="width:12px;display:inline-block;"> + </span><input class="mini" id="predictionred3" /><br/>
 						<div style="height:7px;"></div>
-						<input id="redallianceprediction" class="mini" style="width:178px; background:#FFE0E0;" readonly />
+						<input id="redallianceprediction" tabindex="500" class="mini" style="width:178px; background:#FFE0E0;" readonly />
 						<div style="height:7px;"></div>
 					</td>
 					<td>
 						<div style="height:7px;"></div>
 						<input class="mini" id="predictionblue1" /><span style="width:12px;display:inline-block;"> + </span><input class="mini" id="predictionblue2" /><span style="width:12px;display:inline-block;"> + </span><input class="mini" id="predictionblue3" /><br/>
 						<div style="height:7px;"></div>
-						<input id="blueallianceprediction" class="mini" style="width:178px; background:#E0E0FF;" readonly /> 
+						<input id="blueallianceprediction" tabindex="500" class="mini" style="width:178px; background:#E0E0FF;" readonly /> 
 						<div style="height:7px;"></div>
 					</td>
 					</tr>
 					<tr>
-						<td colspan="2">Tie</td>
+						<td id="predictedresult" colspan="2">Tie</td>
 					</tr>
 					</tbody>
 				</table>
 				
-				<!-- <div style="text-align:center; border:1px #AAAAAA solid; padding-top:7px; padding-bottom:7px;">
-					<b>Match Prediction</b><br/>
-					<div style="height:7px;"></div>
-					<input class="mini" /><span style="width:12px;display:inline-block;"> + </span><input class="mini" /><span style="width:12px;display:inline-block;"> + </span><input class="mini" /> <b>&nbsp;vs&nbsp;</b> <input class="mini" /><span style="width:12px;display:inline-block;"> + </span><input class="mini" /><span style="width:12px;display:inline-block;"> + </span><input class="mini" /><br/>
-					<div style="height:7px;"></div>
-					<input id="redallianceprediction" class="mini" style="width:178px;" readonly /> <b>&nbsp;vs&nbsp;</b> <input id="blueallianceprediction" class="mini" style="width:178px;" readonly /> 
-				</div> -->
-				
-				
-				
-				
-				
-				
-				
-				
-				
-				<br/>
-				<div class="hr"></div>
-				<br/>
-				
-				<table class="shinytable" data-sorting="iidddd" style="width:400px;">
-					<thead>
-						<tr>
-							<td colspan="6">
-							<script>document.write(eventName + " Estimated Contributions (OPR Table)");</script>
-							</td>
-						</tr>
-						<tr>
-							<td>Team*</td>
-							<td>Ranking*</td>
-							<td>Autonomous Pts.**</td>
-							<td>Climb Pts.**</td>
-							<td>Teleoperated Pts.**</td>
-							<td>Total Pts.**</td>
-						</tr>
-					</thead>
-					<tbody>
-						<tr><td colspan="6"><em>Waiting for script to load...</em></td></tr>
-					</tbody>
-					<tfoot>
-						<tr><td colspan="6">
-						*Data from <a href="http://www.usfirst.org">www.US<em>FIRST.org</em></a><br/>
-						**These numbers are calculated and only estimates. They represent the expected average score that <em>this</em> team will score <em>alone</em> in a match.</td></tr>
-					</tfoot>
-				</table>
-				
-				
-				
-				
-				
-				
-				
-				
-				
-				
-				
-				
-				
-				
-				
-				
-				
-				
-				
-				
-				
-				
-				
-				
 			</div>			
 		</div>
-		<div style="clear:both;"><!--return to 1 column layout-->
+		<div style="clear:both; padding-top:30px;"><!--return to 1 column layout-->
 			<h2>How Does This Work?</h2>
 			<p>For each point category, our system solves a system of linear equations for the "average contribution" of each team per match.  Each equation corresponds to a single team and expresses the total accumulated points earned by that team as a linear combination of that team's average contribution and the average contributions of every other team that has competed on an alliance with that team.  Naturally, we represent the system of equations with a single matrix equation of the form <code>Ax=b</code>
 			<ul>
