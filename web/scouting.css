@@ -21,8 +21,9 @@ table.shinytable {
   table-layout:fixed;
 }
 
-table.shinytable tbody tr td {
+#bigtable tbody tr td {
 width:49px;
+height:1.75em;
 }
 
 thead {
