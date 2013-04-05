@@ -35,6 +35,7 @@ if (isset($_REQUEST["grab"])) {
 		<meta charset="UTF-8">
 		<title>Adambots Automated Scouting Kit</title>
 		<!--[if IE]><script type="text/javascript" src="excanvas/excanvas.js"></script><![endif]-->
+		<script type="text/javascript" src="prediction.js"></script>
 		<script type="text/javascript" src="output.js"></script>
 		<script type="text/javascript" src="graphing.js"></script>
 		<script type="text/javascript" src="hashtable.js"></script>
@@ -155,10 +156,41 @@ if (isset($_REQUEST["grab"])) {
 						<tr>
 							<td id="predictedresult" colspan="2">Tie</td>
 						</tr>
+						<tr>
+							<td colspan="2">
+								<label><input name="m1atchpredictionmode" type="radio" checked="checked" id="m1atchpredictionmode0" />OPR Only</label><br/>
+								<label><input name="m1atchpredictionmode" type="radio" id="m1atchpredictionmode1" />OPR + DPR</label><br/>
+								<label><input name="m1atchpredictionmode" type="radio" id="m1atchpredictionmode2" />CCWM</label><br/>
+							</td>
+						</tr>
 					</tbody>
 				</table>
 				
-			</div>			
+			<br/>
+			<div class="hr"></div>
+			<br/>
+
+			<table class="shinytable" id="matchpredictions">
+				<thead>
+					<tr><td colspan="5">Predictions for Unplayed Matches</td></tr>
+					<tr><td style="width:20px;">Match</td><td>Red Alliance</td><td>Blue Alliance</td><td>Red Prediction</td><td>Blue Prediction</td></tr>
+				</thead>
+				<tbody>
+				</tbody>
+				<tfoot>
+					<tr>
+						<td colspan="5">
+							<label><input name="m2atchpredictionmode" type="radio" checked="checked" id="m2atchpredictionmode0" />OPR Only (<span id="m2ode0acc"></span>)</label><br/>
+							<label><input name="m2atchpredictionmode" type="radio" id="m2atchpredictionmode1" />OPR + DPR (<span id="m2ode1acc"></span>)</label><br/>
+							<label><input name="m2atchpredictionmode" type="radio" id="m2atchpredictionmode2" />CCWM (<span id="m2ode2acc"></span>)</label><br/>
+						</td>
+					</tR>
+				</tfoot>
+			</table>
+
+
+			</div>
+
 		</div>
 		
 		<div style="clear:both; padding-top:30px;"><!--return to 1 column layout-->

@@ -101,6 +101,13 @@ function FRCEvent(baseurl,eventName,callback) {
 		this.winAnalysis();
 		this.ccwm = this.mpf.solveLU(this.winMargins);
 		this.dpr = this.mpf.solveLU(this.defenceMargins);
+
+		this.getCCWM = function(t) {
+			return this.ccwm.get(this.teamHash.get(t)-1,0);
+		}
+		this.getDPR = function(t) {
+			return this.dpr.get(this.teamHash.get(t)-1,0);
+		}
 		
 		// Exit
 		this.ready = true;

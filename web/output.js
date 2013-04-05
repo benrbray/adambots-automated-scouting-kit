@@ -18,6 +18,9 @@ function maximumOfVector(v) {
 	for (var i = 0; i < v.length; i++) {
 		r = Math.max(r,v[i]);
 	}
+	if (isNaN(r)) {
+		return 1;
+	}
 	return r;
 }
 
@@ -25,6 +28,9 @@ function minimumOfVector(v) {
 	var r = v[0];
 	for (var i = 0; i < v.length; i++) {
 		r = Math.min(r,v[i]);
+	}
+	if (isNaN(r) ) {
+		return -1;
 	}
 	return r;
 }
@@ -60,7 +66,17 @@ function fillTable( id , columns , sty , fix , sortable) {
 			var a = [227,137,147];
 			var b = [247,247,137];
 			var c = [152,227,167];
-
+			if (sty[i] == "white") {
+				a = [255,255,255];
+				b = [255,255,255];
+				c = [255,255,255];
+			}
+			if (sty[i] == "red") {
+				a = b = c = [255, 200, 200];
+			}
+			if (sty[i] == "blue") {
+				a = b = c = [200, 200, 255];
+			}
 			if (sty[i] == "grey" || sty[i] == "gray") {
 				a = b = c = [238,238,238];
 			}
@@ -72,7 +88,11 @@ function fillTable( id , columns , sty , fix , sortable) {
 
 			s = s + "<td style=\"background:" + getGradient(low,columns[i][row],high,a,b,c) + "\">";
 			if (fix[i] != undefined) {
-				s = s + columns[i][row].toFixed(fix[i]);
+				if (fix[i] < 0) {
+					s = s + columns[i][row];
+				} else {
+					s = s + columns[i][row].toFixed(fix[i]);
+				}
 			} else {
 				s = s + columns[i][row].toFixed(2);
 			}
@@ -103,6 +123,9 @@ function colorToHex(c) {
 Return a color from the three color gradient
 **/
 function getGradient(lo,val,hi,A,B,C) {
+	if (isNaN(val/2*2)) {
+		return colorToHex(A);
+	}
   	var md = (lo + hi)/2;
 	var hf = (hi - lo)/2;
 	if (val < md) {

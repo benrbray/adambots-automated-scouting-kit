@@ -13,7 +13,7 @@ body {
   border-bottom: 1px solid #707070; /*#AAAAAA on the light gray, #AAAAAA on the colored*/
 }
 
-table.shinytable {
+.shinytable {
   border-spacing:0px;
   text-align:center;
   border-left:1px solid #707070;
@@ -40,6 +40,11 @@ thead tr td {
   padding-bottom:4px;
   padding-left:7px;
   padding-right:7px;
+}
+
+#matchpredictions tr td {
+padding-left:7px;
+padding-right:7px;
 }
 
 input.mini {
