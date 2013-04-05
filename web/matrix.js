@@ -39,6 +39,7 @@ function Matrix(data){
 	this.columnHash	= 
 		this.colHash= function(i,j){		return MatrixConstructColumnHash(this,i,j); };
 	this.submat		= function(i,j,k,l){	return MatrixSubMatrix(this,i,j,k,l);};
+	this.toSingleArray=function(){			return MatrixToSingleArray(this);	};
 }
 
 /**
@@ -207,6 +208,21 @@ function MatrixSubMatrix(mat, startRowIndexInclusive, endRowIndexInclusive, star
 	}
 	
 	return sub;
+}
+
+function MatrixToSingleArray(mat){
+	MatrixTypeCoerce(mat);
+	
+	var arr = new Array(mat.getRows() * mat.getCols());
+	var n = 0;
+	for(var i = 0; i < mat.getRows(); i++){
+		for(var j = 0; j < mat.getCols(); j++){
+			arr[n] = mat.get(i, j);
+			n++;
+		}
+	}
+	
+	return arr;
 }
 
 //// MATRIX ARITHMETIC --------------------------------------------------------
