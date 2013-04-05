@@ -47,6 +47,7 @@ function fillTable( id , columns , sty , fix , sortable) {
 		columns[i] = vectorToArray(columns[i]);
 	}
 	var tb = document.getElementById(id).tBodies[0];
+	
 	var s = "";
 	for (var row = 0; row < columns[0].length; row++) {
 		s = s + "<tr>";
@@ -81,24 +82,15 @@ function fillTable( id , columns , sty , fix , sortable) {
 	}
 	tb.innerHTML = s;
 	if (sortable) {
-		setupTable(document.getElementById("oprtable"));
+		setupTable(document.getElementById(id));
 	}
 }
 
-
-
-
-
-
-
-
-function colorLerp(c1,c2,v)
-{
+function colorLerp(c1,c2,v) {
   return [c1[0]*(1-v) + c2[0]*v , c1[1]*(1-v) + c2[1]*v , c1[2]*(1-v) + c2[2]*v ];
 }
 
-function colorToHex(c)
-{
+function colorToHex(c) {
   var u = "0123456789ABCDEF";
   function m(x)
   {

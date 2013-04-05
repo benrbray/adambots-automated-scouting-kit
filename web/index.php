@@ -63,47 +63,67 @@ if (isset($_REQUEST["grab"])) {
 		
 		<br/>
 		
+		<div style="width:819px; margin:0px; padding:0px;">
+			<table class="shinytable" id="bigtable" data-sorting="iidddddd" style="width:819px;">
+				<thead>
+					<tr>
+						<td colspan="8">
+						<script>document.write(eventName + " (Big Table)");</script>
+						</td>
+					</tr>
+					<tr>
+						<td colspan="2">FIRST Data</td>
+						<td colspan="4">Direct Calculations</td>
+						<td colspan="2">Subjective Calculations</td>
+					</tr>
+					<tr>
+						<td>Team*</td>
+						<td>Rank*</td>
+						<td>Auton**</td>
+						<td>Climb**</td>
+						<td>Teleop**</td>
+						<td>OPR**</td>
+						<td>DPR**</td>
+						<td>CCWM**</td>
+					</tr>
+				</thead>
+				<tbody id="bigdata">
+					<tr><td colspan="8"><em>Waiting for script to load...</em></td></tr>
+				</tbody>
+				<tfoot>
+					<tr><td colspan="8">
+					*Data from <a href="http://www.usfirst.org">www.US<em>FIRST.org</em></a><br/>
+					**These numbers are calculated and only estimates. They represent the expected average score that <em>this</em> team will score <em>alone</em> in a match.</td></tr>
+				</tfoot>
+			</table>
+		</div>
+		
+		</br>
+		<div class="hr"></div>
+		</br>
+		
 		<div style="width:819px; margin:0px; padding:0px;"> <!--Column container-->
-			<div style="width:400px; margin:0px; padding:0px; float:left;"> <!--Column 1-->	
-				<table class="shinytable" id="oprtable" data-sorting="iidddd" style="width:400px;">
-					<thead>
-						<tr>
-							<td colspan="6">
-							<script>document.write(eventName + " (Estimated Contributions)");</script>
-							</td>
-						</tr>
-						<tr>
-							<td>Team*</td>
-							<td>Ranking*</td>
-							<td>Auton.**</td>
-							<td>Climb**</td>
-							<td>Teleop.**</td>
-							<td>Total**</td>
-						</tr>
-					</thead>
-					<tbody id="oprdata">
-						<tr><td colspan="6"><em>Waiting for script to load...</em></td></tr>
-					</tbody>
-					<tfoot>
-						<tr><td colspan="6">
-						*Data from <a href="http://www.usfirst.org">www.US<em>FIRST.org</em></a><br/>
-						**These numbers are calculated and only estimates. They represent the expected average score that <em>this</em> team will score <em>alone</em> in a match.</td></tr>
-					</tfoot>
+		
+			<!----------------------------Column 1---------------------------->
+			
+			<div style="width:400px; margin:0px; padding:0px; float:left;">
+				<!-- Match Scores Graph -->
+				<table class="shinytable"><thead><tr><td>Match Scores</td></tr><tbody><tr><td>
+					<canvas id="graphMatches" width="398" height="240" style="background:white;width:398x; height:240px; border:0px #AAAAAA solid;">Graphs require the HTML 5 canvas object.</canvas>
 				</table>
-			</div>
-			<!-- Between Columns -->
-			<div style="width:400px; margin:0px; padding:0px; float:right;"> <!--Column 2-->
-
-<table class="shinytable"><thead><tr><td>Match Scores</td></tr><tbody><tr><td>
-				<canvas id="graphMatches" width="398" height="240" style="background:white;width:398x; height:240px; border:0px #AAAAAA solid;">Graphs require the HTML 5 canvas object.</canvas>
-				</table>
-				<br/>
-				<br/>
 				
+				<br/>
 				<div class="hr"></div>
 				<br/>
+			</div>
+			
+			<!-- Between Columns -->
+			
+			<!----------------------------Column 2---------------------------->
+			
+			<div style="width:400px; margin:0px; padding:0px; float:right;">
 				
-				
+				<!-- Match Prediction Table -->
 				<table class="shinytable" style="width:400px;">
 					<thead>
 						<tr>
@@ -116,29 +136,30 @@ if (isset($_REQUEST["grab"])) {
 						</tr>
 					</thead>
 					<tbody><tr>
-					<td>
-						<div style="height:7px;"></div>
-						<input class="mini" id="predictionred1" /><span style="width:12px;display:inline-block;"> + </span><input class="mini" id="predictionred2" /><span style="width:12px;display:inline-block;"> + </span><input class="mini" id="predictionred3" /><br/>
-						<div style="height:7px;"></div>
-						<input id="redallianceprediction" tabindex="500" class="mini" style="width:178px; background:#FFE0E0;" readonly />
-						<div style="height:7px;"></div>
-					</td>
-					<td>
-						<div style="height:7px;"></div>
-						<input class="mini" id="predictionblue1" /><span style="width:12px;display:inline-block;"> + </span><input class="mini" id="predictionblue2" /><span style="width:12px;display:inline-block;"> + </span><input class="mini" id="predictionblue3" /><br/>
-						<div style="height:7px;"></div>
-						<input id="blueallianceprediction" tabindex="500" class="mini" style="width:178px; background:#E0E0FF;" readonly /> 
-						<div style="height:7px;"></div>
-					</td>
-					</tr>
-					<tr>
-						<td id="predictedresult" colspan="2">Tie</td>
-					</tr>
+						<td>
+							<div style="height:7px;"></div>
+							<input class="mini" id="predictionred1" /><span style="width:12px;display:inline-block;"> + </span><input class="mini" id="predictionred2" /><span style="width:12px;display:inline-block;"> + </span><input class="mini" id="predictionred3" /><br/>
+							<div style="height:7px;"></div>
+							<input id="redallianceprediction" tabindex="500" class="mini" style="width:178px; background:#FFE0E0;" readonly />
+							<div style="height:7px;"></div>
+						</td>
+						<td>
+							<div style="height:7px;"></div>
+							<input class="mini" id="predictionblue1" /><span style="width:12px;display:inline-block;"> + </span><input class="mini" id="predictionblue2" /><span style="width:12px;display:inline-block;"> + </span><input class="mini" id="predictionblue3" /><br/>
+							<div style="height:7px;"></div>
+							<input id="blueallianceprediction" tabindex="500" class="mini" style="width:178px; background:#E0E0FF;" readonly /> 
+							<div style="height:7px;"></div>
+						</td>
+						</tr>
+						<tr>
+							<td id="predictedresult" colspan="2" height="35px">Tie</td>
+						</tr>
 					</tbody>
 				</table>
 				
 			</div>			
 		</div>
+		
 		<div style="clear:both; padding-top:30px;"><!--return to 1 column layout-->
 			<h2>How Does This Work?</h2>
 			<p>For each point category, our system solves a system of linear equations for the "average contribution" of each team per match.  Each equation corresponds to a single team and expresses the total accumulated points earned by that team as a linear combination of that team's average contribution and the average contributions of every other team that has competed on an alliance with that team.  Naturally, we represent the system of equations with a single matrix equation of the form <code>Ax=b</code>

@@ -17,9 +17,9 @@ var frcEvent;
 function Main() {
 	// Display Waiting Message
 	graphMatches = document.getElementById("graphMatches").getContext("2d");
-	plotAxis(graphMatches,0,80,0,150,"Match","Score","");
+	plotAxis(graphMatches, 0, 80, 0, 150, "Match","Score","");
 	
-	document.getElementById("oprdata").innerHTML = "<tr><td colspan=\"6\">Building FRCEvent object</td></tr>";
+	document.getElementById("bigdata").innerHTML = "<tr><td colspan=\"6\">Building FRCEvent object</td></tr>";
 	frcEvent = new FRCEvent(eventURL, eventName, 
 		function () {
 			var t = frcEvent.qualTable.data;
@@ -35,13 +35,12 @@ function Main() {
 				colrank[i] = i + 1;
 				colteam[i] = frcEvent.rankHash.get(i+1);
 			}
-
-			fillTable("oprtable", 
-				[colteam	,colrank	,frcEvent.autonEC	,frcEvent.climbEC	,frcEvent.teleopEC	,frcEvent.totalEC], 
-				["grey"		,"greenred"	,"redgreen"			,"redgreen"			,"redgreen"			,"redgreen"],
-				[0			,0			,2],
-				true);
 			
+			fillTable("bigtable", 
+				[colteam,	colrank,	frcEvent.autonEC,	frcEvent.climbEC,	frcEvent.teleopEC,	frcEvent.totalEC,	frcEvent.dpr,	frcEvent.ccwm], 
+				["grey",	"greenred",	"redgreen",			"redgreen",			"redgreen",			"redgreen",			"redgreen",		"redgreen"],
+				[0,			0,			1,					1,					1,					1,					1,				1],
+				true);
 		}
 	);
 	
@@ -112,7 +111,7 @@ function Main() {
 	}
 
 	/*setInterval( function() { 
-		document.getElementById("oprdata").innerHTML = "<td colspan=\"6\">" + frcEvent.status + "</td>";
+		document.getElementById("contributiondata").innerHTML = "<td colspan=\"6\">" + frcEvent.status + "</td>";
 	}, 100);*/
 }
 

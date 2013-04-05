@@ -51,16 +51,13 @@ function FRCEvent(baseurl,eventName,callback) {
 		
 		// Convert Tables to Matrices
 		this.qualMatrix = new Matrix(this.qualTable.data);
-		this.elimMatrix = new Matrix(this.elimTable.data);
+		this.elimMatrix = (this.elimTable?new Matrix(this.elimTable.data):null);
 		this.rankingsMatrix = new Matrix(this.rankingsTable.data);
 		
 		// Misc Stats
 		this.teamHash = this.rankingsMatrix.columnHash(1, 0);
-
 		this.teamCount = this.rankingsMatrix.getRows();
-
 		this.rankHash = this.rankingsMatrix.columnHash(0, 1);
-
 		this.matchCount = this.qualMatrix.getRows();
 		
 		this.process();
@@ -83,6 +80,7 @@ function FRCEvent(baseurl,eventName,callback) {
 		this.teleopEC = this.mpf.solveLU(this.teleopPoints);
 		this.totalEC = this.mpf.solveLU(this.totalPoints);
 
+		// Define Helper Functions
 		this.isTeam = function(t) {
 			return this.teamHash.get(t) != undefined;
 		}
@@ -98,6 +96,12 @@ function FRCEvent(baseurl,eventName,callback) {
 		this.getTotalEC = function(t) {
 			return this.totalEC.get(this.teamHash.get(t)-1,0);
 		}
+		
+		// Win Analysis
+		this.winAnalysis();
+		this.ccwm = this.mpf.solveLU(this.winMargins);
+		this.dpr = this.mpf.solveLU(this.defenceMargins);
+		
 		// Exit
 		this.ready = true;
 		if (this.callback) {
@@ -111,6 +115,7 @@ function FRCEvent(baseurl,eventName,callback) {
 	this.createMPF = function(){
 		this.mpf = zeros(this.teamCount, this.teamCount);
 		
+		// Loop Through Matches
 		for(var i = 0; i < this.matchCount; i++){
 			// Check for Unplayed Matches
 			if((isNaN(this.qualMatrix.get(i, 8)) || isNaN(this.qualMatrix.get(i, 9)))
@@ -156,10 +161,74 @@ function FRCEvent(baseurl,eventName,callback) {
 	 * qualification Matrix.
 	 */
 	this.createPointMatrices = function(){
+		// Raw Points
 		this.autonPoints = this.rankingsMatrix.submat(0, this.teamCount-1, 3, 3);
 		this.climbPoints = this.rankingsMatrix.submat(0, this.teamCount-1, 4, 4);
 		this.teleopPoints = this.rankingsMatrix.submat(0, this.teamCount-1, 5, 5);
 		this.totalPoints = this.autonPoints.add(this.climbPoints.add(this.teleopPoints));
+	}
+	
+	/**
+	 * Calculates and sums the total win margin for each team.  Note that this
+	 * number is negative when a team loses!
+	 */
+	this.winAnalysis = function(){
+		// Create Matrices
+		this.winMargins = zeros(this.teamCount, 1);
+		this.defenceMargins = zeros(this.teamCount, 1);
+		
+		// Loop Through Matches
+		for(var i = 0; i < this.matchCount; i++){
+			// Check for Unplayed Matches
+			if((isNaN(this.qualMatrix.get(i, 8)) || isNaN(this.qualMatrix.get(i, 9)))
+			|| (this.qualMatrix.get(i, 8) == 0 && this.qualMatrix.get(i, 9) == 0)) continue;
+			
+			// Get Teams
+			var red1 = this.qualMatrix.get(i, 2);
+			var red2 = this.qualMatrix.get(i, 3);
+			var red3 = this.qualMatrix.get(i, 4);
+			var blue1 = this.qualMatrix.get(i, 5);
+			var blue2 = this.qualMatrix.get(i, 6);
+			var blue3 = this.qualMatrix.get(i, 7);
+			var redA = this.teamHash.get(red1) - 1;
+			var redB = this.teamHash.get(red2) - 1;
+			var redC = this.teamHash.get(red3) - 1;
+			var blueA = this.teamHash.get(blue1) - 1;
+			var blueB = this.teamHash.get(blue2) - 1;
+			var blueC = this.teamHash.get(blue3) - 1;
+			
+			// Get Scores
+			var redScore = this.qualMatrix.get(i, 8);
+			var blueScore = this.qualMatrix.get(i, 9);
+			var redExpected = this.getTotalEC(red1) + this.getTotalEC(red2) + this.getTotalEC(red3);
+			var blueExpected = this.getTotalEC(blue1) + this.getTotalEC(blue2) + this.getTotalEC(blue3);
+			
+			// Calculate Margins
+			var redRealMargin = redScore - blueScore;
+			var blueRealMargin = blueScore - redScore;
+			var redExpectedMargin = redExpected - blueExpected;
+			var blueExpectedMargin = blueExpected - redExpected;
+			var redDifference = redRealMargin - redExpectedMargin;
+			var blueDifference = blueRealMargin - blueExpectedMargin;
+			
+			// Win Margin Matrix (Real)
+			this.winMargins.plus(redA, 0, redRealMargin);
+			this.winMargins.plus(redB, 0, redRealMargin);
+			this.winMargins.plus(redC, 0, redRealMargin);
+			this.winMargins.plus(blueA, 0, blueRealMargin);
+			this.winMargins.plus(blueB, 0, blueRealMargin);
+			this.winMargins.plus(blueC, 0, blueRealMargin);
+			
+			// Defense Margins (Opponent Real - Opponent Expected)
+			this.defenceMargins.plus(redA, 0, blueDifference);
+			this.defenceMargins.plus(redB, 0, blueDifference);
+			this.defenceMargins.plus(redC, 0, blueDifference);
+			this.defenceMargins.plus(blueA, 0, redDifference);
+			this.defenceMargins.plus(blueB, 0, redDifference);
+			this.defenceMargins.plus(blueC, 0, redDifference);
+			
+			// Win Frequency Matrix
+		}
 	}
 	
 	setTimeout(this.waitForData, 100);

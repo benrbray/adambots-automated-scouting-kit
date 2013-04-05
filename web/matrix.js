@@ -33,7 +33,8 @@ function Matrix(data){
 	this.transpose	= function(){			return MatrixTranspose(this);		};
 	this.diagProduct= function(){			return MatrixDiagProduct(this);		};
 	this.scale		= function(c){			return MatrixScale(this, c);		};
-	this.increment 	= function(i, j){		this.data[i][j] = this.data[i][j]+1;};
+	this.plus 		= function(i,j,k){		this.data[i][j] = this.data[i][j]+k;};
+	this.increment 	= function(i, j){		this.plus(i,j,1);					};
 	this.rowHash	= function(i,j){		return MatrixConstructRowHash(this,i,j); };
 	this.columnHash	= 
 		this.colHash= function(i,j){		return MatrixConstructColumnHash(this,i,j); };
