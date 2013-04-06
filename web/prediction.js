@@ -145,6 +145,8 @@ function predictUnplayed() {
 			counted = counted + 1;
 		}
 	}
+
+
 	m2ode0acc.innerHTML = Math.floor(100 * correct[0]/counted) + "% accuracy";
 	m2ode1acc.innerHTML = Math.floor(100 * correct[1]/counted) + "% accuracy";
 	m2ode2acc.innerHTML = Math.floor(100 * correct[2]/counted) + "% accuracy";
@@ -154,5 +156,48 @@ function predictUnplayed() {
 		fillTable("matchpredictions", [colmatch , colteams[0], colteams[1], colscores[0], colscores[1] ], ["grey","white","white","red","blue"] , [-1,-1,-1,-1,-1] );
 	} else {
 		// No Unplayed Matches
+		document.getElementById("matchpredictions").tBodies[0].innerHTML = "<tr><td colspan=\"5\">No unplayed qualification matches scheduled.</td></tr>";
+	}
+
+	var fi = frcEvent.elimTable;
+	if (!fi || fi.data.length == 0) {
+		document.getElementById("matchpredictions").tBodies[0].innerHTML += "<tr><td colspan=\"5\">No eliminations matches are scheduled.</td></tr>";
+	} else {
+		var cname = [];
+		var cred = [];
+		var cblue = [];
+		var csr = [];
+		var csb = [];
+		for (var m = 0; m < fi.data.length; m++) {
+			var k = fi.data[m];
+			if (isNaN(k[9])) {
+				cname.push(fi.raw[m][1]);
+				var a = k[3];
+				var b = k[4];
+				var c = k[5];
+				var d = k[6];
+				var e = k[7];
+				var f = k[8];
+
+				var redscore = predictAllianceValue(a,b,c,mode,frcEvent);
+				var bluescore = predictAllianceValue(d,e,f,mode,frcEvent);
+				if (redscore > bluescore) {
+					cred.push("<b>" + a + "&nbsp;&nbsp;" + b + "&nbsp;&nbsp;" + c + "</b>");
+					cblue.push(d + "&nbsp;&nbsp;" + e + "&nbsp;&nbsp;" + f);
+					csr.push( "<b>" + redscore.toFixed(1) + "</b>" );
+					csb.push( bluescore.toFixed(1)  );
+				} else {
+					cred.push(a + "&nbsp;&nbsp;" + b + "&nbsp;&nbsp;" + c);
+					cblue.push("<b>" + d + "&nbsp;&nbsp;" + e + "&nbsp;&nbsp;" + f + "</b>");
+					csr.push( redscore.toFixed(1)  );
+					csb.push( "<b>" + bluescore.toFixed(1)  + "</b>" );
+				}
+			}
+		}
+		if (cname.length == 0) {
+			document.getElementById("matchpredictions").tBodies[0].innerHTML += "<tr><td colspan=\"5\">No unplayed eliminations matches are scheduled.</td></tr>";
+		} else {
+			fillTable("matchpredictions", [cname,cred,cblue,csr,csb] , ["grey","white","white","red","blue"],[-1,-1,-1,-1,-1] );
+		}
 	}
 }

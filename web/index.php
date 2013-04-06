@@ -147,8 +147,19 @@ if (isset($_REQUEST["grab"])) {
 				<br/>
 				
 				<!-- Score Distribution Graph -->
-				<table class="shinytable"><thead><tr><td>Point Distributions</td></tr><tbody><tr><td>
-					<canvas id="graphDistro" width="398" height="240" style="background:white;width:398x; height:240px; border:0px #AAAAAA solid;">Graphs require the HTML 5 canvas object.</canvas>
+				<table class="shinytable">
+					<thead><tr><td>Point Distributions</td></tr></thead>
+						<tbody>
+							<tr><td>
+								<canvas id="graphDistro" width="398" height="240" style="background:white;width:398x; height:240px; border:0px #AAAAAA solid;">Graphs require the HTML 5 canvas object.</canvas>
+							</td></tr>
+						</tbody>
+					<tfoot><tr><td>
+						<span style="display:inline-block; position:relative; width:30px;">&nbsp;<span style="display:block; position:absolute; top:40%; height:21%; width:100%; background:#EE9999;"></span></span>
+						OPR Distribution<br/>
+						<span style="display:inline-block; position:relative; width:30px;">&nbsp;<span style="display:block; position:absolute; top:40%; height:21%; width:100%; background:#9999EE;"></span></span>
+						CCWM Distribution<br/>						
+					  </td></tr></tfoot>
 				</table>
 				
 				<br/>

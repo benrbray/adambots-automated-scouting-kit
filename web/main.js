@@ -77,8 +77,9 @@ function createMatchGraph(){
 		pts[pts.length] = [i+1, t[i][9] ];
 	}
 	
-	plotAxis(graphMatches, 0, frcEvent.matchCount, 0, 200, "Match", "Score", "");
+	plotAxis(graphMatches, 0, frcEvent.matchCount, 0, 200, "", "", "",true,true,false); //Empty and true true for not doubling up text when I draw again.
 	plotCurve(graphMatches,pts,"#9999EE",true);
+	plotAxis(graphMatches, 0, frcEvent.matchCount, 0, 200, "Match", "Score", "",false,false,true);
 }
 
 function createDistroGraph(){
@@ -101,7 +102,8 @@ function createDistroGraph(){
 	}
 	
 	// Plot
-	plotAxis(graphDistro, 0, 100, 0, Math.max(totalMax, ccwmMax) * 1.1, "Points", "Frequency","");
+	plotAxis(graphDistro, 0, 100, 0, Math.max(totalMax, ccwmMax) * 1.1, "", "","",true,true,true); //empty titles and no ticks so we don't double up text.
 	plotCurve(graphDistro, totalPts, "#EE9999", true);
 	plotCurve(graphDistro, ccwmPts, "#9999EE", true);
+	plotAxis(graphDistro, 0, 100, 0, Math.max(totalMax, ccwmMax) * 1.1, "Points", "Frequency","",false,true,true);
 }
