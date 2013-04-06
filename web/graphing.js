@@ -98,14 +98,16 @@ function plotAxis(ctx,minx,maxx,miny,maxy,axx,axy,title) {
 }
 
 /**
-(note: plotAxis must be called before plotCurve in order to set up the graph)
-ctx: the canvas's context (see plotAxis)
-pts: An array of arrays; each object in pts is in the form [x,y]
-color: a CSS color for the curve, e.g. "purple" or "#EECCBB" or "rgba(127,255,200,0.8)"
-nodots: If true, then the dots will not be shown at each data point. Recommended for when data is very dense horizontally or when data is very smooth.
-Otherwise, optional.
-**/
-function plotCurve(ctx,pts,color,nodots) {
+ * (note: plotAxis must be called before plotCurve in order to set up the graph)
+ * @param ctx the canvas's context (see plotAxis)
+ * @param pts An array of arrays; each object in pts is in the form [x,y]
+ * @param color a CSS color for the curve, e.g. "purple" or "#EECCBB" or 
+ * "rgba(127,255,200,0.8)"
+ * @param nodots If true, then the dots will not be shown at each data point. 
+ * Recommended for when data is very dense horizontally or when data is very 
+ * smooth.  Otherwise, optional.
+ */
+function plotCurve(ctx, pts, color, nodots) {
 	if (!ctx) {
 		return;
 	}
@@ -124,29 +126,53 @@ function plotCurve(ctx,pts,color,nodots) {
 		return ctx.canvas.height - ctx.pad - ((y - miny) / (maxy - miny) * (ctx.canvas.height - ctx.pad*2));
 	}
 	
+	// White
 	ctx.lineWidth = 10;
 	ctx.lineJoin = "bevel";
 	ctx.strokeStyle = "white";
 	ctx.beginPath();
-	ctx.moveTo(convx(pts[0][0]),convy(pts[0][1]));
-	for (var i = 1; i < pts.length; i++) {
-		ctx.lineTo(convx(pts[i][0]),convy(pts[i][1]));
+	var moved = false;
+	
+	for (var i = 0; i < pts.length; i++) {
+		if(pts[i][0] < minx || pts[i][0] > maxx) { continue; };
+		var y = pts[i][1] = Math.max(miny, Math.min(maxy, pts[i][1])); 
+		
+		if(!moved){
+			ctx.moveTo(convx(pts[i][0]),convy(y));
+			moved = true;
+		} else {
+			ctx.lineTo(convx(pts[i][0]),convy(y));
+		}
 	}
+	
+	// Color
 	ctx.stroke();
 	ctx.lineJoin = "miter";
 	ctx.lineWidth = 4;
 	ctx.strokeStyle = color;
 	ctx.beginPath();
-	ctx.moveTo(convx(pts[0][0]),convy(pts[0][1]));
-	for (var i = 1; i < pts.length; i++) {
-		ctx.lineTo(convx(pts[i][0]),convy(pts[i][1]));
+	moved = false;
+	
+	for (var i = 0; i < pts.length; i++) {
+		if(pts[i][0] < minx || pts[i][0] > maxx) { continue; };
+		var y = pts[i][1] = Math.max(miny, Math.min(maxy, pts[i][1])); 
+		
+		if(!moved){
+			ctx.moveTo(convx(pts[i][0]),convy(y));
+			moved = true;
+		} else {
+			ctx.lineTo(convx(pts[i][0]),convy(y));
+		}
 	}
 	ctx.stroke();
 	if (!nodots) {
 		for (var i = 0; i < pts.length; i++) {
+			if(pts[i][0] < minx || pts[i][0] > maxx) { continue; };
+		var y = pts[i][1] = Math.max(miny, Math.min(maxy, pts[i][1])); 
+			
 			ctx.beginPath();
 			ctx.fillStyle = "white";
-			ctx.arc(convx(pts[i][0]),convy(pts[i][1]),7,0,6.28);
+			ctx.arc(convx(pts[i][0]),convy(y),7,0,6.28);
 			ctx.fill();
 			ctx.beginPath();
 			ctx.fillStyle = color;
@@ -154,4 +180,34 @@ function plotCurve(ctx,pts,color,nodots) {
 			ctx.fill();
 		}
 	}
+}
+
+function plotNormal(ctx, data, deviations, color, resolution){
+	// Validate
+	if(isMatrix(data)){
+		data = data.toSingleArray();
+	}
+	if(!deviations){ deviations = 3; };
+	if(!resolution){ resolution = 1; };
+	
+	var mu = mean(data);		// Mean
+	var sigma = std(data);	// Standard Deviation
+	var sigmaSquared = sigma * sigma; // Variance
+	
+	console.log("Mu:  " + mu + ", Sigma:  " + sigma);
+	
+	var minX = mu - (deviations * sigma);
+	var maxX = mu + (deviations * sigma);
+	var range = maxX - minX;
+	var coeff = 1 / (sigma * Math.sqrt(2 * Math.PI));
+	
+	var pts = [];
+	for(var i = 0; i < range; i += resolution){
+		var xVal = minX + i;
+		var dev = xVal - mu;
+		pts[i] = [xVal, coeff * Math.exp(-(dev*dev) / (2*sigmaSquared) )];
+		console.log(pts[i][0] + " = " + pts[i][1]);
+	}
+	
+	plotCurve(ctx, pts, color, true);
 }

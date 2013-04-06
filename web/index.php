@@ -37,6 +37,7 @@ if (isset($_REQUEST["grab"])) {
 		<!--[if IE]><script type="text/javascript" src="excanvas/excanvas.js"></script><![endif]-->
 		<script type="text/javascript" src="prediction.js"></script>
 		<script type="text/javascript" src="output.js"></script>
+		<script type="text/javascript" src="statistics.js"></script>
 		<script type="text/javascript" src="graphing.js"></script>
 		<script type="text/javascript" src="hashtable.js"></script>
 		<script type="text/javascript" src="matrix.js"></script>
@@ -100,6 +101,8 @@ if (isset($_REQUEST["grab"])) {
 			</table>
 		</div>
 		
+		<!-- End of Big Table -->
+		
 		<br/>
 		<div class="hr"></div>
 		<br/>
@@ -109,28 +112,66 @@ if (isset($_REQUEST["grab"])) {
 			<!-- Column 1 -->
 			
 			<div style="width:400px; margin:0px; padding:0px; float:left;">
-				<!-- Match Scores Graph -->
-				<table class="shinytable"><thead><tr><td>Match Scores</td></tr><tbody><tr><td>
-					<canvas id="graphMatches" width="398" height="240" style="background:white;width:398x; height:240px; border:0px #AAAAAA solid;">Graphs require the HTML 5 canvas object.</canvas>
+				<!-- Correlation Table -->
+				<table class="shinytable" id="correlationtable" data-sorting="iidddddd" style="width:400px;">
+					<thead>
+						<tr>
+							<td colspan="9">
+							<script>document.write(eventName + " (Correlation)");</script>
+							</td>
+						</tr>
+						<tr>
+							<td></td>
+							<td>Team</td>
+							<td>Rank</td>
+							<td>Auton</td>
+							<td>Climb</td>
+							<td>Teleop</td>
+							<td>OPR</td>
+							<td>DPR</td>
+							<td>CCWM</td>
+						</tr>
+					</thead>
+					<tbody id="correlationdata">
+						<tr><td colspan="9"><em>Waiting for script to load...</em></td></tr>
+					</tbody>
+					<tfoot>
+						<tr><td colspan="9">
+						This is a correlation matrix for many of the various statistics we have collected and calculated, including raw point values from <a href="http://www.usfirst.org">www.US<em>FIRST.org</em></a>.  Each item in the table indicates how well the metric indicated in the topmost row predicts the metric in the leftmost column, and vice versa.  Values close to positive or negative one indicate a high correlation.
+						</td></tr>
+					</tfoot>
+				</table>
+			
+				<br/>
+				<div class="hr"></div>
+				<br/>
+				
+				<!-- Score Distribution Graph -->
+				<table class="shinytable"><thead><tr><td>Point Distributions</td></tr><tbody><tr><td>
+					<canvas id="graphDistro" width="398" height="240" style="background:white;width:398x; height:240px; border:0px #AAAAAA solid;">Graphs require the HTML 5 canvas object.</canvas>
 				</table>
 				
 				<br/>
 				<div class="hr"></div>
 				<br/>
+				
+				<!-- Match Scores Graph -->
+				<table class="shinytable"><thead><tr><td>Match Scores</td></tr><tbody><tr><td>
+					<canvas id="graphMatches" width="398" height="240" style="background:white;width:398x; height:240px; border:0px #AAAAAA solid;">Graphs require the HTML 5 canvas object.</canvas>
+				</table>
 			</div>
 			
 			<!-- Between Columns -->
 			
 			<!-- Column 2 -->
-			
 			<div style="width:400px; margin:0px; padding:0px; float:right;">
 				
-				<!-- Match Prediction Table -->
+				<!-- Match Prediction Box -->
 				<table class="shinytable" style="width:400px;">
 					<thead>
 						<tr>
 							<td colspan="2">
-								Match Prediction
+								Custom Match Prediction
 							</td>
 						</tr>
 						<tr>
@@ -170,6 +211,7 @@ if (isset($_REQUEST["grab"])) {
 			<div class="hr"></div>
 			<br/>
 
+			<!-- Unplayed Match Prediction -->
 			<table class="shinytable" id="matchpredictions">
 				<thead>
 					<tr><td colspan="5">Predictions for Unplayed Matches</td></tr>
@@ -180,9 +222,9 @@ if (isset($_REQUEST["grab"])) {
 				<tfoot>
 					<tr>
 						<td colspan="5">
-							<label><input name="m2atchpredictionmode" type="radio" checked="checked" id="m2atchpredictionmode0" />OPR Only (<span id="m2ode0acc"></span>)</label><br/>
-							<label><input name="m2atchpredictionmode" type="radio" id="m2atchpredictionmode1" />OPR + DPR (<span id="m2ode1acc"></span>)</label><br/>
-							<label><input name="m2atchpredictionmode" type="radio" id="m2atchpredictionmode2" />CCWM (<span id="m2ode2acc"></span>)</label><br/>
+							<label><input name="m2atchpredictionmode" type="radio" checked="checked" id="m2atchpredictionmode0" />OPR Only (<span id="m2ode0acc"><em>loading...</em></span>)</label><br/>
+							<label><input name="m2atchpredictionmode" type="radio" id="m2atchpredictionmode1" />OPR + DPR (<span id="m2ode1acc"><em>loading...</em></span>)</label><br/>
+							<label><input name="m2atchpredictionmode" type="radio" id="m2atchpredictionmode2" />CCWM (<span id="m2ode2acc"><em>loading...</em></span>)</label><br/>
 						</td>
 					</tR>
 				</tfoot>

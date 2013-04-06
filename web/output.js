@@ -48,53 +48,70 @@ fix is an array of the number of decimals to have per column. Defautls to two.
 
 
 **/
-function fillTable( id , columns , sty , fix , sortable) {
+function fillTable( id , columns , sty , fix , sortable, globalColorExtremes, firstColumnIsHeader) {
+	// Convert Columns to Arrays
 	for (var i = 0; i < columns.length; i++) {
 		columns[i] = vectorToArray(columns[i]);
 	}
 	var tb = document.getElementById(id).tBodies[0];
 	
+	// Find Global Extremes
+	var globalLow = minimumOfVector(columns[0]);
+	var globalHigh = maximumOfVector(columns[0]);
+	for(var i = 1; i < columns.length; i++){
+		var min = minimumOfVector(columns[i]);
+		var max = maximumOfVector(columns[i]);
+		if(min < globalLow){
+			globalLow = min;
+		}
+		if(max > globalHigh){
+			globalHigh = max;
+		}
+	}
+	
+	// Create Table
 	var s = "";
 	for (var row = 0; row < columns[0].length; row++) {
 		s = s + "<tr>";
 		for (var i = 0; i < columns.length; i++) {
 			//redgreen default
 
-			var low = minimumOfVector(columns[i]);
-			var high = maximumOfVector(columns[i]);
+			var low = globalColorExtremes?globalLow:minimumOfVector(columns[i]);
+			var high = globalColorExtremes?globalHigh:maximumOfVector(columns[i]);
 
-			var a = [227,137,147];
-			var b = [247,247,137];
-			var c = [152,227,167];
+			var a = [227,137,147]; // Red
+			var b = [247,247,137]; // Yellow
+			var c = [152,227,167]; // Green
+			
 			if (sty[i] == "white") {
-				a = [255,255,255];
-				b = [255,255,255];
-				c = [255,255,255];
-			}
-			if (sty[i] == "red") {
+				a = b = c = [255,255,255];
+			} else if (sty[i] == "red") {
 				a = b = c = [255, 200, 200];
-			}
-			if (sty[i] == "blue") {
+			} else if (sty[i] == "blue") {
 				a = b = c = [200, 200, 255];
-			}
-			if (sty[i] == "grey" || sty[i] == "gray") {
+			} else if (sty[i] == "grey" || sty[i] == "gray") {
 				a = b = c = [238,238,238];
-			}
-			if (sty[i] == "greenred") {
+			} else if (sty[i] == "greenred") {
 				var e = c;
 				c = a;
 				a = e;
+			} else if (sty[i] == "mirrorwhitegreen"){
+				a = c;
+				b = [255, 255, 255];
+			} else if (sty[i] == "mirrorwhitered"){
+				c = a;
+				b = [255, 255, 255];
 			}
 
-			s = s + "<td style=\"background:" + getGradient(low,columns[i][row],high,a,b,c) + "\">";
+			s = s + "<td style=\"background:" + getGradient(low,columns[i][row],high,a,b,c) + ((i==0&&firstColumnIsHeader)?"; font-weight:bold":"") + "\">";
 			if (fix[i] != undefined) {
 				if (fix[i] < 0) {
 					s = s + columns[i][row];
 				} else {
-					s = s + columns[i][row].toFixed(fix[i]);
+					s = s + ((columns[i][row].toFixed)?columns[i][row].toFixed(fix[i]):columns[i][row]);
 				}
 			} else {
-				s = s + columns[i][row].toFixed(2);
+				s = s + ((columns[i][row].toFixed)?columns[i][row].toFixed(fix[i]):columns[i][row]);
 			}
 			s = s + "</td>";
 		}

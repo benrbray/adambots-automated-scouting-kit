@@ -109,6 +109,26 @@ function FRCEvent(baseurl,eventName,callback) {
 			return this.dpr.get(this.teamHash.get(t)-1,0);
 		}
 		
+		// Correlation
+		this.corrVars = [this.rankingsMatrix.submat(0,this.teamCount-1,1,1),
+						 this.rankingsMatrix.submat(0,this.teamCount-1,0,0),
+						 this.autonEC,
+						 this.climbEC,
+						 this.teleopEC,
+						 this.totalEC,
+						 this.dpr,
+						 this.ccwm];
+		this.corrLabels = ["Team", "Rank", "Auton", "Teleop", "Climb", "OPR", "DPR", "CCWM"];
+		this.corrMatrix = new Array(this.corrLabels.length);
+						 
+		for(var i = 0; i < this.corrVars.length; i++){
+			this.corrMatrix[i] = zeros(this.corrLabels.length);
+			for(var j = 0; j < this.corrVars.length; j++){
+				var r = correlation(this.corrVars[i], this.corrVars[j]);
+				this.corrMatrix[i].set(j,0,r);
+			}
+		}
+		
 		// Exit
 		this.ready = true;
 		if (this.callback) {

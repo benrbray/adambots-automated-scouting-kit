@@ -23,7 +23,7 @@ body {
 
 #bigtable tbody tr td {
 width:49px;
-height:1.75em;
+height:1.50em;
 }
 
 thead {
@@ -43,8 +43,14 @@ thead tr td {
 }
 
 #matchpredictions tr td {
-padding-left:7px;
-padding-right:7px;
+padding-left:5px;
+padding-right:5px;
+}
+
+#correlationtable tr td {
+padding-left:1px;
+padding-right:1px;
+height:1.75em;
 }
 
 input.mini {

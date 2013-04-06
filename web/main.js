@@ -15,20 +15,23 @@ var pageRankings;
 var frcEvent;
 
 function Main() {
-	// Display Waiting Message
+	// Graph Context
 	graphMatches = document.getElementById("graphMatches").getContext("2d");
+	graphDistro = document.getElementById("graphDistro").getContext("2d");
 	
-	document.getElementById("bigdata").innerHTML = "<tr><td colspan=\"8\">Building FRCEvent object</td></tr>";
+	// Waiting Message
+	document.getElementById("bigdata").innerHTML = "<tr><td colspan=\"8\">Waiting for data <em>FIRST</em>...</td></tr>";
+	document.getElementById("correlationdata").innerHTML = "<tr><td colspan=\"9\">Waiting for data from <em>FIRST</em>...</td></tr>";
+	
+	// FRC Event
 	frcEvent = new FRCEvent(eventURL, eventName, 
 		function () {
-			var t = frcEvent.qualTable.data;
-			var pts = [];
-			for (var i = 0; i < t.length; i++) {
-				pts[pts.length] = [i+1, t[i][9] ];
-			}
-			plotAxis(graphMatches, 0, frcEvent.qualTable.raw.length, 0, 200, "Match","Score","");
-			plotCurve(graphMatches,pts,"#9999EE",true);
 			
+			// Graph Match Score
+			createMatchGraph();
+			createDistroGraph();
+			
+			// Fill Tables			
 			var colteam = [];
 			var colrank = [];
 			for (var i = 0; i < frcEvent.teamHash.size(); i++) {
@@ -40,7 +43,17 @@ function Main() {
 				[colteam,	colrank,	frcEvent.autonEC,	frcEvent.climbEC,	frcEvent.teleopEC,	frcEvent.totalEC,	frcEvent.dpr,	frcEvent.ccwm], 
 				["grey",	"greenred",	"redgreen",			"redgreen",			"redgreen",			"redgreen",			"redgreen",		"redgreen"],
 				[0,			0,			1,					1,					1,					1,					1,				1],
-				true);
+				true,	// Sortable?
+				false,	// Use Global Extremes for Coloring?
+				false);	// First Column is Header (bold it)?
+				
+			fillTable("correlationtable", 
+				[frcEvent.corrLabels,	frcEvent.corrMatrix[0],	frcEvent.corrMatrix[1],	frcEvent.corrMatrix[2],	frcEvent.corrMatrix[3],	frcEvent.corrMatrix[4],	frcEvent.corrMatrix[5],	frcEvent.corrMatrix[6], frcEvent.corrMatrix[7]], 
+				["grey",				"mirrorwhitegreen",		"mirrorwhitegreen",		"mirrorwhitegreen",		"mirrorwhitegreen",		"mirrorwhitegreen",		"mirrorwhitegreen",		"mirrorwhitegreen",		"mirrorwhitegreen"],
+				[0,						2,						2,						2,						2,						2,						2,						2,						2],
+				false,	// Sortable?
+				true,	// Use Global Extremes for Coloring?
+				true);	// First Column is Header (bold it)?
 
 			m2atchpredictionmode0.onchange = m2atchpredictionmode1.onchange = m2atchpredictionmode2.onchange = predictUnplayed;
 			predictUnplayed();
@@ -55,3 +68,40 @@ function Main() {
 
 
 var graphMatches;
+var graphDistro;
+
+function createMatchGraph(){
+	var t = frcEvent.qualTable.data;
+	var pts = [];
+	for (var i = 0; i < t.length; i++) {
+		pts[pts.length] = [i+1, t[i][9] ];
+	}
+	
+	plotAxis(graphMatches, 0, frcEvent.matchCount, 0, 200, "Match", "Score", "");
+	plotCurve(graphMatches,pts,"#9999EE",true);
+}
+
+function createDistroGraph(){
+	// Prepare Data
+	totalMu = mean(frcEvent.totalEC);
+	totalSigma = std(frcEvent.totalEC);
+	totalPts = normPDFRange(0, 100, totalMu, totalSigma);
+	totalMax = 0;
+	
+	for(var i = 0; i < totalPts.length; i++){
+		if(totalPts[i][1] > totalMax){ totalMax = totalPts[i][1]; };
+	}
+	
+	ccwmMu = mean(frcEvent.ccwm);
+	ccwmSigma = std(frcEvent.ccwm);
+	ccwmPts = normPDFRange(0, 100, ccwmMu, ccwmSigma);
+	ccwmMax = 0;
+	for(var i = 0; i < ccwmPts.length; i++){
+		if(ccwmPts[i][1] > ccwmMax){ ccwmMax = ccwmPts[i][1]; };
+	}
+	
+	// Plot
+	plotAxis(graphDistro, 0, 100, 0, Math.max(totalMax, ccwmMax) * 1.1, "Points", "Frequency","");
+	plotCurve(graphDistro, totalPts, "#EE9999", true);
+	plotCurve(graphDistro, ccwmPts, "#9999EE", true);
+}

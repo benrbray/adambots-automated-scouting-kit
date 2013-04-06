@@ -1,29 +1,33 @@
+function mean(X){
+	if(isMatrix(X)){
+		X = X.toSingleArray();
+	}
+	
+	var sum = 0;
+	for(var i = 0; i < X.length; i++){
+		sum += X[i];
+	}
+	
+	return sum / X.length;
+}
+
 /**
  * Computes the sample variance of X. Matrices are converted to
  * single-dimensional arrays for calculation.
  */
 function variance(X){
-	var vec;
-	
 	if(isMatrix(X)){
-		vec = X.toSingleArray();
-	} else if(X instanceof Array){
-		vec = X;
+		X = X.toSingleArray();
 	}
 	
-	var mean = 0;
-	for(var i = 0; i < vec.length; i++){
-		mean += vec[i];
-	}
-	mean /= vec.length;
-	
+	var avg = mean(X);
 	var sumSquaredDifference = 0;
-	for(var i = 0; i < vec.length; i++){
-		var diff = vec[i] - mean;
+	for(var i = 0; i < X.length; i++){
+		var diff = X[i] - avg;
 		sumSquaredDifference += diff * diff;
 	}
 	
-	return (sumSquaredDifference / (vec.length-1));
+	return (sumSquaredDifference / (X.length-1));
 }
 
 /**
@@ -90,4 +94,40 @@ function covariance(X, Y){
  */
 function correlation(X, Y){
 	return (covariance(X, Y) / (std(X)*std(Y)));
+}
+
+/**
+ * Calculates the normal probability density of the given points and returns
+ * them as an array of (X,Y) pairs for graphing.
+ */
+function normPDFPoints(support, mu, sigma){
+	// Validate
+	if(isMatrix(support)){
+		support = support.toSingleArray();
+	}
+	
+	var sigmaSquared = sigma * sigma; // Variance
+	var coeff = 1 / (sigma * Math.sqrt(2 * Math.PI));
+	
+	var pts = [];
+	for(var i = 0; i < support.length; i++){
+		var dev = support[i] - mu;
+		pts[i] = [support[i], coeff * Math.exp(-(dev*dev) / (2*sigmaSquared) )];
+	}
+	return pts;
+}
+
+function normPDFRange(min, max, mu, sigma, resolution){
+	if(!resolution) { resolution = 1; };
+	var range = max - min;
+	var n = Math.floor(range / resolution);
+	var pts = new Array(n);
+	var sigSquared = sigma * sigma;
+	var coeff = 1 / (sigma * Math.sqrt(2 * Math.PI));
+	for(var i = 0; i < n; i++){
+		var x = min + i * resolution;
+		var dev = x - mu;
+		pts[i] = [x, coeff * Math.exp(-(dev*dev) / (2*sigSquared) )];
+	}
+	return pts;
 }

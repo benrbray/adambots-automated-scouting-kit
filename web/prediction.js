@@ -149,5 +149,10 @@ function predictUnplayed() {
 	m2ode1acc.innerHTML = Math.floor(100 * correct[1]/counted) + "% accuracy";
 	m2ode2acc.innerHTML = Math.floor(100 * correct[2]/counted) + "% accuracy";
 
-	fillTable("matchpredictions", [colmatch , colteams[0], colteams[1], colscores[0], colscores[1] ], ["grey","white","white","red","blue"] , [-1,-1,-1,-1,-1] );
+	if(colmatch.length > 0){
+		// Unplayed Matches Exist
+		fillTable("matchpredictions", [colmatch , colteams[0], colteams[1], colscores[0], colscores[1] ], ["grey","white","white","red","blue"] , [-1,-1,-1,-1,-1] );
+	} else {
+		// No Unplayed Matches
+	}
 }
