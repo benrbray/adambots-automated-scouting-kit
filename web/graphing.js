@@ -59,6 +59,22 @@ function plotAxis(ctx,minx,maxx,miny,maxy,axx,axy,title,noxtics,noytics,nogrey) 
 
 	ctx.right = maxx;
 	ctx.top = maxy;
+
+	
+	var step = round(40 / (ctx.canvas.width - pad*2) * (maxx - minx));
+	for (var i = minx; i < maxx + step; i += step) { 
+		ctx.right = i;
+	}		
+
+	var step = round(40 / (ctx.canvas.height - pad*2) * (maxy - miny));
+	for (var i = miny; i < maxy + step; i += step) { 
+		ctx.top = i;
+	}		
+
+	ctx.maxx = ctx.right;
+	maxx = ctx.maxx;
+	ctx.maxy = ctx.top;
+	maxy = ctx.maxy;
 	
 	if (!noxtics) {
 		var step = round(40 / (ctx.canvas.width - pad*2) * (maxx - minx));
