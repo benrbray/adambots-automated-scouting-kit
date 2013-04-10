@@ -17,13 +17,91 @@ This is the only server-side work done.
 Loading a page from WW2.USFIRST.ORG violates the same-origin policy.
 Instead, this pages acts a proxy, so same-origin isn't violated.
 */
+
 if (isset($_REQUEST["grab"])) {
-    $u = @file_get_contents("http://www2.usfirst.org/" . $_REQUEST["grab"]);
-	if ($u) {
-		exit($u);
+
+	$req = $_REQUEST["grab"];
+	function isamatchuri($m) {
+		return sizeof(explode("matchresults",$m),2) == 2;
+	}
+	function isaranksuri($m) {
+		return sizeof(explode("rankings",$m)) > 1;
+	}
+
+	function matchuri($m) {
+		return dirname($m) . "/matchresults.html";
+	}
+	function ranksuri($m) {
+		return dirname($m) . "/rankings.html";
+	}
+	function cacheuri($m) {
+		return "../../firstdata/cache" . strtolower(str_replace("/","_",$m) ) ;
+	}
+	function getcache($m) {
+		return @file_get_contents( cacheuri($m) );
+	}
+	function readtime($m) {
+		$k = explode("$",$m,2);
+		return $k[0];
+	}
+
+	//Load cache.
+	$fromcache = getcache($req);
+	if (!$fromcache) {
+		//There is no cached file.
+		$remote = @file_get_contents("http://www2.usfirst.org/" . $req); //Get the file from USFIRST
+		if ($remote) {
+			file_put_contents(cacheuri($req),(time() + 1) . "$" . $remote); //Cache the file
+			exit($remote); //Tell the client the contents of the file
+		} else {
+			exit("404");
+		}
+	}
+
+	echo "[" . time() . "]";
+
+	//The file is cached.
+	if ( readtime($fromcache) > time() ) {
+		//The cache time hasn't expired.
+		exit($fromcache);
+	}
+
+	function matchesdone($m) { //Pass it the contents of the MatchResults page. Returns true if that comp. is done.
+		$k = explode("Number",$m,3);
+		if (sizeof($k) < 3) {
+			return false;
+		}
+		$r = strrpos($k[2],"20",0);
+		if (r < 3 && r >= 0) {
+			return true;
+		}
+	}
+
+
+	//The file is cached but expired.
+	$remote = @file_get_contents("http://www2.usfirst.org/" . $req);
+	if ($remote) {
+		$ti = time() + 1;
+		if (isamatchuri($req)) {
+			echo "(match)";
+			//The request is for a match page.
+			if (matchesdone($remote)) {
+				$ti = time() + 365*24*60*60; //Cache for 1 year, not 5 minutes; the competition is over.
+			}
+		}
+		if (isaranksuri($req)) {
+			echo "(ranks)";
+			$cachedmatch = getcache(matchuri($req));
+			if ($cachedmatch && matchesdone($cachedmatch)) {
+				$ti = time() + 365*24*60*60; //Cache for 1 year
+			}
+		}
+		file_put_contents(cacheuri($req), $ti . "$" . $remote); //Cache the file
+		exit($remote); //Tell the client the contents of the file
 	} else {
 		exit("404");
 	}
+	exit("500");
 }
 
 ?>
