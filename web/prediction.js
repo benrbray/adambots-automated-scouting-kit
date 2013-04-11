@@ -173,12 +173,12 @@ function predictUnplayed() {
 		fillTable("matchpredictions", [colmatch , colteams[0], colteams[1], colscores[0], colscores[1] ], ["grey","white","white","red","blue"] , [-1,-1,-1,-1,-1] );
 	} else {
 		// No Unplayed Matches
-		document.getElementById("matchpredictions").tBodies[0].innerHTML = "<tr><td colspan=\"5\" style=\"height:40px;background:#FFEEEE\">No unplayed qualification matches scheduled.</td></tr>";
+		document.getElementById("matchpredictions").tBodies[0].innerHTML = "<tr><td colspan=\"5\" class=\"error\">No unplayed qualification matches scheduled.</td></tr>";
 	}
 
 	var fi = frcEvent.elimTable;
 	if (!fi || fi.data.length == 0) {
-		document.getElementById("matchpredictions").tBodies[0].innerHTML += "<tr><td colspan=\"5\" style=\"height:40px;background:#FFEEEE\">No eliminations matches are scheduled.</td></tr>";
+		document.getElementById("matchpredictions").tBodies[0].innerHTML += "<tr><td colspan=\"5\" class=\"error\">No eliminations matches are scheduled.</td></tr>";
 	} else {
 		var cname = [];
 		var cred = [];
@@ -212,7 +212,7 @@ function predictUnplayed() {
 			}
 		}
 		if (cname.length == 0) {
-			document.getElementById("matchpredictions").tBodies[0].innerHTML += "<tr><td colspan=\"5\" style=\"height:40px;background:#FFEEEE\">No unplayed eliminations matches are scheduled.</td></tr>";
+			document.getElementById("matchpredictions").tBodies[0].innerHTML += "<tr><td colspan=\"5\"  class=\"error\">No unplayed eliminations matches are scheduled.</td></tr>";
 		} else {
 			fillTable("matchpredictions", [cname,cred,cblue,csr,csb] , ["grey","white","white","red","blue"],[-1,-1,-1,-1,-1] );
 		}

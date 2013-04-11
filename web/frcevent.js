@@ -69,6 +69,12 @@ function FRCEvent(baseurl,eventName,callback) {
 		this.elimTable = this.pageMatches.tables[1];
 		this.rankingsTable = this.pageRankings.tables[0];
 		
+		if (!this.qualTable) {
+			this.failed = true;
+			this.callback();
+			return;
+		}
+		
 		// Convert Tables to Matrices
 		this.qualMatrix = new Matrix(this.qualTable.data);
 		this.elimMatrix = (this.elimTable?new Matrix(this.elimTable.data):null);
@@ -95,10 +101,28 @@ function FRCEvent(baseurl,eventName,callback) {
 		this.createPointMatrices();
 		
 		// Solve the System
-		this.autonEC = this.mpf.solveLU(this.autonPoints);
-		this.climbEC = this.mpf.solveLU(this.climbPoints);
-		this.teleopEC = this.mpf.solveLU(this.teleopPoints);
-		this.totalEC = this.mpf.solveLU(this.totalPoints);
+		var singularWarning = "Warning:  It appears that not enough matches have been played.  The displayed solution is a \"best guess\", use additional discretion when interpreting results.";
+		
+		// LU Decomposition
+		var LU = this.mpf.luSeparate();
+		var L = LU[0];
+		var U = LU[1];
+		
+		// Return Iterative Approximation if Singular
+		var det = L.diagProduct() * U.diagProduct();
+		
+		if(isNaN(det) || det==0){
+			alert(singularWarning);
+			this.autonEC = this.mpf.gaussSeidel(this.autonPoints);
+			this.climbEC = this.mpf.gaussSeidel(this.climbPoints);
+			this.teleopEC = this.mpf.gaussSeidel(this.teleopPoints);
+			this.totalEC = this.mpf.gaussSeidel(this.totalPoints);
+		} else {
+			this.autonEC = MatrixSolveLUPrefactorized(L, U, this.autonPoints);
+			this.climbEC = MatrixSolveLUPrefactorized(L, U, this.climbPoints);
+			this.teleopEC = MatrixSolveLUPrefactorized(L, U, this.teleopPoints);
+			this.totalEC = MatrixSolveLUPrefactorized(L, U, this.totalPoints);
+		}
 
 		// Define Helper Functions
 		this.isTeam = function(t) {
@@ -138,7 +162,7 @@ function FRCEvent(baseurl,eventName,callback) {
 						 this.totalEC,
 						 this.dpr,
 						 this.ccwm];
-		this.corrLabels = ["Team", "Rank", "Auton", "Teleop", "Climb", "OPR", "DPR", "CCWM"];
+		this.corrLabels = ["Team", "Rank", "Auton", "Climb", "Teleop", "OPR", "DPR", "CCWM"];
 		this.corrMatrix = new Array(this.corrLabels.length);
 						 
 		for(var i = 0; i < this.corrVars.length; i++){

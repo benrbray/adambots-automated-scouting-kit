@@ -79,7 +79,8 @@ if (isset($_REQUEST["grab"])) {
 			return false;
 		}
 		$r = strrpos($k[2],"20",0);
-		if (r < 3 && r >= 0) {
+		if ($r < 3 && $r >= 0) {
+			echo "matches done";
 			return true;
 		}
 	}
@@ -135,14 +136,16 @@ if (isset($_REQUEST["grab"])) {
 		<h1>Adambots Automated Scouting Kit</h1>
 		<p>The Adambots Automated Scouting Kit (AASK) automatically generates estimations of the ability of robots at competition. 
 		It utilizes the estimation of solutions to linear equations to predict expected contributions.
-		<p>This tool was produced using Javascript, PHP, HTML, and CSS by Adambots team members for any <em>FIRST</em> robotics teams to use!
-		Click the table headings to sort the table.  See <a href="#about">About This Tool</a> below for information about this tool and instructions for use.<br/>
-		<br/>
+		<p>This tool was produced using Javascript, PHP, HTML, and CSS by Adambots team members for any <em>FIRST</em> robotics teams to use! 
+		Click the table headings to sort the table.  See <a href="#about">About This Tool&#x25BE;</a> below for information about this tool and instructions for use.<br/>
+		<br/><b>Important note:</b> this tool will only produce constructive and accurate results when enough matches have been played; each team should have played at least several matches before any of these calculations are taken seriously.<br/>
 		
 		<div id="change-selection" style="text-align:center;">
 			<h3>Competition Select</h3>
 			<div style="height:35px;">
-				<select id="compselector" style="width:754px;height:35px;outline:none;vertical-align:top;"></select><span style="display:inline-block; width:6px;height:1px; background:white;"></span><button id="goToComp" style="width:60px;height:35px;">Go!</button><br/>
+				<select id="compselector" style="width:654px;height:35px;outline:none;vertical-align:top;"></select>
+				<span style="display:inline-block; width:6px;height:1px; background:white;"></span>
+				<button id="goToComp" style="width:60px;height:35px;">Go!</button><br/>
 			</div>
 			<script src="competitions.js" type="text/javascript"></script>
 		</div>
@@ -337,12 +340,12 @@ if (isset($_REQUEST["grab"])) {
 			<h2 id="about">About This Tool</h2>
 			
 			<h3>What Do All Those Numbers Mean?</h3>
-			<p>Below is a description of each of the columns of the <a href="#bigtable">Analysis Table</a> above.  Remember that you can sort the columns of the table by clicking the underlined headings!
+			<p>Below is a description of each of the columns of the <a href="#bigtable">Analysis Table&#x25B4;</a> above.  Remember that you can sort the columns of the table by clicking the underlined headings!
 			<ul>
 				<li><b>Rank:</b> The team's rank at the event, in terms of Qualification Points, as reported by <em>FIRST</em>.</li>
 				<li><b>Auton:</b> An estimate of the number of points a team scores, on average, during the autonomous period.</li>
-				<li><b>Climb:</b> An estimate of the number of points a team scores, on average, during the teleoperated period.</li>
-				<li><b>Teleop:</b> An estimate of the number of points a team earns, on average, by climbing.</li>
+				<li><b>Climb:</b> An estimate of the number of points a team earns, on average, by climbing.</li>
+				<li><b>Teleop:</b> An estimate of the number of points a team scores, on average, during the teleoperated period.</li>
 				<li><b>OPR:</b> Offensive Power Rating.  An estimate of the number of points the team scores overall, on average.  This number represents the offensive utility of a team.  Comparable to the OPR reported by other teams.</li>
 				<li><b>DPR:</b> Defensive Power Rating.  An estimate of the defensive utility of a team.  May be interpreted as the number of points that a team takes away from its opposing alliance, on average.</li>
 				<li><b>CCWM:</b> Calculated Contribution to Winning Margin.  An estimate of the number of points a team contributes to the winning margin of its alliance.</li>

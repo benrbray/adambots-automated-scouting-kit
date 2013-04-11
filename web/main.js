@@ -30,6 +30,12 @@ function Main() {
 	// FRC Event
 	frcEvent = new FRCEvent(eventURL, eventName, 
 		function () {
+		
+			if (frcEvent.failed) {
+				document.getElementById("bigdata").innerHTML = "<tr><td class=\"error\" colspan=\"8\">No data is available for this event right now.</td></tr>";
+				document.getElementById("correlationdata").innerHTML = "<tr><td class=\"error\" colspan=\"9\">No data is available for this event right now.</td></tr>";
+				return;
+			}
 			
 			// Graph Match Score
 			createMatchGraph();

@@ -484,14 +484,16 @@ function MatrixBackSolve(A, b){
  * @param b A vector of constants representing the right-hand side of the
  * equation.
  */
-function MatrixSolveLU(A, b){
+ 
+var warningHasBeenShown = false;
+ 
+function MatrixSolveLU(A, b, message){
 	// Initialize
 	var n = A.getRows();
 	var x = zeros(n, 1);
 
 	// LU Decomposition
 	var LU = A.luSeparate();
-	
 	var L = LU[0];
 	var U = LU[1];
 	
@@ -500,13 +502,20 @@ function MatrixSolveLU(A, b){
 	var detU = U.diagProduct();
 	
 	if(isNaN(detL) || isNaN(detU) || detL === 0 || detU === 0){
-		alert("Warning:  It appears that not enough matches have been played.  The displayed solution is a \"best guess\", use additional discretion when interpreting results.");
+		if (!warningHasBeenShown) {
+			if(message) { alert(message); };
+			warningHasBeenShown = true;
+		}
 		return A.gaussSeidel(b);
 	} else {
-		var y = L.forwardSolve(b);
-		var x = U.backSolve(y);
-		return x;
+		return MatrixSolveLUPrefactorized(L, U, b, message);
 	}
+}
+
+function MatrixSolveLUPrefactorized(L, U, b, message){
+	var y = L.forwardSolve(b);
+	var x = U.backSolve(y);
+	return x;
 }
 
 /**
