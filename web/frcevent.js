@@ -1,19 +1,39 @@
+/*
+This file is part of the Adambots Automated Scouting Kit (AASK).
+
+AASK is free software: you can redistribute it and/or modify it under the terms
+of the GNU General Public License as published by the Free Software Foundation,
+either version 3 of the License, or (at your option) any later version.
+
+AASK is distributed in the hope that it will be useful, but WITHOUT ANY
+WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A
+PARTICULAR PURPOSE.  See the GNU General Public License for more details.
+
+You should have received a copy of the GNU General Public License along with
+AASK.  If not, see <http://www.gnu.org/licenses/>.
+
+AASK was started during the 2013 FIRST season by Ben Bray and Curtis Fenner of
+Team 245, the Adambots, for use by other FRC teams.
+*/
+
 //// FRCEVENT -----------------------------------------------------------------
 
 /**
  * Represents all of the pages and data necessary for all of the calculations
  * about an Event.
  * 
- * baseurl: e.g., 2013comp/Events/MIGBL
+ * @param baseurl Event URL, e.g., 2013comp/Events/MIGBL
+ * @param eventName The name of the event, e.g. "Grand Blanc District"
+ * @param callback The function to call on completion of parsing and calculations.
  * 
- * .pageRankings a Page for rankings.html
- * .pageMatches a Page for matchresults.html
- * 
- * .qualTable a Table for the qualification matches on matchresults.html (Will
+ * Fields:
+ * #pageRankings a Page object for /rankings.html
+ * #pageMatches a Page object for /matchresults.html
+ * #qualTable a Table object for the qualification matches on matchresults.html (Will
  * 		be undefined if the competition is not begun)
- * .elimTable a Table for the elimination matches on matchresults.html (MAY BE
+ * #elimTable a Table for the elimination matches on matchresults.html (MAY BE
  *		UNDEFINED IF THEY HAVE NO YET BEGUN)
- * .rankingsTable a Table for the data on rankings.html
+ * #rankingsTable a Table for the data on rankings.html
  **/
 function FRCEvent(baseurl,eventName,callback) {
 	// Initialize Fields

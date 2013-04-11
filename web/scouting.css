@@ -1,89 +1,124 @@
+/*
+This file is part of the Adambots Automated Scouting Kit (AASK).
+
+AASK is free software: you can redistribute it and/or modify it under the terms
+of the GNU General Public License as published by the Free Software Foundation,
+either version 3 of the License, or (at your option) any later version.
+
+AASK is distributed in the hope that it will be useful, but WITHOUT ANY
+WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A
+PARTICULAR PURPOSE.  See the GNU General Public License for more details.
+
+You should have received a copy of the GNU General Public License along with
+AASK.  If not, see <http://www.gnu.org/licenses/>.
+
+AASK was started during the 2013 FIRST season by Ben Bray and Curtis Fenner of
+Team 245, the Adambots, for use by other FRC teams.
+*/
+
 a {
-  font-weight:bold;
-  color:#5588EE;
+	font-weight:bold;
+	color:#5588EE;
 }
 
 body {
-  font-family:Arial;
-  font-size:12px;
+	font-family:Arial;
+	font-size:12px;
 }
 
 .shinytable * tr td {
-  border-right: 1px solid #707070;
-  border-bottom: 1px solid #707070; /*#AAAAAA on the light gray, #AAAAAA on the colored*/
+	border-right: 1px solid #707070;
+	border-bottom: 1px solid #707070; /*#AAAAAA on the light gray, #AAAAAA on the colored*/
 }
 
 .shinytable {
-  border-spacing:0px;
-  text-align:center;
-  border-left:1px solid #707070;
-  border-top:1px solid #707070;
-  table-layout:fixed;
+	border-spacing:0px;
+	text-align:center;
+	border-left:1px solid #707070;
+	border-top:1px solid #707070;
+	table-layout:fixed;
 }
 
 #bigtable tbody tr td {
-width:49px;
-height:1.50em;
+	width:49px;
+	height:1.50em;
 }
 
 thead {
-  font-weight:bold;
-  background:#EEEEEE;
+	font-weight:bold;
+	background:#EEEEEE;
 }
 
 tfoot {
-  text-align:left;
+	text-align:left;
+}
+
+td.description {
+	margin-top:7px;
+	margin-bottom:7px;
+	margin-left:7px;
+	margin-right:7px;
 }
 
 thead tr td {
-  padding-top:4px;
-  padding-bottom:4px;
-  padding-left:7px;
-  padding-right:7px;
+	padding-top:4px;
+	padding-bottom:4px;
+	padding-left:7px;
+	padding-right:7px;
 }
 
 #matchpredictions tr td {
-padding-left:5px;
-padding-right:5px;
+	padding-left:5px;
+	padding-right:5px;
 }
 
 #correlationtable tr td {
-padding-left:1px;
-padding-right:1px;
-height:1.75em;
+	padding-left:1px;
+	padding-right:1px;
+	height:1.75em;
 }
 
 input.mini {
-width:50px;
-outline:none;
-text-align:center;
-height:35px;
-border:1px solid #AAAAAA;
-border-radius:3px;
+	width:50px;
+	outline:none;
+	text-align:center;
+	height:35px;
+	border:1px solid #AAAAAA;
+	border-radius:3px;
 }
 
 input.mini:focus {
-border:1px solid #AAAAFF;
+	border:1px solid #AAAAFF;
 }
 
 #redallianceprediction:focus, #predictionred1:focus, #predictionred2:focus, #predictionred3:focus {
-border:1px solid #FFAAAA;
+	border:1px solid #FFAAAA;
 }
 
 input.mini[readonly] {
-background:#EEEEEE;
+	background:#EEEEEE;
 }
 
 div.hr {
-height:1px;
-width:80%;
-margin-left:auto;
-margin-right:auto;
-background:#DDDDDD;
-border-left:20px solid #F5F5F5;
-border-right:20px solid #F5F5F5;
+	height:1px;
+	width:80%;
+	margin-left:auto;
+	margin-right:auto;
+	background:#DDDDDD;
+	border-left:20px solid #F5F5F5;
+	border-right:20px solid #F5F5F5;
 }
 
 #predictedresult {
-  padding:4px;
+	padding:4px;
+}
+
+div.license {
+	text-align:justify;
+	background:#EEEEEE;
+	padding-top:10px;
+	padding-bottom:10px;
+	padding-left:10px;
+	padding-right:10px;
+	border:1px solid #AAAAAA;
 }

@@ -1,13 +1,35 @@
+/*
+This file is part of the Adambots Automated Scouting Kit (AASK).
+
+AASK is free software: you can redistribute it and/or modify it under the terms
+of the GNU General Public License as published by the Free Software Foundation,
+either version 3 of the License, or (at your option) any later version.
+
+AASK is distributed in the hope that it will be useful, but WITHOUT ANY
+WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A
+PARTICULAR PURPOSE.  See the GNU General Public License for more details.
+
+You should have received a copy of the GNU General Public License along with
+AASK.  If not, see <http://www.gnu.org/licenses/>.
+
+AASK was started during the 2013 FIRST season by Ben Bray and Curtis Fenner of
+Team 245, the Adambots, for use by other FRC teams.
+*/
+
 /**
-ctx: The canvas's context (canvas.getContext("2d"))
-minx: The minimum x to be shown on the xaxis (often either 0 or the minimum x of the dataset)
-maxx: The maximum x to be shown (often the maximum x of the dataset)
-miny: The min. y (often either 0 or the minimum y of the data set)
-maxy: The max. y (often 1.25 * the max. y, or something similar)
-axx: Name of the x axis
-axy: Name of the y axis
-title: Name of graph (optional)
-**/
+ * Prepares a graph context and draws the axes.
+ * @param ctx The canvas's context (canvas.getContext("2d"))
+ * @param minx The minimum x to be shown on the xaxis (often either 0 or the minimum x of the dataset)
+ * @param maxx The maximum x to be shown (often the maximum x of the dataset)
+ * @param miny The min. y (often either 0 or the minimum y of the data set)
+ * @param maxy The max. y (often 1.25 * the max. y, or something similar)
+ * @param axx Name of the x axis
+ * @param axy Name of the y axis
+ * @param title Name of graph (optional)
+ * @param noxtics If TRUE, no ticks or interval labels are displayed for the horizontal axis.
+ * @param nottics If TRUE, no ticks or interval labels are displayed for the vertical axis.
+ * @param nogrey If TRUE, no gray subinterval lines will be displayed
+ **/
 function plotAxis(ctx,minx,maxx,miny,maxy,axx,axy,title,noxtics,noytics,nogrey) {
 	if (!ctx) {
 		return;
@@ -230,6 +252,13 @@ function plotCurve(ctx, pts, color, nodots) {
 	}
 }
 
+/** 
+ * Plots a normal curve for the given dataset.
+ * @param ctx The Canvas context to draw on.
+ * @param data The number of standard deviations to plot.
+ * @param color Line color.
+ * @param resolution The amount of plot detail.  A value of one will plot points an interval of one pixel apart.
+ */
 function plotNormal(ctx, data, deviations, color, resolution){
 	// Validate
 	if(isMatrix(data)){

@@ -1,13 +1,20 @@
 <?php
 /*
-Licensed use:
-The Adambots Automated Scouting Kit (AASK) is free software: you can redistribute it and/or modify it under the terms
-of the GNU General Public License as published by the Free Software Foundation, version 3 of the License. 
-AASK is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied
-warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU General Public License for more details. 
-You should have received a copy of the GNU General Public License along with AASK.
-If not, see <http://www.gnu.org/licenses/>.
+This file is part of the Adambots Automated Scouting Kit (AASK).
 
+AASK is free software: you can redistribute it and/or modify it under the terms
+of the GNU General Public License as published by the Free Software Foundation,
+either version 3 of the License, or (at your option) any later version.
+
+AASK is distributed in the hope that it will be useful, but WITHOUT ANY
+WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A
+PARTICULAR PURPOSE.  See the GNU General Public License for more details.
+
+You should have received a copy of the GNU General Public License along with
+AASK.  If not, see <http://www.gnu.org/licenses/>.
+
+AASK was started during the 2013 FIRST season by Ben Bray and Curtis Fenner of
+Team 245, the Adambots, for use by other FRC teams.
 */
 
 
@@ -77,8 +84,7 @@ if (isset($_REQUEST["grab"])) {
 		}
 	}
 
-
-	//The file is cached but expired.
+	// The file is cached but expired.
 	$remote = @file_get_contents("http://www2.usfirst.org/" . $req);
 	if ($remote) {
 		$ti = time() + 1;
@@ -127,15 +133,14 @@ if (isset($_REQUEST["grab"])) {
 	</head>
 	<body style="width:820px; padding-left:50px; padding-right:50px; margin-left:auto; margin-right:auto;">
 		<h1>Adambots Automated Scouting Kit</h1>
-		The Adambots Automated Scouting Kit (AASK) automatically generates estimations of the ability of robots at competition. It utilizes the estimation of solutions to linear equations to predict expected contributions.<br/><br/>
-		This system is produced in Javascript by Adambots team members for any <em>FIRST</em> robotics teams to use!
-		<br/>
-		<br/>
-		Click the table headings to sort the table.<br/>
+		<p>The Adambots Automated Scouting Kit (AASK) automatically generates estimations of the ability of robots at competition. 
+		It utilizes the estimation of solutions to linear equations to predict expected contributions.
+		<p>This tool was produced using Javascript, PHP, HTML, and CSS by Adambots team members for any <em>FIRST</em> robotics teams to use!
+		Click the table headings to sort the table.  See <a href="#about">About This Tool</a> below for information about this tool and instructions for use.<br/>
 		<br/>
 		
 		<div id="change-selection" style="text-align:center;">
-			Select Competition:<br/><br/>
+			<h3>Competition Select</h3>
 			<div style="height:35px;">
 				<select id="compselector" style="width:754px;height:35px;outline:none;vertical-align:top;"></select><span style="display:inline-block; width:6px;height:1px; background:white;"></span><button id="goToComp" style="width:60px;height:35px;">Go!</button><br/>
 			</div>
@@ -153,19 +158,19 @@ if (isset($_REQUEST["grab"])) {
 						</td>
 					</tr>
 					<tr>
-						<td colspan="2">FIRST Data</td>
-						<td colspan="4">Direct Calculations</td>
-						<td colspan="2">Subjective Calculations</td>
+						<td colspan="2">FIRST Data*</td>
+						<td colspan="4">Direct Calculations<sup>&dagger;</sup></td>
+						<td colspan="2">Subjective Calculations<sup>&Dagger;</sup></td>
 					</tr>
 					<tr>
-						<td>Team*</td>
-						<td>Rank*</td>
-						<td>Auton**</td>
-						<td>Climb**</td>
-						<td>Teleop**</td>
-						<td>OPR**</td>
-						<td>DPR**</td>
-						<td>CCWM**</td>
+						<td>Team</td>
+						<td>Rank</td>
+						<td>Auton</td>
+						<td>Climb</td>
+						<td>Teleop</td>
+						<td>OPR</td>
+						<td>DPR</td>
+						<td>CCWM</td>
 					</tr>
 				</thead>
 				<tbody id="bigdata">
@@ -173,8 +178,10 @@ if (isset($_REQUEST["grab"])) {
 				</tbody>
 				<tfoot>
 					<tr><td colspan="8">
-					*Data from <a href="http://www.usfirst.org">www.US<em>FIRST.org</em></a><br/>
-					**These numbers are calculated and only estimates. They represent the expected average score that <em>this</em> team will score <em>alone</em> in a match.</td></tr>
+						*Tabulated directly from <a href="http://www.usfirst.org">www.US<em>FIRST.org</em></a><br/>
+						&dagger;Calculated using match and ranking data directly to solve a system of linear equations.  These numbers are reliable <em>estimates</em> of team utility.<br/>
+						&Dagger;Calculated from raw data and previous calculations manipulated in a way deemed meaningful by the creators of AASK.
+					</td></tr>
 				</tfoot>
 			</table>
 		</div>
@@ -214,8 +221,8 @@ if (isset($_REQUEST["grab"])) {
 						<tr><td colspan="9"><em>Waiting for script to load...</em></td></tr>
 					</tbody>
 					<tfoot>
-						<tr><td colspan="9">
-						This is a correlation matrix for many of the various statistics we have collected and calculated, including raw point values from <a href="http://www.usfirst.org">www.US<em>FIRST.org</em></a>.  Each item in the table indicates how well the metric indicated in the topmost row predicts the metric in the leftmost column, and vice versa.  Values close to positive or negative one indicate a high correlation.
+						<tr><td class="description" colspan="9">
+							This is a correlation matrix for many of the various statistics we have collected and calculated, including raw point values.  Values near positive or negative one indicate a high correlation.
 						</td></tr>
 					</tfoot>
 				</table>
@@ -286,6 +293,8 @@ if (isset($_REQUEST["grab"])) {
 						<tr>
 							<td id="predictedresult" colspan="2">Tie</td>
 						</tr>
+					</tbody>
+					<tfoot>
 						<tr>
 							<td colspan="2">
 								<label><input name="m1atchpredictionmode" type="radio" checked="checked" id="m1atchpredictionmode0" />OPR Only</label><br/>
@@ -293,7 +302,7 @@ if (isset($_REQUEST["grab"])) {
 								<label><input name="m1atchpredictionmode" type="radio" id="m1atchpredictionmode2" />CCWM</label><br/>
 							</td>
 						</tr>
-					</tbody>
+					</tfoot>
 				</table>
 				
 			<br/>
@@ -325,51 +334,73 @@ if (isset($_REQUEST["grab"])) {
 		</div>
 		
 		<div style="clear:both; padding-top:30px;"><!--return to 1 column layout-->
-			<h2>How Does This Work?</h2>
-			<p>For each point category, our system solves a system of linear equations for the "average contribution" of each team per match.  Each equation corresponds to a single team and expresses the total accumulated points earned by that team as a linear combination of that team's average contribution and the average contributions of every other team that has competed on an alliance with that team.  Naturally, we represent the system of equations with a single matrix equation of the form <code>Ax=b</code>
+			<h2 id="about">About This Tool</h2>
+			
+			<h3>What Do All Those Numbers Mean?</h3>
+			<p>Below is a description of each of the columns of the <a href="#bigtable">Analysis Table</a> above.  Remember that you can sort the columns of the table by clicking the underlined headings!
 			<ul>
-				<li>Vector <code>b</code> contains the aggregate point value for each team.</li>
+				<li><b>Rank:</b> The team's rank at the event, in terms of Qualification Points, as reported by <em>FIRST</em>.</li>
+				<li><b>Auton:</b> An estimate of the number of points a team scores, on average, during the autonomous period.</li>
+				<li><b>Climb:</b> An estimate of the number of points a team scores, on average, during the teleoperated period.</li>
+				<li><b>Teleop:</b> An estimate of the number of points a team earns, on average, by climbing.</li>
+				<li><b>OPR:</b> Offensive Power Rating.  An estimate of the number of points the team scores overall, on average.  This number represents the offensive utility of a team.  Comparable to the OPR reported by other teams.</li>
+				<li><b>DPR:</b> Defensive Power Rating.  An estimate of the defensive utility of a team.  May be interpreted as the number of points that a team takes away from its opposing alliance, on average.</li>
+				<li><b>CCWM:</b> Calculated Contribution to Winning Margin.  An estimate of the number of points a team contributes to the winning margin of its alliance.</li>
+			</ul>
+			
+			<h3>Should My Team Still Scout?</h3>
+			<p>Yes!  AASK is meant only as a secondary source of information, either as a basis for comparison or to replace missing or faulty information.  We do not guarantee that the results of our estimates will accurately reflect the capabilities of each team.
+		
+			<h3>How Does This Work?</h3>
+			<p>For each point category, our system solves a <a href="http://en.wikipedia.org/wiki/System_of_linear_equations">system of linear equations</a> for the "average contribution" of each team per match.  Each equation corresponds to a single team and expresses the total accumulated points earned by that team as a linear combination of that team's average contribution and the average contributions of every other team that has competed on an alliance with that team.  Naturally, we represent the system of equations with a single matrix equation of the form <code>Ax=b</code>
+			<ul>
+				<li>Vector <code>b</code> contains the aggregate point value (one of AP, CP, TP, or their sum) for each team.</li>
 				<li>Each element <code>A<sub>i&#8291;j</sub></code> of matrix <code>A</code> represents the number of times team <code>i</code> has played with team <code>j</code>.
 					Each element on the diagonal, therefore, is the total number of matches played by the team represented by that row and column.  As a result, our
 					matrix has the following properties:
 					<ul>
-						<li>It is symmetric.</li>
-						<li>It is (very loosely speaking) diagonally dominant.</li>
-						<li>It is always nonsingular.</li>
+						<li>It is <a href="http://en.wikipedia.org/wiki/Symmetric_matrix">symmetric</a>.</li>
+						<li>It is irreducibly <a href="http://en.wikipedia.org/wiki/Diagonally_dominant_matrix">diagonally dominant</a>.</li>
 					</ul>
 				</li>
 				<li>We solve for the vector <code>x</code>, which contains the average contribution of each team.</li>
 			</ul>
 		
-			<p>Because of the special properties of our matrix, we can easily find an exact solution using LU Factorization (without pivoting!) followed by forward- and back-substitution.</p>
+			<p>Because of the special properties of our matrix, we can easily find an exact solution when the matrix is nonsingular using <a href="http://en.wikipedia.org/wiki/LU_decomposition">LU Factorization</a> (without pivoting!) followed by forward- and back-substitution.  When the matrix is singular, we approximate the solution iteratively with the <a href="http://en.wikipedia.org/wiki/Gauss-Seidel">Gauss-Seidel method</a> and display a warning to the user.
 		
-			<p>This Javascript implementation is dependent on the match and rankings reported by <a href="http://www.usfirst.org">www.US<em>FIRST.org</em></a>.<br/>
-			Example pages for the 2013 Grand Blanc competition:
-			<ul>
-				<li><a href="http://www2.usfirst.org/2013comp/Events/MIGBL/rankings.html">http://www2.usfirst.org/2013comp/Events/MIGBL/rankings.html</a></li>
-				<li><a href="http://www2.usfirst.org/2013comp/events/MIGBL/matchresults.html">http://www2.usfirst.org/2013comp/events/MIGBL/matchresults.html</a></li>
-			</ul>
+			<p>The <b>Defensive Power Rating (DPR)</b> for a team is calculated by iterating through the list of completed matches and using the calculated OPR values to predict the outcome of each match.  For each match, for both alliances, the difference between this expected outcome and the true outcome of the match is credited to the defensive utility of the opposing alliance.  For each team, we sum up these differences and solve a linear system similar to the one above using this new tabulated data.
+			
+			<p>The <b>Calculated Contribution to the Winning Margin (CCWM)</b> for each team is calculated by summing up the alliance score difference for each team for each match and solving our favorite system of linear equations for the <code>x</code> vector with these margins in our <code>b</code> vector.
+			
+			<p>AASK is dependent on the match schedule and rankings reported by <a href="http://www.usfirst.org">www.US<em>FIRST.org</em></a>.  Occasionally, the <em>FIRST</em> website will experience an outage, rendering our tool temporarily incapacitated.  We have implemented a simple caching system, designed to reduce the frequency of such failures, but ultimately the status of the <em>FIRST</em> website controls the functionality of this tool.<br/>
 
-			<h2>Want Source Code?</h2>
-			This project is available on <a href="https://github.com/benrbray/adambots-automated-scouting-kit/">GitHub</a>. It is available in <a href="https://github.com/benrbray/adambots-automated-scouting-kit/">web</a> form, utilizing PHP, Javascript, HTML, and CSS.<br/>
-			<br/>
-			Licensed use:<br/>
-			The <em>Adambots Automated Scouting Kit (AASK)</em> is free software: you can redistribute it and/or modify
-			it under the terms of the GNU General Public License as published by
-			the Free Software Foundation, either version 3 of the License.
-			<br/>
-			AASK is distributed in the hope that it will be useful,
-			but WITHOUT ANY WARRANTY; without even the implied warranty of
-			MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-			GNU General Public License for more details.
-			<br/>
-			You should have received a copy of the GNU General Public License
-			along with AASK.  If not, see &lt;http://www.gnu.org/licenses/&gt;.
-			<br/>
-			<br/>
-			This project utilizes Excanvas.js (&copy; Google 2006) for backwards compatibility for Microsoft Internet Explorer which is licenced under the Apache License.<br/>
-			See <a href="excanvas">here</a>.
+			<h3>Want Source Code?</h3>
+			This project is available on <a href="https://github.com/benrbray/adambots-automated-scouting-kit/">GitHub</a> under the <a href="http://www.gnu.org/licenses/gpl.html">GPU General Public License</a>:
+			<br/><br/>
+			
+			<div class="license">
+				<code>The <em>Adambots Automated Scouting Kit (AASK)</em> is free software: you can 
+				redistribute it and/or modify it under the terms of the GNU General Public License
+				as published by the Free Software Foundation, either version 3 of the License, 
+				or (at your option) any later version.
+				<br/><br/>
+				AASK is distributed in the hope that it will be useful, but WITHOUT ANY
+				WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A
+				PARTICULAR PURPOSE.  See the GNU General Public License for more details.
+				<br/><br/>
+				You should have received a copy of the GNU General Public License along with
+				AASK.  If not, see <a href="http://www.gnu.org/licenses/">http://www.gnu.org/licenses/</a>.
+				<br/><br/>
+				AASK was started during the 2013 FIRST season by Ben Bray and Curtis Fenner of
+				Team 245, the Adambots, for use by other FRC teams.</code>
+				<br/>
+			</div>
+			
+			<h3>Excanvas.js</h3>
+			This project utilizes <code>Excanvas.js</code> (&copy; Google 2006) for backwards compatibility with 
+			Microsoft Internet Explorer, which is licenced under the Apache License. See <a href="excanvas">here</a>.
 		</div>
+		<div style="height:50px;"></div>
 		<script type="text/javascript">setTimeout(Main,1);</script>
 	</body>
 </html>

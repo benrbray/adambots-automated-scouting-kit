@@ -1,3 +1,21 @@
+/*
+This file is part of the Adambots Automated Scouting Kit (AASK).
+
+AASK is free software: you can redistribute it and/or modify it under the terms
+of the GNU General Public License as published by the Free Software Foundation,
+either version 3 of the License, or (at your option) any later version.
+
+AASK is distributed in the hope that it will be useful, but WITHOUT ANY
+WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A
+PARTICULAR PURPOSE.  See the GNU General Public License for more details.
+
+You should have received a copy of the GNU General Public License along with
+AASK.  If not, see <http://www.gnu.org/licenses/>.
+
+AASK was started during the 2013 FIRST season by Ben Bray and Curtis Fenner of
+Team 245, the Adambots, for use by other FRC teams.
+*/
+
 var competitionList = [
 	["BAE Systems Granite State Regional","2013comp/Events/NHMA/"],
 	["Finger Lakes Regional","2013comp/Events/NYRO/"],
@@ -92,6 +110,9 @@ for (var i = 0; i < competitionList.length; i++) {
 
 compselector.innerHTML = s;
 var url = document.URL;
+if (url.indexOf("#") >= 0) {
+	url = url.split("#")[0];
+}
 url = url.split("?");
 url[1] = !url[1] ? [] : url[1].split("&");
 
@@ -115,14 +136,10 @@ goToComp.onclick = function() {
 
 var eventName = competitionList[i][0];
 var eventURL = competitionList[i][1];
-//var rankingsPage = competitionList[i][1];
-//var resultsPage = competitionList[i][2];
 
 for (var i = 0; i < competitionList.length; i++) {
 	if ((url.param.comp||"").split("-").join("") == competitionList[i][0].split(" ").join("").split("-").join("")){
 		eventName = competitionList[i][0];
 		eventURL = competitionList[i][1];
-		//rankingsPage = competitionList[i][1];
-		//resultsPage = competitionList[i][2];
 	}
 }

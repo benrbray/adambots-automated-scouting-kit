@@ -1,16 +1,20 @@
-var pageMatches;
-var pageRankings;
+/*
+This file is part of the Adambots Automated Scouting Kit (AASK).
 
-/**
- * Repeatedly occurs until both pageMatches and pageRankings report that they have finished scraping and parsing.
- * Then, inside the "if" , the remainder of processing may continue. Might want to move this inside of the FRC event?
- */
+AASK is free software: you can redistribute it and/or modify it under the terms
+of the GNU General Public License as published by the Free Software Foundation,
+either version 3 of the License, or (at your option) any later version.
 
-/**
- * Initial table text is "waiting for scripts" so this modifies it to state "waiting for data".
- * Create the Page objects necessary for the event (to be encapsulated by an FRCEvent object).
- * Start waiting for the scrape and parse to finish at "waitForData()".
- */
+AASK is distributed in the hope that it will be useful, but WITHOUT ANY
+WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A
+PARTICULAR PURPOSE.  See the GNU General Public License for more details.
+
+You should have received a copy of the GNU General Public License along with
+AASK.  If not, see <http://www.gnu.org/licenses/>.
+
+AASK was started during the 2013 FIRST season by Ben Bray and Curtis Fenner of
+Team 245, the Adambots, for use by other FRC teams.
+*/
 
 var frcEvent;
 
@@ -61,9 +65,6 @@ function Main() {
 	);
 
 	setupMatchPredictor();
-	/*setInterval( function() { 
-		document.getElementById("contributiondata").innerHTML = "<td colspan=\"8\">" + frcEvent.status + "</td>";
-	}, 100);*/
 }
 
 
@@ -83,27 +84,43 @@ function createMatchGraph(){
 }
 
 function createDistroGraph(){
-	// Prepare Data
-	totalMu = mean(frcEvent.totalEC);
-	totalSigma = std(frcEvent.totalEC);
-	totalPts = normPDFRange(0, 100, totalMu, totalSigma);
-	totalMax = 0;
+	// Find Max/Min
+	var winMin = frcEvent.totalEC.get(0,0);
+	var winMax = frcEvent.totalEC.get(0,0);
 	
-	for(var i = 0; i < totalPts.length; i++){
-		if(totalPts[i][1] > totalMax){ totalMax = totalPts[i][1]; };
+	for(var i = 0; i < frcEvent.teamCount; i++){
+		if(frcEvent.totalEC.get(i,0) > winMax){ winMax = frcEvent.totalEC.get(i,0); };
+		if(frcEvent.totalEC.get(i,0) < winMin){ winMin = frcEvent.totalEC.get(i,0); };
+		if(frcEvent.ccwm.get(i,0) > winMax){ winMax = frcEvent.ccwm.get(i,0); };
+		if(frcEvent.ccwm.get(i,0) < winMin){ winMin = frcEvent.ccwm.get(i,0); };
 	}
 	
-	ccwmMu = mean(frcEvent.ccwm);
-	ccwmSigma = std(frcEvent.ccwm);
-	ccwmPts = normPDFRange(0, 100, ccwmMu, ccwmSigma);
-	ccwmMax = 0;
+	winMax = Math.floor(winMax*0.11)*10;//roundPretty(winMax);
+	winMin = Math.floor((winMin-Math.abs(winMin)*0.1)/10)*10;//roundPretty(winMin);
+	
+	// Total Points Stats
+	var totalMu = mean(frcEvent.totalEC);
+	var totalSigma = std(frcEvent.totalEC);
+	var totalPts = normPDFRange(-100, 100, totalMu, totalSigma);
+	var totalMaxPD = 0;
+	
+	for(var i = 0; i < totalPts.length; i++){
+		if(totalPts[i][1] > totalMaxPD){ totalMaxPD = totalPts[i][1]; };
+	}
+	
+	// CCWM Stats
+	var ccwmMu = mean(frcEvent.ccwm);
+	var ccwmSigma = std(frcEvent.ccwm);
+	var ccwmPts = normPDFRange(-100, 100, ccwmMu, ccwmSigma);
+	var ccwmMaxPD = 0;
+	
 	for(var i = 0; i < ccwmPts.length; i++){
-		if(ccwmPts[i][1] > ccwmMax){ ccwmMax = ccwmPts[i][1]; };
+		if(ccwmPts[i][1] > ccwmMaxPD){ ccwmMaxPD = ccwmPts[i][1]; };
 	}
 	
 	// Plot
-	plotAxis(graphDistro, 0, 100, 0, Math.max(totalMax, ccwmMax) * 1.1, "", "","",true,true,true); //empty titles and no ticks so we don't double up text.
+	plotAxis(graphDistro, winMin, winMax, 0, Math.max(totalMaxPD, ccwmMaxPD) * 1.1, "", "","",true,true,true); //empty titles and no ticks so we don't double up text.
 	plotCurve(graphDistro, totalPts, "#EE9999", true);
 	plotCurve(graphDistro, ccwmPts, "#9999EE", true);
-	plotAxis(graphDistro, 0, 100, 0, Math.max(totalMax, ccwmMax) * 1.1, "Points", "Frequency","",false,true,true);
+	plotAxis(graphDistro, winMin, winMax, 0, Math.max(totalMaxPD, ccwmMaxPD) * 1.1, "Points", "Frequency","",false,true,true);
 }

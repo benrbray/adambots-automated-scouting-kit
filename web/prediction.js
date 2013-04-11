@@ -1,3 +1,20 @@
+/*
+This file is part of the Adambots Automated Scouting Kit (AASK).
+
+AASK is free software: you can redistribute it and/or modify it under the terms
+of the GNU General Public License as published by the Free Software Foundation,
+either version 3 of the License, or (at your option) any later version.
+
+AASK is distributed in the hope that it will be useful, but WITHOUT ANY
+WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A
+PARTICULAR PURPOSE.  See the GNU General Public License for more details.
+
+You should have received a copy of the GNU General Public License along with
+AASK.  If not, see <http://www.gnu.org/licenses/>.
+
+AASK was started during the 2013 FIRST season by Ben Bray and Curtis Fenner of
+Team 245, the Adambots, for use by other FRC teams.
+*/
 
 /**
 Mode:
@@ -156,12 +173,12 @@ function predictUnplayed() {
 		fillTable("matchpredictions", [colmatch , colteams[0], colteams[1], colscores[0], colscores[1] ], ["grey","white","white","red","blue"] , [-1,-1,-1,-1,-1] );
 	} else {
 		// No Unplayed Matches
-		document.getElementById("matchpredictions").tBodies[0].innerHTML = "<tr><td colspan=\"5\">No unplayed qualification matches scheduled.</td></tr>";
+		document.getElementById("matchpredictions").tBodies[0].innerHTML = "<tr><td colspan=\"5\" style=\"height:40px;background:#FFEEEE\">No unplayed qualification matches scheduled.</td></tr>";
 	}
 
 	var fi = frcEvent.elimTable;
 	if (!fi || fi.data.length == 0) {
-		document.getElementById("matchpredictions").tBodies[0].innerHTML += "<tr><td colspan=\"5\">No eliminations matches are scheduled.</td></tr>";
+		document.getElementById("matchpredictions").tBodies[0].innerHTML += "<tr><td colspan=\"5\" style=\"height:40px;background:#FFEEEE\">No eliminations matches are scheduled.</td></tr>";
 	} else {
 		var cname = [];
 		var cred = [];
@@ -195,7 +212,7 @@ function predictUnplayed() {
 			}
 		}
 		if (cname.length == 0) {
-			document.getElementById("matchpredictions").tBodies[0].innerHTML += "<tr><td colspan=\"5\">No unplayed eliminations matches are scheduled.</td></tr>";
+			document.getElementById("matchpredictions").tBodies[0].innerHTML += "<tr><td colspan=\"5\" style=\"height:40px;background:#FFEEEE\">No unplayed eliminations matches are scheduled.</td></tr>";
 		} else {
 			fillTable("matchpredictions", [cname,cred,cblue,csr,csb] , ["grey","white","white","red","blue"],[-1,-1,-1,-1,-1] );
 		}
