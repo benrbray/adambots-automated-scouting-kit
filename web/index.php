@@ -25,6 +25,12 @@ Loading a page from WW2.USFIRST.ORG violates the same-origin policy.
 Instead, this pages acts a proxy, so same-origin isn't violated.
 */
 
+function directory() {
+	//bloginfo("template_directory");
+	//echo "/Scouting/";
+}
+
+
 if (isset($_REQUEST["grab"])) {
 
 	$req = $_REQUEST["grab"];
@@ -123,18 +129,18 @@ if (isset($_REQUEST["grab"])) {
 	<head>
 		<meta charset="UTF-8">
 		<title>Adambots Automated Scouting Kit</title>
-		<!--[if IE]><script type="text/javascript" src="excanvas/excanvas.js"></script><![endif]-->
-		<script type="text/javascript" src="prediction.js"></script>
-		<script type="text/javascript" src="output.js"></script>
-		<script type="text/javascript" src="statistics.js"></script>
-		<script type="text/javascript" src="graphing.js"></script>
-		<script type="text/javascript" src="hashtable.js"></script>
-		<script type="text/javascript" src="matrix.js"></script>
-		<script type="text/javascript" src="frcEvent.js"></script>
-		<script type="text/javascript" src="sorttable.js"></script>
-		<script type="text/javascript" src="page.js"></script>
-		<script type="text/javascript" src="main.js"></script>
-		<link href="scouting.css" rel="stylesheet" type="text/css">
+		<!--[if IE]><script type="text/javascript" src="<?php directory();?>excanvas/excanvas.js"></script><![endif]-->
+		<script type="text/javascript" src="<?php directory();?>prediction.js"></script>
+		<script type="text/javascript" src="<?php directory();?>output.js"></script>
+		<script type="text/javascript" src="<?php directory();?>statistics.js"></script>
+		<script type="text/javascript" src="<?php directory();?>graphing.js"></script>
+		<script type="text/javascript" src="<?php directory();?>hashtable.js"></script>
+		<script type="text/javascript" src="<?php directory();?>matrix.js"></script>
+		<script type="text/javascript" src="<?php directory();?>frcevent.js"></script>
+		<script type="text/javascript" src="<?php directory();?>sorttable.js"></script>
+		<script type="text/javascript" src="<?php directory();?>page.js"></script>
+		<script type="text/javascript" src="<?php directory();?>main.js"></script>
+		<link href="<?php directory();?>scouting.css" rel="stylesheet" type="text/css">
 	</head>
 	<body style="width:820px; padding-left:50px; padding-right:50px; margin-left:auto; margin-right:auto;">
 		<h1>Adambots Automated Scouting Kit</h1>
@@ -156,7 +162,7 @@ if (isset($_REQUEST["grab"])) {
 				<button onclick="goToRankings()" style="width:120px;height:35px;">Rankings</button>
 				<br/>
 			</div>
-			<script src="competitions.js" type="text/javascript"></script>
+			<script src="<?php directory();?>competitions.js" type="text/javascript"></script>
 		</div>
 		
 		<br/>
@@ -257,10 +263,14 @@ if (isset($_REQUEST["grab"])) {
 							</td></tr>
 						</tbody>
 					<tfoot><tr><td>
-						<span style="display:inline-block; position:relative; width:30px;">&nbsp;<span style="display:block; position:absolute; top:40%; height:21%; width:100%; background:#EE9999;"></span></span>
-						OPR Distribution<br/>
-						<span style="display:inline-block; position:relative; width:30px;">&nbsp;<span style="display:block; position:absolute; top:40%; height:21%; width:100%; background:#9999EE;"></span></span>
-						CCWM Distribution<br/>						
+					<span style="display:inline-block; position:relative; width:30px;">&nbsp;<span style="display:block; position:absolute; top:40%; height:21%; width:100%; background:#EE9999;"></span></span>
+					OPR Distribution Approximation<br/>
+					<span style="display:inline-block; position:relative; width:30px;">&nbsp;<span style="display:block; position:absolute; top:40%; height:21%; width:100%; background:#9999EE;"></span></span>
+					CCWM Distribution Approximation<br/>						
+					<span style="display:inline-block; position:relative; width:30px;">&nbsp;<span style="display:block; position:absolute; top:40%; height:21%; width:100%; background:#CC5555;"></span></span>
+					OPR Normal Distribution<br/>			
+					<span style="display:inline-block; position:relative; width:30px;">&nbsp;<span style="display:block; position:absolute; top:40%; height:21%; width:100%; background:#5555CC;"></span></span>
+					CCWM Normal Distribution<br/>	
 					  </td></tr></tfoot>
 				</table>
 				

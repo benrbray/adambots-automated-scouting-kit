@@ -132,8 +132,43 @@ function createMatchGraph(){
 	plotAxis(graphMatches, 0, frcEvent.matchCount, 0, 200, "Match", "Score", "",false,false,true);
 }
 
+function generateApproximateDistribution(data) {
+	function smooth(a,m) {
+		var b = [];
+		for (var i = 0; i < a.length; i++) {
+			var s = 0;
+			var w = 0;
+			for (var j = 0; j < a.length; j++) {
+				var p = Math.pow(m,Math.abs(a[j][0] - a[i][0]));
+				w = w + p;
+				s = s + p * a[j][1];
+			}
+			b.push([a[i][0],s/w]);
+		}
+		return b;
+	}
+	k = data;
+	k.sort(function(a,b) { return a-b; });
+	var integral = [];
+	for (var i = 0; i < k.length; i++) {
+		integral.push( [k[i] , (i-1) / (k.length-1)] );
+	}
+	integral = smooth(integral,0.5);
+	var distribution = [];
+	var cum = 0;
+	var sum = 0;
+	for (var i = 1; i < k.length; i++) {
+		distribution.push([k[i] , (integral[i][1] - integral[i-1][1]) / (k[i] - k[i-1])   ]);
+	}
+	distr = smooth(distribution,0.1);
+	distr.push([k[0],0]);
+	distr.push([k[k.length-1],0]);
+	return distr;
+}
+
 function createDistroGraph(){
 	// Find Max/Min
+	
 	var winMin = frcEvent.totalEC.get(0,0);
 	var winMax = frcEvent.totalEC.get(0,0);
 	
@@ -169,7 +204,32 @@ function createDistroGraph(){
 	
 	// Plot
 	plotAxis(graphDistro, winMin, winMax, 0, Math.max(totalMaxPD, ccwmMaxPD) * 1.1, "", "","",true,true,true); //empty titles and no ticks so we don't double up text.
-	plotCurve(graphDistro, totalPts, "#EE9999", true);
-	plotCurve(graphDistro, ccwmPts, "#9999EE", true);
+	
 	plotAxis(graphDistro, winMin, winMax, 0, Math.max(totalMaxPD, ccwmMaxPD) * 1.1, "Points", "Frequency","",false,true,true);
+	
+	//Fancy calculus distribution?
+	var k = [];
+	for (var i = 0; i < frcEvent.teamCount; i++) {
+		k.push( parseFloat(frcEvent.totalEC.get(i,0)) );
+	}
+	var distrOPR = generateApproximateDistribution(k);
+
+	var k = [];
+	for (var i = 0; i < frcEvent.teamCount; i++) {
+		k.push( parseFloat(frcEvent.ccwm.get(i,0)) );
+	}
+	var distrCCWM = generateApproximateDistribution(k);
+
+	//plotAxis(graphDistro,-5,80 , 0 , 0.03);
+	graphDistro.lines = 0.5;
+	plotCurve(graphDistro, distrOPR , "#EE9999" , true);
+
+	graphDistro.lines = 0.5;
+	plotCurve(graphDistro, distrCCWM , "#9999EE" , true);
+
+	graphDistro.lines = 0.75;
+	plotCurve(graphDistro, totalPts, "#CC5555", true);
+
+	graphDistro.lines = 0.75;
+	plotCurve(graphDistro, ccwmPts, "#5555CC", true);
 }
