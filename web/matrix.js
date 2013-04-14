@@ -32,6 +32,7 @@ function Matrix(data){
 	// Fields
 	
 	// Methods
+	this.getData	= function(){			return this.data;					};
 	this.getRows 	= function(){			return this.data.length; 			};
 	this.getCols 	= function(){			return this.data[0].length; 		};
 	this.getColumns = function(){			return this.data[0].length; 		};
@@ -556,8 +557,6 @@ function MatrixGaussSeidel(A, b){
 				error = Math.abs(residual.get(i,0));
 			}
 		}
-		
-		console.log(error, iterations);
 	}
 	
 	return phi;

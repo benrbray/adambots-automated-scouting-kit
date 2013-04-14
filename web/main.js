@@ -24,22 +24,26 @@ function Main() {
 	graphDistro = document.getElementById("graphDistro").getContext("2d");
 	
 	// Waiting Message
-	document.getElementById("bigdata").innerHTML = "<tr><td colspan=\"8\">Waiting for data <em>FIRST</em>...</td></tr>";
-	document.getElementById("correlationdata").innerHTML = "<tr><td colspan=\"9\">Waiting for data from <em>FIRST</em>...</td></tr>";
+	document.getElementById("bigdata").innerHTML = "<tr><td colspan=\"9\">Waiting for data from <em>FIRST</em>...</td></tr>";
+	document.getElementById("correlationdata").innerHTML = "<tr><td colspan=\"10\">Waiting for data from <em>FIRST</em>...</td></tr>";
 	
 	// FRC Event
 	frcEvent = new FRCEvent(eventURL, eventName, 
 		function () {
 		
 			if (frcEvent.failed) {
-				document.getElementById("bigdata").innerHTML = "<tr><td class=\"error\" colspan=\"8\">No data is available for this event right now.</td></tr>";
-				document.getElementById("correlationdata").innerHTML = "<tr><td class=\"error\" colspan=\"9\">No data is available for this event right now.</td></tr>";
+				document.getElementById("bigdata").innerHTML = "<tr><td class=\"error\" colspan=\"9\">No data is available for this event right now.</td></tr>";
+				document.getElementById("correlationdata").innerHTML = "<tr><td class=\"error\" colspan=\"10\">No data is available for this event right now.</td></tr>";
 				return;
 			}
 			
 			// Graph Match Score
 			createMatchGraph();
 			createDistroGraph();
+			
+			// Predict Unplayed Matches
+			m2atchpredictionmode0.onchange = m2atchpredictionmode1.onchange = m2atchpredictionmode2.onchange = predictUnplayed;
+			predictUnplayed();
 			
 			// Fill Tables			
 			var colteam = [];
@@ -49,43 +53,82 @@ function Main() {
 				colteam[i] = frcEvent.rankHash.get(i+1);
 			}
 			
+			// Big Table
 			fillTable("bigtable", 
-				[colteam,	colrank,	frcEvent.autonEC,	frcEvent.climbEC,	frcEvent.teleopEC,	frcEvent.totalEC,	frcEvent.dpr,	frcEvent.ccwm], 
-				["grey",	"greenred",	"redgreen",			"redgreen",			"redgreen",			"redgreen",			"redgreen",		"redgreen"],
-				[0,			0,			1,					1,					1,					1,					1,				1],
+				[colteam,	colrank,	frcEvent.autonEC,	frcEvent.climbEC,	frcEvent.teleopEC,	frcEvent.totalEC,	frcEvent.dpr,	frcEvent.ccwm,	(frcEvent.estimatedRankings || colrank)], 
+				["grey",	"greenred",	"redgreen",			"redgreen",			"redgreen",			"redgreen",			"redgreen",		"redgreen",  	"greenred"],
+				[0,			0,			1,					1,					1,					1,					1,				1,				0],
 				true,	// Sortable?
 				false,	// Use Global Extremes for Coloring?
 				false);	// First Column is Header (bold it)?
+			
 				
+			// Correlation Table
 			fillTable("correlationtable", 
-				[frcEvent.corrLabels,	frcEvent.corrMatrix[0],	frcEvent.corrMatrix[1],	frcEvent.corrMatrix[2],	frcEvent.corrMatrix[3],	frcEvent.corrMatrix[4],	frcEvent.corrMatrix[5],	frcEvent.corrMatrix[6], frcEvent.corrMatrix[7]], 
-				["grey",				"mirrorwhitegreen",		"mirrorwhitegreen",		"mirrorwhitegreen",		"mirrorwhitegreen",		"mirrorwhitegreen",		"mirrorwhitegreen",		"mirrorwhitegreen",		"mirrorwhitegreen"],
-				[0,						2,						2,						2,						2,						2,						2,						2,						2],
+				[frcEvent.corrLabels,	frcEvent.corrMatrix[0],	frcEvent.corrMatrix[1],	frcEvent.corrMatrix[2],	frcEvent.corrMatrix[3],	frcEvent.corrMatrix[4],	frcEvent.corrMatrix[5],	frcEvent.corrMatrix[6], frcEvent.corrMatrix[7], frcEvent.corrMatrix[8]], 
+				["grey",				"mirrorwhitegreen",		"mirrorwhitegreen",		"mirrorwhitegreen",		"mirrorwhitegreen",		"mirrorwhitegreen",		"mirrorwhitegreen",		"mirrorwhitegreen",		"mirrorwhitegreen", "mirrorwhitegreen"],
+				[0,						2,						2,						2,						2,						2,						2,						2,						2,	2],
 				false,	// Sortable?
 				true,	// Use Global Extremes for Coloring?
 				true);	// First Column is Header (bold it)?
 
-			m2atchpredictionmode0.onchange = m2atchpredictionmode1.onchange = m2atchpredictionmode2.onchange = predictUnplayed;
-			predictUnplayed();
 		}
 	);
 
 	setupMatchPredictor();
 }
 
+function goToRankings(){
+	if(!frcEvent) { return; };
+	window.open("http://www2.usfirst.org/" + frcEvent.url + "rankings.html", "_self");
+}
+
+function goToSchedule(){
+	if(!frcEvent) { return; };
+	window.open("http://www2.usfirst.org/" + frcEvent.url + "matchresults.html", "_self");
+}
 
 var graphMatches;
 var graphDistro;
 
 function createMatchGraph(){
 	var t = frcEvent.qualTable.data;
-	var pts = [];
+	var lowPts = [];
+	var highPts = [];
 	for (var i = 0; i < t.length; i++) {
-		pts[pts.length] = [i+1, t[i][9] ];
+		var x = i + 1;
+		var y1 = t[i][9];
+		var y2 = t[i][8];
+		var lo = Math.min(y1,y2);
+		var hi = Math.max(y1,y2);
+		lowPts[lowPts.length] = [x,lo];
+		highPts[highPts.length] = [x,hi ];
 	}
 	
-	plotAxis(graphMatches, 0, frcEvent.matchCount, 0, 200, "", "", "",true,true,false); //Empty and true true for not doubling up text when I draw again.
-	plotCurve(graphMatches,pts,"#9999EE",true);
+	var movingHigh = new Array(highPts.length);
+	var movingLow = new Array(lowPts.length);
+	
+	var movingLength = 10;
+	
+	for(var i = 0; i < highPts.length; i++){
+		movingHigh[i] = 0;
+		movingLow[i] = 0;
+		for(var j = 0; j < movingLength; j++){
+			if(i-j < 0) { continue; };
+			movingHigh[i] += highPts[i-j][1];
+			movingLow[i] += lowPts[i-j][1];
+		}
+		movingHigh[i] = [i,movingHigh[i]/Math.min(i+1,movingLength)];
+		movingLow[i] = [i,movingLow[i]/Math.min(i+1,movingLength)];
+	}
+	
+	plotAxis(graphMatches, 0, frcEvent.matchCount, 0, 200, "", "", "",true,true,false); //Empty and true true for not doubling up text when I draw again.0.5;
+	graphMatches.lines = 0.5;
+	plotCurve(graphMatches,lowPts,"#9999EE",true);
+	plotCurve(graphMatches,highPts,"#EE9999",true);
+	graphMatches.lines = 0.75;
+	plotCurve(graphMatches,movingHigh,"#CC5555",true);
+	plotCurve(graphMatches,movingLow,"#5555CC",true);
 	plotAxis(graphMatches, 0, frcEvent.matchCount, 0, 200, "Match", "Score", "",false,false,true);
 }
 

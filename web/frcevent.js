@@ -101,7 +101,7 @@ function FRCEvent(baseurl,eventName,callback) {
 		this.createPointMatrices();
 		
 		// Solve the System
-		var singularWarning = "Warning:  It appears that not enough matches have been played.  The displayed solution is a \"best guess\", use additional discretion when interpreting results.";
+		var singularWarning = "Warning:  It appears that not enough matches have been played to yield reliable results.  The displayed solution is a \"best guess\", use additional discretion when interpreting results.";
 		
 		// LU Decomposition
 		var LU = this.mpf.luSeparate();
@@ -111,7 +111,7 @@ function FRCEvent(baseurl,eventName,callback) {
 		// Return Iterative Approximation if Singular
 		var det = L.diagProduct() * U.diagProduct();
 		
-		if(isNaN(det) || det==0){
+		if(isNaN(det) || det==0 || this.matchCount < (this.teamCount/2)){
 			alert(singularWarning);
 			this.autonEC = this.mpf.gaussSeidel(this.autonPoints);
 			this.climbEC = this.mpf.gaussSeidel(this.climbPoints);
@@ -143,14 +143,60 @@ function FRCEvent(baseurl,eventName,callback) {
 		
 		// Win Analysis
 		this.winAnalysis();
-		this.ccwm = this.mpf.solveLU(this.winMargins);
-		this.dpr = this.mpf.solveLU(this.defenceMargins);
+		this.ccwm = this.mpf.gaussSeidel(this.winMargins);
+		this.dpr = this.mpf.gaussSeidel(this.defenceMargins);
 
 		this.getCCWM = function(t) {
 			return this.ccwm.get(this.teamHash.get(t)-1,0);
 		}
 		this.getDPR = function(t) {
 			return this.dpr.get(this.teamHash.get(t)-1,0);
+		}
+		
+		// Estimated Rank
+		this.predictedWinCounts = zeros(this.teamCount, 1);
+		var qu = this.qualTable.data;
+		for (var m = 0; m < this.matchCount; m++) {
+			// Get Match (Row)
+			var match = qu[m];
+			var played = !isNaN(match[8]);
+			
+			// Predict Scores
+			var red = played ? match[8] : predictAllianceValue(match[2], match[3], match[4] , 1 , frcEvent);
+			var blue = played ? match[9] : predictAllianceValue(match[5], match[6], match[7] , 1 , frcEvent);
+			
+			if(red > blue){
+				for(var i = 0; i < 3; i++){
+					this.predictedWinCounts.plus(this.teamHash.get(match[2 + i])-1, 0, 2);
+				}
+			} else if(blue > red) {
+				for(var i = 0; i < 3; i++){
+					this.predictedWinCounts.plus(this.teamHash.get(match[5 + i])-1, 0, 2);
+				}
+			} else {
+				for(var i = 0; i < 6; i++){
+					this.predictedWinCounts.plus(this.teamHash.get(match[2 + i])-1, 0, 1);
+				}
+			}
+		}
+		
+		var teamIndecies = this.rankingsMatrix.submat(0, this.teamCount-1, 0, 0).getData();
+		var me = this;
+		teamIndecies.sort(function(indexA, indexB){
+			var order = new Array(me.predictedWinCounts, me.autonEC, me.climbEC, me.teleopEC);
+			for(var i = 0; i < order.length; i++){
+				var a = order[i].get(indexA-1, 0);
+				var b = order[i].get(indexB-1, 0);
+				if(a != b){
+					return b-a;
+				}
+			}
+			return indexB - indexA;
+		});
+		
+		this.estimatedRankings = zeros(this.teamCount, 1);
+		for(var i = 0; i < this.teamCount; i++){
+			this.estimatedRankings.set(teamIndecies[i]-1, 0, i+1);
 		}
 		
 		// Correlation
@@ -161,8 +207,9 @@ function FRCEvent(baseurl,eventName,callback) {
 						 this.teleopEC,
 						 this.totalEC,
 						 this.dpr,
-						 this.ccwm];
-		this.corrLabels = ["Team", "Rank", "Auton", "Climb", "Teleop", "OPR", "DPR", "CCWM"];
+						 this.ccwm,
+						 this.estimatedRankings];
+		this.corrLabels = ["Team", "Rank", "Auton", "Climb", "Teleop", "OPR", "DPR", "CCWM", "Seed"];
 		this.corrMatrix = new Array(this.corrLabels.length);
 						 
 		for(var i = 0; i < this.corrVars.length; i++){

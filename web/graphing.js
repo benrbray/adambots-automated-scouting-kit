@@ -37,7 +37,7 @@ function plotAxis(ctx,minx,maxx,miny,maxy,axx,axy,title,noxtics,noytics,nogrey) 
 	if (!title) {
 		title = "";
 	}
-	
+	ctx.lines = 1;
 	ctx.pad = 50;
 	var pad = ctx.pad;
 	function round(x) {
@@ -197,7 +197,7 @@ function plotCurve(ctx, pts, color, nodots) {
 	}
 	
 	// White
-	ctx.lineWidth = 10;
+	ctx.lineWidth = 10 * ctx.lines;
 	ctx.lineJoin = "bevel";
 	ctx.strokeStyle = "white";
 	ctx.beginPath();
@@ -218,7 +218,7 @@ function plotCurve(ctx, pts, color, nodots) {
 	// Color
 	ctx.stroke();
 	ctx.lineJoin = "miter";
-	ctx.lineWidth = 4;
+	ctx.lineWidth = 4 * ctx.lines;
 	ctx.strokeStyle = color;
 	ctx.beginPath();
 	moved = false;

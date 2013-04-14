@@ -106,7 +106,11 @@ if (isset($_REQUEST["grab"])) {
 		file_put_contents(cacheuri($req), $ti . "$" . $remote); //Cache the file
 		exit($remote); //Tell the client the contents of the file
 	} else {
-		exit("404");
+		if ($fromcache) {
+			exit("old" . $fromcache);
+		} else {
+			exit("404");
+		}
 	}
 	exit("500");
 }
@@ -143,27 +147,32 @@ if (isset($_REQUEST["grab"])) {
 		<div id="change-selection" style="text-align:center;">
 			<h3>Competition Select</h3>
 			<div style="height:35px;">
-				<select id="compselector" style="width:654px;height:35px;outline:none;vertical-align:top;"></select>
+				<select id="compselector" style="width:484px;height:35px;outline:none;vertical-align:top;"></select>
 				<span style="display:inline-block; width:6px;height:1px; background:white;"></span>
-				<button id="goToComp" style="width:60px;height:35px;">Go!</button><br/>
+				<button id="goToComp" style="width:60px;height:35px;">Go!</button>
+				<span style="display:inline-block; width:6px;height:1px; background:white;"></span>
+				<button onclick="goToSchedule()" style="width:120px;height:35px;">Schedule</button>
+				<span style="display:inline-block; width:6px;height:1px; background:white;"></span>
+				<button onclick="goToRankings()" style="width:120px;height:35px;">Rankings</button>
+				<br/>
 			</div>
 			<script src="competitions.js" type="text/javascript"></script>
 		</div>
 		
 		<br/>
 		
-		<div style="width:819px; margin:0px; padding:0px;">
+		<div style="width:819px; margin:0px; padding:0px;position:relative;overflow:hidden;">
 			<table class="shinytable" id="bigtable" data-sorting="iidddddd" style="width:819px;">
 				<thead>
 					<tr>
-						<td colspan="8">
+						<td colspan="9">
 						<script>document.write(eventName + " (Analysis)");</script>
 						</td>
 					</tr>
 					<tr>
 						<td colspan="2">FIRST Data*</td>
 						<td colspan="4">Direct Calculations<sup>&dagger;</sup></td>
-						<td colspan="2">Subjective Calculations<sup>&Dagger;</sup></td>
+						<td colspan="3">Subjective Calculations<sup>&Dagger;</sup></td>
 					</tr>
 					<tr>
 						<td>Team</td>
@@ -174,16 +183,18 @@ if (isset($_REQUEST["grab"])) {
 						<td>OPR</td>
 						<td>DPR</td>
 						<td>CCWM</td>
+						<td>Seed<sup>&#167;</sup></td>
 					</tr>
 				</thead>
 				<tbody id="bigdata">
-					<tr><td colspan="8"><em>Waiting for script to load...</em></td></tr>
+					<tr><td colspan="9"><em>Waiting for script to load...</em></td></tr>
 				</tbody>
 				<tfoot>
-					<tr><td colspan="8">
-						*Tabulated directly from <a href="http://www.usfirst.org">www.US<em>FIRST.org</em></a><br/>
-						&dagger;Calculated using match and ranking data directly to solve a system of linear equations.  These numbers are reliable <em>estimates</em> of team utility.<br/>
-						&Dagger;Calculated from raw data and previous calculations manipulated in a way deemed meaningful by the creators of AASK.
+					<tr><td colspan="9">
+						* Tabulated directly from <a href="http://www.usfirst.org">www.US<em>FIRST.org</em></a><br/>
+						&dagger; Calculated using match and ranking data directly to solve a system of linear equations.  These numbers are reliable <em>estimates</em> of team utility.<br/>
+						&Dagger; Calculated from raw data and previous calculations manipulated in a way deemed meaningful by the creators of AASK.<br/>
+						&#167; Projected Seed, from match results predicted with OPR.
 					</td></tr>
 				</tfoot>
 			</table>
@@ -201,10 +212,10 @@ if (isset($_REQUEST["grab"])) {
 			
 			<div style="width:400px; margin:0px; padding:0px; float:left;">
 				<!-- Correlation Table -->
-				<table class="shinytable" id="correlationtable" data-sorting="iidddddd" style="width:400px;">
+				<table class="shinytable" id="correlationtable" data-sorting="iidddddddd" style="width:400px;">
 					<thead>
 						<tr>
-							<td colspan="9">
+							<td colspan="10">
 							<script>document.write(eventName + " (Correlation)");</script>
 							</td>
 						</tr>
@@ -218,13 +229,16 @@ if (isset($_REQUEST["grab"])) {
 							<td>OPR</td>
 							<td>DPR</td>
 							<td>CCWM</td>
+							<td>Seed*</td>
 						</tr>
 					</thead>
 					<tbody id="correlationdata">
-						<tr><td colspan="9"><em>Waiting for script to load...</em></td></tr>
+						<tr><td colspan="10"><em>Waiting for script to load...</em></td></tr>
 					</tbody>
 					<tfoot>
-						<tr><td class="description" colspan="9">
+						<tr><td class="description" colspan="10">
+							*Projected Seed
+							<br/>
 							This is a correlation matrix for many of the various statistics we have collected and calculated, including raw point values.  Values near positive or negative one indicate a high correlation.
 						</td></tr>
 					</tfoot>
@@ -257,6 +271,17 @@ if (isset($_REQUEST["grab"])) {
 				<!-- Match Scores Graph -->
 				<table class="shinytable"><thead><tr><td>Match Scores</td></tr><tbody><tr><td>
 					<canvas id="graphMatches" width="398" height="240" style="background:white;width:398x; height:240px; border:0px #AAAAAA solid;">Graphs require the HTML 5 canvas object.</canvas>
+					
+					<tfoot><tr><td>
+					<span style="display:inline-block; position:relative; width:30px;">&nbsp;<span style="display:block; position:absolute; top:40%; height:21%; width:100%; background:#EE9999;"></span></span>
+					Winning Match Score<br/>
+					<span style="display:inline-block; position:relative; width:30px;">&nbsp;<span style="display:block; position:absolute; top:40%; height:21%; width:100%; background:#9999EE;"></span></span>
+					Losing Match Score<br/>						
+					<span style="display:inline-block; position:relative; width:30px;">&nbsp;<span style="display:block; position:absolute; top:40%; height:21%; width:100%; background:#CC5555;"></span></span>
+					Moving Average of Winning Score (10 matches)<br/>			
+					<span style="display:inline-block; position:relative; width:30px;">&nbsp;<span style="display:block; position:absolute; top:40%; height:21%; width:100%; background:#5555CC;"></span></span>
+					Moving Average of Losing Score (10 matches)<br/>	
+					 </td></tr></tfoot>
 				</table>
 			</div>
 			
@@ -300,9 +325,9 @@ if (isset($_REQUEST["grab"])) {
 					<tfoot>
 						<tr>
 							<td colspan="2">
-								<label><input name="m1atchpredictionmode" type="radio" checked="checked" id="m1atchpredictionmode0" />OPR Only</label><br/>
-								<label><input name="m1atchpredictionmode" type="radio" id="m1atchpredictionmode1" />OPR + DPR</label><br/>
-								<label><input name="m1atchpredictionmode" type="radio" id="m1atchpredictionmode2" />CCWM</label><br/>
+								<label><input name="m1atchpredictionmode" type="radio" checked="checked" id="m1atchpredictionmode0" />Estimate Scores using OPR</label><br/>
+								<label><input name="m1atchpredictionmode" type="radio" id="m1atchpredictionmode1" />Estimate Scores using OPR+DPR</label><br/>
+								<label><input name="m1atchpredictionmode" type="radio" id="m1atchpredictionmode2" />Estimate Winning Margin using CCWM</label><br/>
 							</td>
 						</tr>
 					</tfoot>
@@ -323,9 +348,9 @@ if (isset($_REQUEST["grab"])) {
 				<tfoot>
 					<tr>
 						<td colspan="5">
-							<label><input name="m2atchpredictionmode" type="radio" checked="checked" id="m2atchpredictionmode0" />OPR Only (<span id="m2ode0acc"><em>loading...</em></span>)</label><br/>
-							<label><input name="m2atchpredictionmode" type="radio" id="m2atchpredictionmode1" />OPR + DPR (<span id="m2ode1acc"><em>loading...</em></span>)</label><br/>
-							<label><input name="m2atchpredictionmode" type="radio" id="m2atchpredictionmode2" />CCWM (<span id="m2ode2acc"><em>loading...</em></span>)</label><br/>
+							<label><input name="m2atchpredictionmode" type="radio" checked="checked" id="m2atchpredictionmode0" />Estimate Scores using only OPR (<span id="m2ode0acc"><em>loading...</em></span>)</label><br/>
+							<label><input name="m2atchpredictionmode" type="radio" id="m2atchpredictionmode1" />Estimate Scores using OPR+DPR (<span id="m2ode1acc"><em>loading...</em></span>)</label><br/>
+							<label><input name="m2atchpredictionmode" type="radio" id="m2atchpredictionmode2" />Estimate Winning Margin using CCWM (<span id="m2ode2acc"><em>loading...</em></span>)</label><br/>
 						</td>
 					</tR>
 				</tfoot>
@@ -345,10 +370,11 @@ if (isset($_REQUEST["grab"])) {
 				<li><b>Rank:</b> The team's rank at the event, in terms of Qualification Points, as reported by <em>FIRST</em>.</li>
 				<li><b>Auton:</b> An estimate of the number of points a team scores, on average, during the autonomous period.</li>
 				<li><b>Climb:</b> An estimate of the number of points a team earns, on average, by climbing.</li>
-				<li><b>Teleop:</b> An estimate of the number of points a team scores, on average, during the teleoperated period.</li>
-				<li><b>OPR:</b> Offensive Power Rating.  An estimate of the number of points the team scores overall, on average.  This number represents the offensive utility of a team.  Comparable to the OPR reported by other teams.</li>
+				<li><b>Teleop:</b> An estimate of the number of points a team scores, on average, during the teleoperated period.  Please note that any foul points are included in each team's Teleop score by FIRST.  Unfortunately, this is how FIRST handles score reporting, and our system cannot circument this custom.</li>
+				<li><b>OPR:</b> Offensive Power Rating.  An estimate of the number of points the team scores overall, on average.  This number represents the offensive utility of a team.  Comparable to the OPR reported by other teams.  Please note that this value is slightly skewed by foul points (see above).</li>
 				<li><b>DPR:</b> Defensive Power Rating.  An estimate of the defensive utility of a team.  May be interpreted as the number of points that a team takes away from its opposing alliance, on average.</li>
 				<li><b>CCWM:</b> Calculated Contribution to Winning Margin.  An estimate of the number of points a team contributes to the winning margin of its alliance.</li>
+				<li><b>Seed:</b> Projected final tournament seed (ranking), calculated from OPR-predicted match results.
 			</ul>
 			
 			<h3>Should My Team Still Scout?</h3>
@@ -358,7 +384,7 @@ if (isset($_REQUEST["grab"])) {
 			<p>For each point category, our system solves a <a href="http://en.wikipedia.org/wiki/System_of_linear_equations">system of linear equations</a> for the "average contribution" of each team per match.  Each equation corresponds to a single team and expresses the total accumulated points earned by that team as a linear combination of that team's average contribution and the average contributions of every other team that has competed on an alliance with that team.  Naturally, we represent the system of equations with a single matrix equation of the form <code>Ax=b</code>
 			<ul>
 				<li>Vector <code>b</code> contains the aggregate point value (one of AP, CP, TP, or their sum) for each team.</li>
-				<li>Each element <code>A<sub>i&#8291;j</sub></code> of matrix <code>A</code> represents the number of times team <code>i</code> has played with team <code>j</code>.
+				<li>Each element <code>A<sub>ij</sub></code> of matrix <code>A</code> represents the number of times team <code>i</code> has played with team <code>j</code>.
 					Each element on the diagonal, therefore, is the total number of matches played by the team represented by that row and column.  As a result, our
 					matrix has the following properties:
 					<ul>
@@ -374,6 +400,8 @@ if (isset($_REQUEST["grab"])) {
 			<p>The <b>Defensive Power Rating (DPR)</b> for a team is calculated by iterating through the list of completed matches and using the calculated OPR values to predict the outcome of each match.  For each match, for both alliances, the difference between this expected outcome and the true outcome of the match is credited to the defensive utility of the opposing alliance.  For each team, we sum up these differences and solve a linear system similar to the one above using this new tabulated data.
 			
 			<p>The <b>Calculated Contribution to the Winning Margin (CCWM)</b> for each team is calculated by summing up the alliance score difference for each team for each match and solving our favorite system of linear equations for the <code>x</code> vector with these margins in our <code>b</code> vector.
+			
+			<p>The <b>Projected Seed (Seed)</b> for each team is calculated by predicting the results of unplayed matches with OPR, and adjusting their win/loss/tie record accordingly.
 			
 			<p>AASK is dependent on the match schedule and rankings reported by <a href="http://www.usfirst.org">www.US<em>FIRST.org</em></a>.  Occasionally, the <em>FIRST</em> website will experience an outage, rendering our tool temporarily incapacitated.  We have implemented a simple caching system, designed to reduce the frequency of such failures, but ultimately the status of the <em>FIRST</em> website controls the functionality of this tool.<br/>
 

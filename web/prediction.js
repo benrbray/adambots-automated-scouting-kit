@@ -95,10 +95,10 @@ function setupMatchPredictor() {
 			predictedresult.innerHTML = "Expected near tie.";
 		}
 		if (blue > red + 1) {
-			predictedresult.innerHTML = "Blue wins by an expected " + (blue - red).toFixed(1) + " points.";
+			predictedresult.innerHTML = "Blue wins" + (mode==2 ? "." : " by an expected " + (blue - red).toFixed(1) + " points.");
 		}
 		if (red > blue + 1) {
-			predictedresult.innerHTML = "Red wins by an expected " + (red-blue).toFixed(1) + " points.";
+			predictedresult.innerHTML = "Red wins" + (mode==2 ? "." : " by an expected " + (red-blue).toFixed(1) + " points.");
 		}
 
 	}
@@ -123,25 +123,26 @@ function predictUnplayed() {
 	var colscores = [[],[]];
 
 	for (var m = 0; m < qu.length; m++) {
+		// Get Match (Row)
 		var match = qu[m];
+		
+		// Tabulate
 		if (isNaN(match[8])) {
 			//Match has not been played.
 			colmatch.push("Q" + match[1]);
-			/*colteams[0].push(match[2]);
-			colteams[1].push(match[3]);
-			colteams[2].push(match[4]);//Red
-			colteams[3].push(match[5]);//Blue
-			colteams[4].push(match[6]);
-			colteams[5].push(match[7]);*/
+			
 			var redalli = match[2] + "&nbsp;&nbsp;" + match[3] + "&nbsp;&nbsp;" + match[4];
 			var bluealli = match[5] + "&nbsp;&nbsp;" + match[6] + "&nbsp;&nbsp;" + match[7];
 			var red = predictAllianceValue(match[2],match[3],match[4] , mode , frcEvent);
 			var blue = predictAllianceValue(match[5],match[6],match[7] , mode , frcEvent);
+			
 			if (red > blue ) {
+				// Prediction Table
 				colscores[0].push( "<b>" + red.toFixed(1) + "</b>" );
 				colscores[1].push( blue.toFixed(1) );
 				redalli = "<b>" + redalli + "</b>";
 			} else {
+				// Prediction Table
 				colscores[0].push( red.toFixed(1) );
 				colscores[1].push( "<b>" + blue.toFixed(1) + "</b>" );
 				bluealli = "<b>" + bluealli + "</b>";
@@ -149,13 +150,16 @@ function predictUnplayed() {
 
 			colteams[0].push(redalli);
 			colteams[1].push(bluealli);
-
 		} else {
 			//Match has been played.
 			for (var z = 0; z < 3; z++) {
 				var red = predictAllianceValue(match[2],match[3],match[4] , z , frcEvent );
 				var blue = predictAllianceValue(match[5],match[6],match[7] , z , frcEvent );
-				if ((red >= blue) == (parseInt(match[8]) >= parseInt(match[9])  ) ) {
+				var realRed = parseInt(match[8]);
+				var realBlue = parseInt(match[9]);
+				
+				// Count Correct
+				if ((red >= blue) == (realRed >= realBlue) ) {
 					correct[z] = correct[z] + 1;
 				}
 			}
@@ -178,7 +182,7 @@ function predictUnplayed() {
 
 	var fi = frcEvent.elimTable;
 	if (!fi || fi.data.length == 0) {
-		document.getElementById("matchpredictions").tBodies[0].innerHTML += "<tr><td colspan=\"5\" class=\"error\">No eliminations matches are scheduled.</td></tr>";
+		document.getElementById("matchpredictions").tBodies[0].innerHTML += "<tr><td colspan=\"5\" class=\"error\">No elimination matches are scheduled.</td></tr>";
 	} else {
 		var cname = [];
 		var cred = [];
