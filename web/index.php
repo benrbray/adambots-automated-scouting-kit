@@ -264,9 +264,9 @@ if (isset($_REQUEST["grab"])) {
 						</tbody>
 					<tfoot><tr><td>
 					<span style="display:inline-block; position:relative; width:30px;">&nbsp;<span style="display:block; position:absolute; top:40%; height:21%; width:100%; background:#EE9999;"></span></span>
-					OPR Distribution Approximation<br/>
+					OPR True Distribution Approximation<br/>
 					<span style="display:inline-block; position:relative; width:30px;">&nbsp;<span style="display:block; position:absolute; top:40%; height:21%; width:100%; background:#9999EE;"></span></span>
-					CCWM Distribution Approximation<br/>						
+					CCWM True Distribution Approximation<br/>						
 					<span style="display:inline-block; position:relative; width:30px;">&nbsp;<span style="display:block; position:absolute; top:40%; height:21%; width:100%; background:#CC5555;"></span></span>
 					OPR Normal Distribution<br/>			
 					<span style="display:inline-block; position:relative; width:30px;">&nbsp;<span style="display:block; position:absolute; top:40%; height:21%; width:100%; background:#5555CC;"></span></span>

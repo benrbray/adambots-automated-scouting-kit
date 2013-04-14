@@ -204,9 +204,7 @@ function createDistroGraph(){
 	
 	// Plot
 	plotAxis(graphDistro, winMin, winMax, 0, Math.max(totalMaxPD, ccwmMaxPD) * 1.1, "", "","",true,true,true); //empty titles and no ticks so we don't double up text.
-	
-	plotAxis(graphDistro, winMin, winMax, 0, Math.max(totalMaxPD, ccwmMaxPD) * 1.1, "Points", "Frequency","",false,true,true);
-	
+
 	//Fancy calculus distribution?
 	var k = [];
 	for (var i = 0; i < frcEvent.teamCount; i++) {
@@ -232,4 +230,7 @@ function createDistroGraph(){
 
 	graphDistro.lines = 0.75;
 	plotCurve(graphDistro, ccwmPts, "#5555CC", true);
+
+	plotAxis(graphDistro, winMin, winMax, 0, Math.max(totalMaxPD, ccwmMaxPD) * 1.1, "Points", "Frequency","",false,true,true);
+	
 }
