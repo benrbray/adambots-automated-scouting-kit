@@ -70,53 +70,13 @@ function createRequest() {
  * obj.ready :: bool True when the data has been parsed and placed into the tables array.
  */
 function Page(url) {
-	function outoftag(str) {
-		//e.g
-		//<a>b<c><d>efg</k></m><n>o</p>
-		//returns
-		//befgo
-		var intag = false; //whether or not position [i] is in an html tag (between < and >)
-		var quoted = false; //whether or not position [i] is in an attribute in a tag between < X "i" >
-		var text = ""; //The text collected to return. Spaces between tags? Nope. Silly. Of course not.
-		for (var i = 0; i < str.length; i++) {
-			var ch = str.charAt(i);
-			if (!intag) {
-				//outside of a tag
-				if (ch == "<") {
-					intag = true;
-				}
-				else
-				{
-					text = text + ch;
-				}
-			} else {
-				//INSIDE of a tag.
-				if (!quoted) {
-					//Not already IN a quote.
-					if (ch == "\""){
-						quoted = true;
-					}
-					if (ch == ">") {
-						intag = false;
-					}
-				}else{
-				//Inside of a quote, waiting for a ".
-					if (ch == "\"") {
-						quoted = false;
-						
-					}
-				}
-			}
-		}
-		return text;
-	}
 	var me = this;
 	this.returnto = function() {
 		if (me.r.readyState != 4) {
 			return;
 		}
 		var text = me.r.responseText.toUpperCase();
-		var rows = text.split("<TR"); //I do NOT want the first one (prior to the start of a <TR>:
+		/*var rows = text.split("<TR"); //I do NOT want the first one (prior to the start of a <TR>:
 		rows.splice(0,1); //Remove the first one.
 		for (var i = 0; i < rows.length; i++) {
 			rows[i] = rows[i].substring(0, rows[i].indexOf("</TR") ); //Stop when the row ends. Requires a </TR> pairing to each <TR>.
@@ -142,7 +102,22 @@ function Page(url) {
 					data[i].hasdata = true;
 				}
 			}
+		}*/
+		var raw = [];
+		var data = [];
+		var raw = text.split("\n");
+		for (var i = 0; i < raw.length; i++) {
+			raw[i] = raw[i].split(";");
+			data[i] = [];
+			for (var j = 0; j < raw[i].length; j++) {
+				data[i][j] = parseFloat(raw[i][j]);
+				var isnumber = raw[i][j].replace(/[0123456789\.]/g,"").trim() == ""; //contains only the decimal, spaces, and numbers.
+				if (isnumber && !isNaN(data[i][j])) {
+					data[i].hasdata = true;
+				}
+			}
 		}
+
 		me.tables = [];
 		for (var i = 0; i < data.length; i++) {
 			if (data[i].hasdata) {

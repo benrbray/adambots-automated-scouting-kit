@@ -32,7 +32,6 @@ function directory() {
 
 
 if (isset($_REQUEST["grab"])) {
-
 	$req = $_REQUEST["grab"];
 	function isamatchuri($m) {
 		return sizeof(explode("matchresults",$m),2) == 2;
@@ -62,21 +61,22 @@ if (isset($_REQUEST["grab"])) {
 	$fromcache = getcache($req);
 	if (!$fromcache) {
 		//There is no cached file.
-		$remote = @file_get_contents("http://www2.usfirst.org/" . $req); //Get the file from USFIRST
+		//$remote = @file_get_contents("http://www2.usfirst.org/" . $req); //Get the file from USFIRST
+		include("condense.php");
 		if ($remote) {
-			file_put_contents(cacheuri($req),(time() + 1) . "$" . $remote); //Cache the file
-			exit($remote); //Tell the client the contents of the file
+			file_put_contents(cacheuri($req),(time() + 1) . "]$ [There was no cache]" . $remote); //Cache the file
+			exit("[There was no cache]" . $remote); //Tell the client the contents of the file
 		} else {
 			exit("404");
 		}
 	}
 
-	echo "[" . time() . "]";
+	echo "[Current time: " . time() . "]";
 
 	//The file is cached.
 	if ( readtime($fromcache) > time() ) {
 		//The cache time hasn't expired.
-		exit($fromcache);
+		exit("[Cached]" . $fromcache);
 	}
 
 	function matchesdone($m) { //Pass it the contents of the MatchResults page. Returns true if that comp. is done.
@@ -86,30 +86,31 @@ if (isset($_REQUEST["grab"])) {
 		}
 		$r = strrpos($k[2],"20",0);
 		if ($r < 3 && $r >= 0) {
-			echo "matches done";
+			echo "These matches are done.";
 			return true;
 		}
 	}
 
 	// The file is cached but expired.
-	$remote = @file_get_contents("http://www2.usfirst.org/" . $req);
+	//$remote = @file_get_contents("http://www2.usfirst.org/" . $req);
+	include("condense.php");
 	if ($remote) {
-		$ti = time() + 1;
+		$ti = time() + 5 * 60;
 		if (isamatchuri($req)) {
-			echo "(match)";
+			echo "(This is a match results page.)";
 			//The request is for a match page.
 			if (matchesdone($remote)) {
 				$ti = time() + 365*24*60*60; //Cache for 1 year, not 5 minutes; the competition is over.
 			}
 		}
 		if (isaranksuri($req)) {
-			echo "(ranks)";
+			echo "(this is a rankings page)";
 			$cachedmatch = getcache(matchuri($req));
 			if ($cachedmatch && matchesdone($cachedmatch)) {
 				$ti = time() + 365*24*60*60; //Cache for 1 year
 			}
 		}
-		file_put_contents(cacheuri($req), $ti . "$" . $remote); //Cache the file
+		file_put_contents(cacheuri($req), $ti . "]$" . "UNCACHED RESULT [Expires: " .   $ti . "]" . $remote); //Cache the file
 		exit($remote); //Tell the client the contents of the file
 	} else {
 		if ($fromcache) {
