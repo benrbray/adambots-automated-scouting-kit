@@ -26,12 +26,15 @@ Instead, this pages acts a proxy, so same-origin isn't violated.
 */
 
 function directory() {
-	//bloginfo("template_directory");
-	//echo "/Scouting/";
+	//This is used to state where resource files are.
+	//bloginfo("template_directory"); //Our Wordpress server uses this
 }
 
 
 if (isset($_REQUEST["grab"])) {
+	//There is only one PHP file in this project.
+	//When ?grab is set, this loads the files for Javascript to parse containin match and ranking data.
+
 	$req = $_REQUEST["grab"];
 	function isamatchuri($m) {
 		return sizeof(explode("matchresults",$m),2) == 2;
@@ -121,6 +124,7 @@ if (isset($_REQUEST["grab"])) {
 	}
 	exit("500");
 }
+//At this point, this is the public rendered page.
 
 ?>
 
@@ -130,8 +134,7 @@ if (isset($_REQUEST["grab"])) {
 	<head>
 		<meta charset="UTF-8">
 		<title>Adambots Automated Scouting Kit</title>
-		<!--[if IE]><script type="text/javascript" src="<?php directory();?>excanvas/excanvas.js"></script><![endif]-->
-		<script type="text/javascript" src="<?php directory();?>prediction.js"></script>
+		<script type="text/javascript" src="<?php directory();//This simplifies moving between servers which put resource files in different places.?>prediction.js"></script>
 		<script type="text/javascript" src="<?php directory();?>output.js"></script>
 		<script type="text/javascript" src="<?php directory();?>statistics.js"></script>
 		<script type="text/javascript" src="<?php directory();?>graphing.js"></script>
@@ -439,6 +442,6 @@ if (isset($_REQUEST["grab"])) {
 			</div>
 		</div>
 		<div style="height:50px;"></div>
-		<script type="text/javascript">setTimeout(Main,1);</script>
+		<script type="text/javascript">setTimeout(Main,1);//Begin running everything</script>
 	</body>
 </html>
