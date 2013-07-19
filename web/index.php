@@ -437,10 +437,6 @@ if (isset($_REQUEST["grab"])) {
 				Team 245, the Adambots, for use by other FRC teams.</code>
 				<br/>
 			</div>
-			
-			<h3>Excanvas.js</h3>
-			This project utilizes <code>Excanvas.js</code> (&copy; Google 2006) for backwards compatibility with 
-			Microsoft Internet Explorer, which is licenced under the Apache License. See <a href="excanvas">here</a>.
 		</div>
 		<div style="height:50px;"></div>
 		<script type="text/javascript">setTimeout(Main,1);</script>
