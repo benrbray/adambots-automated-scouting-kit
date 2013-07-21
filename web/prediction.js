@@ -22,6 +22,15 @@ Mode:
 1: OPR + DRP
 2: CCWM
 **/
+
+// Array Remove - By John Resig (MIT Licensed)
+Array.prototype.remove = function(from, to) {
+  var rest = this.slice((to || from) + 1 || this.length);
+  this.length = from < 0 ? this.length + from : from;
+  return this.push.apply(this, rest);
+};
+
+//This is for convenience. It loads from the FRCEvent `even` the data.
 function predictTeamValue(team,mode,even) {
 	team = parseInt("" + team);
 	if (!even.isTeam(team)) {
@@ -38,6 +47,7 @@ function predictTeamValue(team,mode,even) {
 	}
 }
 
+//Also for convenience, this computes the value of a particular alliance under the current mode `m` and FRCEvent `e`.
 function predictAllianceValue(t1,t2,t3,m,e) {
 	return predictTeamValue(t1,m,e) + predictTeamValue(t2,m,e) + predictTeamValue(t3,m,e);
 }
@@ -117,10 +127,27 @@ function predictUnplayed() {
 	var correct = [0,0,0];
 	var counted = 0;
 	var qu = frcEvent.qualTable.data;
+	var qu2 = []; // Generate total match list, of both qualification and elimination matches
+	for (var i = 0; i < frcEvent.qualTable.data.length; i++) {
+		var u = frcEvent.qualTable.data[i].slice(0);
+		u.name = "<b>Q" + u[1] + "</b>";
+		qu2.push(u);
+	}
+	for (var i = 0; i < frcEvent.elimTable.data.length; i++) {
+		var u = frcEvent.elimTable.data[i].slice(0);
+		u.name = "<b>" + frcEvent.elimTable.raw[i][1].replace(" ","<br/>") + "</b>";
+		u.remove(1);
+		qu2.push(u);
+	}
+	qu = qu2;
 
 	var colmatch = [];
+	var finmatch = [];
 	var colteams = [[],[]]//[[],[],[],[],[],[]];
+	var finteams = [[],[]];
 	var colscores = [[],[]];
+	var finscores = [[],[]];
+	var finscoresreal = [[],[]];
 
 	for (var m = 0; m < qu.length; m++) {
 		// Get Match (Row)
@@ -129,8 +156,8 @@ function predictUnplayed() {
 		// Tabulate
 		if (isNaN(match[8])) {
 			//Match has not been played.
-			colmatch.push("Q" + match[1]);
-			
+			//colmatch.push("Q" + match[1]);	
+			colmatch.push(qu[m].name);
 			var redalli = match[2] + "&nbsp;&nbsp;" + match[3] + "&nbsp;&nbsp;" + match[4];
 			var bluealli = match[5] + "&nbsp;&nbsp;" + match[6] + "&nbsp;&nbsp;" + match[7];
 			var red = predictAllianceValue(match[2],match[3],match[4] , mode , frcEvent);
@@ -147,20 +174,56 @@ function predictUnplayed() {
 				colscores[1].push( "<b>" + blue.toFixed(1) + "</b>" );
 				bluealli = "<b>" + bluealli + "</b>";
 			}
-
 			colteams[0].push(redalli);
 			colteams[1].push(bluealli);
 		} else {
 			//Match has been played.
+			//finmatch.push("Q" + match[1]);	//<derivative from above>
+			finmatch.push(qu[m].name);
+			var redalli = match[2] + "&nbsp;&nbsp;" + match[3] + "&nbsp;&nbsp;" + match[4];
+			var bluealli = match[5] + "&nbsp;&nbsp;" + match[6] + "&nbsp;&nbsp;" + match[7];
+			var red = predictAllianceValue(match[2],match[3],match[4] , mode , frcEvent);
+			var blue = predictAllianceValue(match[5],match[6],match[7] , mode , frcEvent);
+			
+			var op = "";
+			var cp = "";
+			if (red >= blue != parseInt(match[8]) >= parseInt(match[9])) {
+				op = "<del>";
+				cp = "</del>";
+			}
+
+			if (red > blue ) {
+				// Prediction Table
+				finscores[0].push( op + "" + red.toFixed(1) + "" + cp );
+				finscores[1].push( op + blue.toFixed(1)  + cp );
+			} else {
+				// Prediction Table
+				finscores[0].push( op + red.toFixed(1) + cp );
+				finscores[1].push( op + "" + blue.toFixed(1) + "" + cp );
+			}
+			if (match[8] >= match[9]) {
+				finscoresreal[0].push("<b>" + match[8] + "</b>");
+				redalli = "<b>" + redalli + "</b>";
+			} else {
+				finscoresreal[0].push(match[8]);
+			}
+			if (match[9] >= match[8]) {
+				finscoresreal[1].push("<b>" + match[9] + "</b>");
+				bluealli = "<b>" + bluealli + "</b>";
+			} else {
+				finscoresreal[1].push(match[9]);
+			}
+			finteams[0].push(redalli);
+			finteams[1].push(bluealli); //</derivative from above>
 			for (var z = 0; z < 3; z++) {
-				var red = predictAllianceValue(match[2],match[3],match[4] , z , frcEvent );
+				var red = predictAllianceValue(match[2],match[3],match[4] , z , frcEvent ); //The scores predicted by the current game model.
 				var blue = predictAllianceValue(match[5],match[6],match[7] , z , frcEvent );
-				var realRed = parseInt(match[8]);
+				var realRed = parseInt(match[8]); //The actual scores for this match reported by FIRST
 				var realBlue = parseInt(match[9]);
 				
 				// Count Correct
 				if ((red >= blue) == (realRed >= realBlue) ) {
-					correct[z] = correct[z] + 1;
+					correct[z] = correct[z] + 1; //`z` refers to prediction mode, so this is done for all 3 here.
 				}
 			}
 			counted = counted + 1;
@@ -177,48 +240,14 @@ function predictUnplayed() {
 		fillTable("matchpredictions", [colmatch , colteams[0], colteams[1], colscores[0], colscores[1] ], ["grey","white","white","red","blue"] , [-1,-1,-1,-1,-1] );
 	} else {
 		// No Unplayed Matches
-		document.getElementById("matchpredictions").tBodies[0].innerHTML = "<tr><td colspan=\"5\" class=\"error\">No unplayed qualification matches scheduled.</td></tr>";
+		document.getElementById("matchpredictions").tBodies[0].innerHTML = "<tr><td colspan=\"5\" class=\"error\">No unplayed matches are scheduled.</td></tr>";
 	}
 
-	var fi = frcEvent.elimTable;
-	if (!fi || fi.data.length == 0) {
-		document.getElementById("matchpredictions").tBodies[0].innerHTML += "<tr><td colspan=\"5\" class=\"error\">No elimination matches are scheduled.</td></tr>";
+	if(finmatch.length > 0){
+		// Played Matches Exist
+		fillTable("matchresults", [finmatch , finteams[0], finteams[1], finscoresreal[0], finscoresreal[1], finscores[0], finscores[1] ], ["grey","white","white","red","blue","red","blue"] , [-1,-1,-1,-1,-1,-1,-1] );
 	} else {
-		var cname = [];
-		var cred = [];
-		var cblue = [];
-		var csr = [];
-		var csb = [];
-		for (var m = 0; m < fi.data.length; m++) {
-			var k = fi.data[m];
-			if (isNaN(k[9])) {
-				cname.push(fi.raw[m][1]);
-				var a = k[3];
-				var b = k[4];
-				var c = k[5];
-				var d = k[6];
-				var e = k[7];
-				var f = k[8];
-
-				var redscore = predictAllianceValue(a,b,c,mode,frcEvent);
-				var bluescore = predictAllianceValue(d,e,f,mode,frcEvent);
-				if (redscore > bluescore) {
-					cred.push("<b>" + a + "&nbsp;&nbsp;" + b + "&nbsp;&nbsp;" + c + "</b>");
-					cblue.push(d + "&nbsp;&nbsp;" + e + "&nbsp;&nbsp;" + f);
-					csr.push( "<b>" + redscore.toFixed(1) + "</b>" );
-					csb.push( bluescore.toFixed(1)  );
-				} else {
-					cred.push(a + "&nbsp;&nbsp;" + b + "&nbsp;&nbsp;" + c);
-					cblue.push("<b>" + d + "&nbsp;&nbsp;" + e + "&nbsp;&nbsp;" + f + "</b>");
-					csr.push( redscore.toFixed(1)  );
-					csb.push( "<b>" + bluescore.toFixed(1)  + "</b>" );
-				}
-			}
-		}
-		if (cname.length == 0) {
-			document.getElementById("matchpredictions").tBodies[0].innerHTML += "<tr><td colspan=\"5\"  class=\"error\">No unplayed eliminations matches are scheduled.</td></tr>";
-		} else {
-			fillTable("matchpredictions", [cname,cred,cblue,csr,csb] , ["grey","white","white","red","blue"],[-1,-1,-1,-1,-1] );
-		}
+		// No played Matches
+		document.getElementById("matchresults").tBodies[0].innerHTML = "<tr><td colspan=\"5\" class=\"error\">No matches have been played yet.</td></tr>";
 	}
 }

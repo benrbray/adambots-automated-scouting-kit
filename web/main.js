@@ -19,33 +19,39 @@ Team 245, the Adambots, for use by other FRC teams.
 var frcEvent;
 
 function Main() {
-	// Graph Context
+	//This function is directly called by the page, and begins all.
+
+	//Generate Graph Context
 	graphMatches = document.getElementById("graphMatches").getContext("2d");
 	graphDistro = document.getElementById("graphDistro").getContext("2d");
 	
-	// Waiting Message
+	//Set a  waiting message.
 	document.getElementById("bigdata").innerHTML = "<tr><td colspan=\"9\">Waiting for data from <em>FIRST</em>...</td></tr>";
 	document.getElementById("correlationdata").innerHTML = "<tr><td colspan=\"10\">Waiting for data from <em>FIRST</em>...</td></tr>";
 	
-	// FRC Event
-	frcEvent = new FRCEvent(eventURL, eventName, 
+	//Create the FRCEvent object for the current event.
+	frcEvent = new FRCEvent(eventURL, eventName,  // <-- frcevent.js
 		function () {
+			//This is a callback for after the event is loaded and analyzed.
+			//This generates all visible page features using the data embedded in frcEvent.
 		
 			if (frcEvent.failed) {
+				//If for some reason the frcEvent could not be created correctly, frcEvent.failed is true.
+				//This will run, giving up on rendering the page.
 				document.getElementById("bigdata").innerHTML = "<tr><td class=\"error\" colspan=\"9\">No data is available for this event right now.</td></tr>";
 				document.getElementById("correlationdata").innerHTML = "<tr><td class=\"error\" colspan=\"10\">No data is available for this event right now.</td></tr>";
 				return;
 			}
 			
-			// Graph Match Score
-			createMatchGraph();
-			createDistroGraph();
+			//Generate the graphs.
+			createMatchGraph(); // v main.js
+			createDistroGraph(); // v main.js
 			
-			// Predict Unplayed Matches
+			//This sets up the match predictor.
 			m2atchpredictionmode0.onchange = m2atchpredictionmode1.onchange = m2atchpredictionmode2.onchange = predictUnplayed;
-			predictUnplayed();
+			predictUnplayed(); // --> prediction.js
 			
-			// Fill Tables			
+			//Here, the data tables are filled.		
 			var colteam = [];
 			var colrank = [];
 			for (var i = 0; i < frcEvent.teamHash.size(); i++) {
@@ -54,7 +60,7 @@ function Main() {
 			}
 			
 			// Big Table
-			fillTable("bigtable", 
+			fillTable("bigtable", // --> output.js
 				[colteam,	colrank,	frcEvent.autonEC,	frcEvent.climbEC,	frcEvent.teleopEC,	frcEvent.totalEC,	frcEvent.dpr,	frcEvent.ccwm,	(frcEvent.estimatedRankings || colrank)], 
 				["grey",	"greenred",	"redgreen",			"redgreen",			"redgreen",			"redgreen",			"redgreen",		"redgreen",  	"greenred"],
 				[0,			0,			1,					1,					1,					1,					1,				1,				0],
@@ -74,7 +80,7 @@ function Main() {
 
 		}
 	);
-
+	//This finishes setting up match prediction.
 	setupMatchPredictor();
 }
 
@@ -121,15 +127,14 @@ function createMatchGraph(){
 		movingHigh[i] = [i,movingHigh[i]/Math.min(i+1,movingLength)];
 		movingLow[i] = [i,movingLow[i]/Math.min(i+1,movingLength)];
 	}
-	
-	plotAxis(graphMatches, 0, frcEvent.matchCount, 0, 200, "", "", "",true,true,false); //Empty and true true for not doubling up text when I draw again.0.5;
+	plotAxis(graphMatches, 0, /*frcEvent.matchCount*/t.length, 0, 200, "", "", "",true,true,false); //Empty and true true for not doubling up text when I draw again.0.5;
 	graphMatches.lines = 0.5;
 	plotCurve(graphMatches,lowPts,"#9999EE",true);
 	plotCurve(graphMatches,highPts,"#EE9999",true);
 	graphMatches.lines = 0.75;
 	plotCurve(graphMatches,movingHigh,"#CC5555",true);
 	plotCurve(graphMatches,movingLow,"#5555CC",true);
-	plotAxis(graphMatches, 0, frcEvent.matchCount, 0, 200, "Match", "Score", "",false,false,true);
+	plotAxis(graphMatches, 0, t.length, 0, 200, "Match", "Score", "",false,false,true);
 }
 
 function generateApproximateDistribution(data) {
@@ -160,7 +165,7 @@ function generateApproximateDistribution(data) {
 	for (var i = 1; i < k.length; i++) {
 		distribution.push([k[i] , (integral[i][1] - integral[i-1][1]) / (k[i] - k[i-1])   ]);
 	}
-	distr = smooth(distribution,0.1);
+	distr = smooth(distribution,0.2);
 	distr.push([k[0],0]);
 	distr.push([k[k.length-1],0]);
 	return distr;

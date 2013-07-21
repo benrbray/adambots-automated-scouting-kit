@@ -67,7 +67,16 @@ thead tr td {
 	padding-right:7px;
 }
 
-#matchpredictions tr td {
+#matchresults thead tr td {
+	padding-left:1px;
+	padding-right:1px;
+}
+
+#matchresults * tr td:nth-of-type(5) {
+	border-right:3px solid #707070;
+}
+
+#matchpredictions * tr td {
 	padding-left:5px;
 	padding-right:5px;
 }
