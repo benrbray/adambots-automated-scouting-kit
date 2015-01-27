@@ -50,7 +50,7 @@ if (isset($_REQUEST["grab"])) {
 		return dirname($m) . "/rankings.html";
 	}
 	function cacheuri($m) {
-		return "../../firstdata/cache" . strtolower(str_replace("/","_",$m) ) ;
+		return "../firstdata/cache" . strtolower(str_replace("/","_",$m) ) ;
 	}
 	function getcache($m) {
 		return @file_get_contents( cacheuri($m) );
