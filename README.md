@@ -3,6 +3,8 @@ adambots-automated-scouting-kit
 
 The "Adambots Automated Scouting Kit" (AASK) is a tool designed to aid the scouting efforts of FIRST FRC teams.
 
+![aask-screenshot](img/aask-screenshot.png)
+
 How Does It Work?
 -----------------
 
